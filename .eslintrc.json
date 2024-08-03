@@ -1,0 +1,67 @@
+{
+    "root": true,
+    "overrides": [
+      {
+        "files": ["*.ts"],
+        "parser": "@typescript-eslint/parser",
+        "extends": [
+          "eslint:recommended",
+          "plugin:@typescript-eslint/recommended",
+          "plugin:@angular-eslint/recommended",
+          "plugin:@angular-eslint/template/process-inline-templates",
+          "plugin:prettier/recommended",
+          "plugin:@softarc/sheriff/default"
+        ],
+        "rules": {
+          "@angular-eslint/directive-selector": [
+            "warn",
+            {
+              "type": "attribute",
+              "prefix": "sxe",
+              "style": "camelCase"
+            }
+          ],
+          "@angular-eslint/component-selector": [
+            "warn",
+            {
+              "type": "element",
+              "prefix": "sxe",
+              "style": "kebab-case"
+            }
+          ],
+          "@typescript-eslint/explicit-function-return-type": "warn",
+          "eqeqeq": ["warn", "smart"],
+          "no-unused-vars": "off",
+          "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+              "args": "all"
+            }
+          ]
+        }
+      },
+      {
+        "files": ["*.html"],
+        "extends": [
+          "plugin:@angular-eslint/template/recommended",
+          "plugin:@angular-eslint/template/accessibility",
+          "plugin:prettier/recommended"
+        ],
+        "rules": {
+          "prettier/prettier": [
+            "warn",
+            {
+              "parser": "angular"
+            }
+          ],
+          "@angular-eslint/template/eqeqeq": [
+            "warn",
+            {
+              "allowNullOrUndefined": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

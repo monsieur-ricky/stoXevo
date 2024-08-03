@@ -1,0 +1,77 @@
+@use 'variables';
+@use 'mixins';
+@use 'typography';
+@use 'input-group';
+@use 'menu';
+@use 'calendar';
+@use 'dropdown';
+@use 'input-number';
+@use 'icon-field';
+@use 'widget';
+
+*:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+input:disabled {
+  background-color: var(--gray-100);
+  cursor: not-allowed;
+}
+
+html,
+body {
+  font-size: 14px;
+  padding: 0;
+  margin: var(--main-spacing);
+  background: #f5f5f5;
+}
+
+.container {
+  display: flex;
+  height: calc(100vh - 145px);
+  margin-top: var(--main-spacing);
+
+  aside {
+    margin: var(--main-spacing) var(--main-spacing) 0 0;
+  }
+
+  main {
+    flex: 1;
+    padding: 2rem;
+    margin: var(--main-spacing) 0 0 var(--main-spacing);
+    border-radius: var(--border-radius);
+    overflow: auto;
+    background: #ffffff;
+
+    @include mixins.main-shadow;
+
+    &:has(.dashboard) {
+      padding: var(--main-spacing);
+      background: none;
+      box-shadow: none;
+      margin: 0;
+    }
+  }
+}
+
+footer {
+  text-align: center;
+  margin: 15px 0 0 0;
+  color: var(--gray-400);
+
+  a {
+    color: var(--gray-400);
+    font-weight: 500;
+  }
+}
+
+main {
+  [class*='header'] {
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+    }
+  }
+}

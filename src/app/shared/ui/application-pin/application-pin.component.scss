@@ -1,0 +1,22 @@
+:host {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  section {
+    text-align: center;
+
+    p-inputotp {
+      justify-content: center;
+      transform: scale(1.3);
+      margin-bottom: 25px;
+    }
+  }
+}

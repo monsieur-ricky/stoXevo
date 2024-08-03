@@ -1,0 +1,14 @@
+:host {
+  span {
+    &:has(span) {
+      display: block;
+      color: var(--gray-500);
+
+      span {
+        font-weight: 400;
+        display: block;
+        color: var(--gray-900);
+      }
+    }
+  }
+}

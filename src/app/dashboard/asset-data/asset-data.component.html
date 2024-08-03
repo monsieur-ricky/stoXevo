@@ -1,0 +1,44 @@
+@if (totalInvestment() > 0) {
+  @let stockValueDiff = totalValue() - totalInvestment();
+  @let stockPercentageDiff = stockValueDiff / totalInvestment() | percent;
+
+  <h3>{{ title() }}</h3>
+  <div class="grid">
+    <div class="col-3">
+      <section class="widget widget--small bg-blue-300">
+        <h5>Total Investment</h5>
+        <h1>{{ totalInvestment() | number: '1.2-2' }}</h1>
+      </section>
+    </div>
+    <div class="col-3">
+      <section
+        class="widget widget--small"
+        [class.bg-green-300]="stockValueDiff > 0"
+        [class.bg-red-300]="stockValueDiff < 0"
+      >
+        <h5>Total Value</h5>
+        <h1>{{ totalValue() | number: '1.2-2' }}</h1>
+      </section>
+    </div>
+    <div class="col-3">
+      <section
+        class="widget widget--small"
+        [class.bg-green-300]="stockValueDiff > 0"
+        [class.bg-red-300]="stockValueDiff < 0"
+      >
+        <h5>Value Difference</h5>
+        <h1>{{ stockValueDiff | number: '1.2-2' }}</h1>
+      </section>
+    </div>
+    <div class="col-3">
+      <section
+        class="widget widget--small"
+        [class.bg-green-300]="stockValueDiff > 0"
+        [class.bg-red-300]="stockValueDiff < 0"
+      >
+        <h5>Percentage Difference</h5>
+        <h1>{{ stockPercentageDiff }}</h1>
+      </section>
+    </div>
+  </div>
+}

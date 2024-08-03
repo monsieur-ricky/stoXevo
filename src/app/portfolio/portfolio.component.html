@@ -1,0 +1,145 @@
+<div class="header grid mb-5">
+  <div class="col flex align-items-center">
+    <h1>Portfolio</h1>
+  </div>
+  <div class="col flex align-items-center justify-content-end">
+    <p-button
+      label="Update"
+      severity="info"
+      icon="pi pi-sync"
+      class="mr-3"
+      [disabled]="!isApiKeySet()"
+      [loading]="loading()"
+      (onClick)="onGetQuotes()"
+    />
+    <p-button
+      label="Add New Asset"
+      icon="pi pi-plus-circle"
+      [disabled]="!isApiKeySet()"
+      (onClick)="onAddAsset()"
+    />
+  </div>
+</div>
+
+<div>
+  <p-table
+    scrollHeight="flex"
+    [value]="portfolio()"
+    [tableStyle]="{ 'min-width': '10rem' }"
+    [scrollable]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="w-5rem">Symbol</th>
+        <th class="w-6rem">Type</th>
+        <th>Name</th>
+        <th class="w-8rem">Purchase Date</th>
+        <th class="w-5rem">Qty</th>
+        <th class="w-7rem">Purchase Price</th>
+        <th class="w-7rem">Total Investment</th>
+        <th class="w-7rem">Current Value</th>
+        <th class="w-7rem">Total Value</th>
+        <th class="w-7rem">Value Difference</th>
+        <th class="w-7rem">Percentage Difference</th>
+        <th class="w-5rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-asset>
+      @let currency = asset.currency;
+      @let totalInvestment = asset | portfolioTotalsCalc: 'investment';
+      @let totalValue = asset | portfolioTotalsCalc: 'value';
+      @let valueDifference = totalValue - totalInvestment;
+      @let percentageDifference = valueDifference / totalInvestment | percent;
+
+      <tr>
+        <td>{{ asset.symbol }}</td>
+        <td>{{ asset.type | uppercase }}</td>
+        <td>{{ asset.name }}</td>
+        <td>{{ asset.purchaseDate | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ asset.quantity }}</td>
+        <td>{{ asset.purchasePrice | currency: currency }}</td>
+        <td>
+          {{ totalInvestment | currency: currency }}
+        </td>
+        <td
+          [class.text-green-700]="asset.value > asset.purchasePrice"
+          [class.text-red-700]="asset.value < asset.purchasePrice"
+          class="font-bold"
+        >
+          {{ asset.value | currency: currency }}
+        </td>
+        <td
+          [class.text-green-700]="totalValue > totalInvestment"
+          [class.text-red-700]="totalValue < totalInvestment"
+          class="font-bold"
+        >
+          {{ totalValue | currency: currency }}
+        </td>
+        <td
+          [class.text-green-700]="asset.value > asset.purchasePrice"
+          [class.text-red-700]="asset.value < asset.purchasePrice"
+        >
+          {{ valueDifference | currency: currency }}
+        </td>
+        <td
+          [class.text-green-700]="asset.value > asset.purchasePrice"
+          [class.text-red-700]="asset.value < asset.purchasePrice"
+        >
+          {{ percentageDifference }}
+        </td>
+        <td class="text-center">
+          <p-menu
+            #menu
+            styleClass="w-10rem"
+            appendTo="body"
+            [model]="items"
+            [popup]="true"
+          />
+          <p-button
+            icon="pi pi-ellipsis-v"
+            severity="secondary"
+            [rounded]="true"
+            [text]="true"
+            [outlined]="true"
+            (onClick)="onShowMenu($event, menu, asset)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr>
+        <td colspan="6" class="text-right">Totals</td>
+        <td>{{ totalInvestmentSum() | number: '1.2-2' }}</td>
+        <td></td>
+        <td
+          [class.bg-green-100]="totalValueDifferenceSum() > 0"
+          [class.bg-red-100]="totalValueDifferenceSum() < 0"
+        >
+          {{ totalValueSum() | number: '1.2-2' }}
+        </td>
+        <td
+          [class.bg-green-100]="totalValueDifferenceSum() > 0"
+          [class.bg-red-100]="totalValueDifferenceSum() < 0"
+        >
+          {{ totalValueDifferenceSum() | number: '1.2-2' }}
+        </td>
+        <td
+          [class.bg-green-100]="totalValueDifferenceSum() > 0"
+          [class.bg-red-100]="totalValueDifferenceSum() < 0"
+        >
+          {{ totalPercentageDifferenceSum() | percent }}
+        </td>
+        <td></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">No assets in portfolio</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<sxe-portfolio-details [(openSidebar)]="sidebarVisible" />
+
+<p-confirmDialog />

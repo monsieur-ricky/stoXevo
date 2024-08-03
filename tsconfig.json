@@ -1,0 +1,52 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "@app": ["src/app"],
+
+      "@about": ["src/app/about"],
+
+      "@dashboard": ["src/app/dashboard"],
+
+      "@portfolio": ["src/app/portfolio"],
+
+      "@profile": ["src/app/profile"],
+
+      "@shared/ui": ["src/app/shared/ui"],
+      "@shared/data/api": ["src/app/shared/data/api"],
+      "@shared/data": ["src/app/shared/data"],
+      "@shared/models": ["src/app/shared/models"],
+      "@shared/components": ["src/app/shared/components"],
+      "@shared/interceptors": ["src/app/shared/interceptors"],
+      "@shared/utils": ["src/app/shared/utils"],
+      "@shared/services": ["src/app/shared/services"],
+      "@shared/providers": ["src/app/shared/providers"],
+      "@shared/pipes": ["src/app/shared/pipes"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

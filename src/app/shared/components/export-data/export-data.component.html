@@ -1,0 +1,11 @@
+<p-button
+  icon="pi pi-download"
+  severity="secondary"
+  pTooltip="Export Data"
+  tooltipPosition="bottom"
+  size="large"
+  [disabled]="!isApiKeySet()"
+  [rounded]="true"
+  [text]="true"
+  (onClick)="onExportData()"
+/>

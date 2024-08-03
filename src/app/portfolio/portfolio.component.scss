@@ -1,0 +1,5 @@
+:host {
+  div:has(table) {
+    height: calc(100vh - (200px + 87px));
+  }
+}

@@ -1,0 +1,133 @@
+<div class="dashboard">
+  <div class="grid">
+    <div class="col-3">
+      <section class="widget bg-blue-300">
+        <h5>Total Investment</h5>
+        <h1>{{ totalInvestment() | number: '1.2-2' }}</h1>
+      </section>
+    </div>
+    <div class="col-3">
+      <section
+        class="widget"
+        [class.bg-green-300]="valueDifference() > 0"
+        [class.bg-red-300]="valueDifference() < 0"
+      >
+        <h5>Total Value</h5>
+        <h1>{{ totalValue() | number: '1.2-2' }}</h1>
+      </section>
+    </div>
+    <div class="col-3">
+      <section
+        class="widget"
+        [class.bg-green-300]="valueDifference() > 0"
+        [class.bg-red-300]="valueDifference() < 0"
+      >
+        <h5>Value Difference</h5>
+        <h1>{{ valueDifference() | number: '1.2-2' }}</h1>
+      </section>
+    </div>
+    <div class="col-3">
+      <section
+        class="widget"
+        [class.bg-green-300]="valueDifference() > 0"
+        [class.bg-red-300]="valueDifference() < 0"
+      >
+        <h5>Percentage Difference</h5>
+        <h1>{{ percentageDifference() | percent }}</h1>
+      </section>
+    </div>
+  </div>
+
+  <div class="grid mt-2">
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Assets</h5>
+        <h1>{{ totalNumberOfAssets() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Stocks</h5>
+        <h1>{{ totalNumberOfStocks() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>ETFs</h5>
+        <h1>{{ totalNumberOfETFs() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Funds</h5>
+        <h1>{{ totalNumberOfFunds() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Bonds</h5>
+        <h1>{{ totalNumberOfBonds() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Commodity</h5>
+        <h1>{{ totalNumberOfCommodities() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Crypto</h5>
+        <h1>{{ totalNumberOfCryptos() }}</h1>
+      </section>
+    </div>
+    <div class="col">
+      <section class="widget widget--small widget--light">
+        <h5>Forex</h5>
+        <h1>{{ totalNumberOfForex() }}</h1>
+      </section>
+    </div>
+  </div>
+</div>
+
+<sxe-dashboard-asset-data
+  assetType="stock"
+  [totalInvestment]="totalInvestmentOfStocks()"
+  [totalValue]="totalValueOfStocks()"
+/>
+
+<sxe-dashboard-asset-data
+  assetType="etf"
+  [totalInvestment]="totalInvestmentOfETFs()"
+  [totalValue]="totalValueOfETFs()"
+/>
+
+<sxe-dashboard-asset-data
+  assetType="fund"
+  [totalInvestment]="totalInvestmentOfFunds()"
+  [totalValue]="totalValueOfFunds()"
+/>
+
+<sxe-dashboard-asset-data
+  assetType="bond"
+  [totalInvestment]="totalInvestmentOfBonds()"
+  [totalValue]="totalValueOfBonds()"
+/>
+
+<sxe-dashboard-asset-data
+  assetType="commodity"
+  [totalInvestment]="totalInvestmentOfCommodities()"
+  [totalValue]="totalValueOfCommodities()"
+/>
+
+<sxe-dashboard-asset-data
+  assetType="crypto"
+  [totalInvestment]="totalInvestmentOfCrypto()"
+  [totalValue]="totalValueOfCrypto()"
+/>
+
+<sxe-dashboard-asset-data
+  assetType="forex"
+  [totalInvestment]="totalInvestmentOfForex()"
+  [totalValue]="totalValueOfForex()"
+/>

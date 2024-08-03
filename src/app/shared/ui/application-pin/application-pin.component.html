@@ -1,0 +1,19 @@
+<section>
+  <h3 class="text-primary">Enter your PIN:</h3>
+  <p-inputOtp
+    [mask]="true"
+    [integerOnly]="true"
+    [autofocus]="true"
+    [ngModel]="pin"
+    (ngModelChange)="onPinChange($event)"
+  />
+  <p>
+    This PIN is used to access the application and encrypt/decrypt the data.
+  </p>
+  <p>
+    <b>
+      Make sure to remember this PIN, as it will be required to access the
+      application.
+    </b>
+  </p>
+</section>

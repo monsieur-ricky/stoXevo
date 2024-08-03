@@ -1,0 +1,42 @@
+<p-button
+  icon="pi pi-upload"
+  severity="secondary"
+  pTooltip="Import Data"
+  tooltipPosition="bottom"
+  size="large"
+  [rounded]="true"
+  [text]="true"
+  (onClick)="openDialog.set(true)"
+/>
+
+<p-dialog
+  header="Import Data"
+  [modal]="true"
+  [style]="{ width: '25rem' }"
+  [(visible)]="openDialog"
+  (onHide)="onHideDialog()"
+>
+  <p-fileUpload
+    #fileUpload
+    mode="basic"
+    chooseLabel="Choose file to import..."
+    chooseIcon="pi pi-upload"
+    accept=".json"
+    maxFileSize="1000000"
+    styleClass="w-full surface-200 border-300 text-color-secondary"
+    (onSelect)="onFileSelect($event)"
+  />
+
+  <div class="flex justify-content-end mt-5 gap-3">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (onClick)="openDialog.set(false)"
+    />
+    <p-button
+      label="Import"
+      (onClick)="onImportData()"
+      [disabled]="!importedData()"
+    />
+  </div>
+</p-dialog>

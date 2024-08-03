@@ -1,0 +1,201 @@
+<h1 class="flex align-items-center">
+  {{ profile()?.symbol }}
+  <p-avatar
+    styleClass="mr-2"
+    size="large"
+    class="ml-3"
+    [style]="{ 'background-color': '#ece9fc', padding: '0.2rem' }"
+    [image]="profile()?.image"
+  />
+</h1>
+
+<div class="grid">
+  @let range = profile()?.range ?? '0-0';
+  @let low = range.split('-')[0];
+  @let high = range.split('-')[1];
+  @let price = profile()?.price ?? 0;
+  @let changes = profile()?.changes ?? 0;
+  @let changePercent = changes / price;
+
+  <div
+    class="col-3 mb-4 border-round-sm border-1"
+    [class.border-red-700]="changes < 0"
+    [class.bg-red-50]="changes < 0"
+    [class.border-green-700]="changes > 0"
+    [class.bg-green-50]="changes > 0"
+  >
+    <span>
+      <span
+        class="font-medium"
+        [class.text-red-700]="changes < 0"
+        [class.text-green-700]="changes > 0"
+      >
+        {{ profile()?.price }} {{ profile()?.currency }}
+      </span>
+
+      @if (changes) {
+        <span
+          class="text-sm"
+          [class.text-red-700]="changes < 0"
+          [class.text-green-700]="changes > 0"
+        >
+          {{ changes }}
+          ({{ changePercent | percent: '1.2' }})
+        </span>
+      }
+    </span>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-3">
+    <span>
+      Symbol:
+      <span>
+        {{ profile()?.symbol }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Name:
+      <span>
+        {{ profile()?.companyName }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Exchange:
+      <span>
+        {{ profile()?.exchangeShortName }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      ISIN:
+      <span>
+        {{ profile()?.isin }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Currency:
+      <span>
+        {{ profile()?.currency }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Industry:
+      <span>
+        {{ profile()?.industry }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Sector:
+      <span>
+        {{ profile()?.sector }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Website:
+      <span>
+        <a href="{{ profile()?.website }}" target="_blank">
+          {{ profile()?.website }}
+        </a>
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      CEO:
+      <span>
+        {{ profile()?.ceo }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Country:
+      <span>
+        {{ profile()?.country }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      State:
+      <span>
+        {{ profile()?.state }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      City:
+      <span>
+        {{ profile()?.city }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Employees:
+      <span>
+        {{ profile()?.fullTimeEmployees }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      Last Dividend:
+      <span> {{ profile()?.lastDiv }} {{ profile()?.currency }} </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      52-Wk High:
+      <span> {{ high }} {{ profile()?.currency }} </span>
+    </span>
+  </div>
+
+  <div class="col-3">
+    <span>
+      52-Wk Low:
+      <span> {{ low }} {{ profile()?.currency }} </span>
+    </span>
+  </div>
+</div>
+
+<div class="grid mt-3">
+  <div class="col-12">
+    <span>
+      About:
+      <span>
+        {{ profile()?.description }}
+      </span>
+    </span>
+  </div>
+</div>

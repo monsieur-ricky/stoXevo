@@ -1,0 +1,46 @@
+@use 'mixins' as mixin;
+
+.p-menu {
+  width: 15rem;
+  padding: 0.8rem;
+  border: none;
+
+  @include mixin.main-shadow;
+
+  .p-menuitem {
+    margin: var(--main-spacing);
+    font-size: 1.1rem;
+
+    .p-menuitem-content {
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease-in-out;
+
+      .p-menuitem-link {
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease-in-out;
+
+        &.p-menuitem-link-active {
+          background-color: var(--primary-color);
+
+          .p-menuitem-text,
+          .p-menuitem-icon {
+            color: #ffffff;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+.p-menubar {
+  padding: 0.45rem 0.8rem;
+  background: #ffffff;
+  border: none;
+
+  @include mixin.main-shadow;
+
+  .p-menubar-end {
+    width: 900px;
+  }
+}

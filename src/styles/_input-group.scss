@@ -1,0 +1,11 @@
+.p-inputgroup {
+  &:has(.p-inputgroup-addon) {
+    .p-autocomplete,
+    .p-autocomplete-clearable {
+      .p-inputtext {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<p-iconField iconPosition="left">
+  <p-inputIcon styleClass="pi pi-search" />
+
+  <p-autoComplete
+    field="name"
+    placeholder="Search Asset..."
+    [showClear]="true"
+    [style]="{ width: '100%' }"
+    [inputStyle]="{ width: '100%' }"
+    [suggestions]="symbols()"
+    [minLength]="3"
+    [virtualScroll]="true"
+    [virtualScrollItemSize]="34"
+    [disabled]="!isApiKeySet()"
+    (onSelect)="onSelect($event.value)"
+    (completeMethod)="searchSymbols($event.query)"
+    [(ngModel)]="selectedItem"
+  >
+    <ng-template let-symbol pTemplate="item">
+      <div class="flex align-items-center gap-2">
+        <span>{{ symbol.name }}</span>
+        <span>({{ symbol.symbol }})</span>
+      </div>
+    </ng-template>
+  </p-autoComplete>
+</p-iconField>

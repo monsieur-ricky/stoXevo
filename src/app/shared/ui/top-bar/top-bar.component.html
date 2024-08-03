@@ -1,0 +1,15 @@
+<p-menubar>
+  <ng-template pTemplate="start">
+    <h1 class="text-primary font-medium m-0">stoXevo</h1>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <div class="flex justify-content-end gap-3">
+      <div class="w-full">
+        <ng-content select="symbol-search"></ng-content>
+      </div>
+
+      <ng-content select="menu"></ng-content>
+    </div>
+  </ng-template>
+</p-menubar>

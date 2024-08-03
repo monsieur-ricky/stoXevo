@@ -1,0 +1,132 @@
+<p-sidebar
+  position="right"
+  [style]="{ width: '45rem' }"
+  [dismissible]="false"
+  (onHide)="onClose()"
+  [(visible)]="openSidebar"
+>
+  <ng-template pTemplate="header">
+    <h2>{{ sidebarTitle() }}</h2>
+  </ng-template>
+
+  <form [formGroup]="assetForm">
+    <h3>Asset Information</h3>
+
+    <div class="formgrid grid">
+      <div class="col-12 mb-5">
+        <sxe-symbol-search (selected)="onSymbolSelected($event)" />
+      </div>
+
+      <div class="field col-6">
+        <label for="symbol">Symbol</label>
+        <input pInputText id="symbol" formControlName="symbol" class="w-full" />
+      </div>
+      <div class="field col-6">
+        <label for="name">Name</label>
+        <input pInputText id="name" formControlName="name" class="w-full" />
+      </div>
+      <div class="field col-6">
+        <label for="currency">Currency</label>
+        <input
+          pInputText
+          id="currency"
+          formControlName="currency"
+          class="w-full"
+        />
+      </div>
+      <div class="field col-6">
+        <label for="exchangeShortName">Exchange Name</label>
+        <input
+          pInputText
+          id="exchangeShortName"
+          formControlName="exchangeShortName"
+          class="w-full"
+        />
+      </div>
+    </div>
+
+    <h3>Investment Information</h3>
+
+    <div class="formgrid grid">
+      <div class="field col-6">
+        <label for="purchaseDate">Purchase Date</label>
+        <p-calendar
+          id="purchaseDate"
+          formControlName="purchaseDate"
+          dateFormat="dd-mm-yy"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+        />
+      </div>
+      <div class="field col-6">
+        <label for="purchasePrice">Purchase Price</label>
+        <p-inputNumber
+          id="purchasePrice"
+          formControlName="purchasePrice"
+          mode="decimal"
+          class="w-full"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="5"
+        />
+      </div>
+      <div class="field col-6">
+        <label for="quantity">Quantity</label>
+        <p-inputNumber
+          id="quantity"
+          formControlName="quantity"
+          mode="decimal"
+          class="w-full"
+          [min]="0"
+          [maxFractionDigits]="8"
+        />
+      </div>
+      <div class="field col-6">
+        <label for="type">Type</label>
+        <p-dropdown
+          id="type"
+          formControlName="type"
+          optionValue="id"
+          [options]="types"
+        />
+      </div>
+      <div class="field col-6">
+        <label for="value">Current Price</label>
+        <p-inputNumber
+          id="value"
+          formControlName="value"
+          mode="decimal"
+          class="w-full"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="5"
+        />
+      </div>
+      <div class="field col-6 flex align-items-center gap-2 mt-4">
+        <p-checkbox
+          formControlName="manualUpdate"
+          inputId="manualUpdate"
+          [binary]="true"
+        />
+        <label class="mt-2" for="manualUpdate">
+          Disable auto value updates?
+        </label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-between flex-wrap">
+      <p-button
+        icon="pi pi-save"
+        [label]="saveBtnText()"
+        (onClick)="onSave()"
+      />
+
+      <p-button
+        severity="secondary"
+        icon="pi pi-times"
+        [label]="cancelBtnText()"
+        (onClick)="onClose()"
+      />
+    </div>
+  </ng-template>
+</p-sidebar>

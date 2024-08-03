@@ -1,0 +1,51 @@
+<p-button
+  icon="pi pi-cog"
+  severity="secondary"
+  pTooltip="Settings"
+  tooltipPosition="bottom"
+  size="large"
+  [rounded]="true"
+  [text]="true"
+  (onClick)="openDialog.set(true)"
+/>
+
+<p-dialog
+  header="Application Settings"
+  [modal]="true"
+  [style]="{ width: '30rem' }"
+  [(visible)]="openDialog"
+>
+  <div class="field">
+    <label for="key">API Key</label>
+    <p-inputGroup>
+      <p-inputGroupAddon>
+        <i class="pi pi-key"></i>
+      </p-inputGroupAddon>
+      <input
+        id="key"
+        pInputText
+        aria-describedby="key-help"
+        [(ngModel)]="apiKey"
+      />
+    </p-inputGroup>
+    <small id="key-help">
+      Don't have an API Key? Get one from
+      <a
+        href="https://site.financialmodelingprep.com/"
+        target="_blank"
+        class="text-primary"
+        >FMP</a
+      >
+      for free.
+    </small>
+  </div>
+
+  <div class="flex justify-content-end mt-5 gap-3">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (onClick)="openDialog.set(false)"
+    />
+    <p-button label="Save" [disabled]="!apiKey" (onClick)="onSaveSettings()" />
+  </div>
+</p-dialog>
