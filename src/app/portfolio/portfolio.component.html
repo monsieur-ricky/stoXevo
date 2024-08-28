@@ -1,20 +1,20 @@
-<div class="header grid mb-5">
-  <div class="col flex align-items-center">
+<div class="header grid mb-3 md:mb-5">
+  <div class="col-6 md:col flex align-items-center">
     <h1>Portfolio</h1>
   </div>
-  <div class="col flex align-items-center justify-content-end">
+  <div class="col-6 md:col flex align-items-center justify-content-end">
     <p-button
-      label="Update"
       severity="info"
       icon="pi pi-sync"
       class="mr-3"
+      [label]="isMobile() ? undefined : 'Update'"
       [disabled]="!isApiKeySet()"
       [loading]="loading()"
       (onClick)="onGetQuotes()"
     />
     <p-button
-      label="Add New Asset"
       icon="pi pi-plus-circle"
+      [label]="isMobile() ? undefined : 'Add New Asset'"
       [disabled]="!isApiKeySet()"
       (onClick)="onAddAsset()"
     />
@@ -24,6 +24,7 @@
 <div>
   <p-table
     scrollHeight="flex"
+    styleClass="p-datatable-sm"
     [value]="portfolio()"
     [tableStyle]="{ 'min-width': '10rem' }"
     [scrollable]="true"

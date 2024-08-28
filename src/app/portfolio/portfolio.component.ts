@@ -60,6 +60,7 @@ export class PortfolioComponent {
   private readonly appStore = inject(ApplicationStore);
   private readonly confirmationService = inject(ConfirmationService);
 
+  isMobile = this.appStore.isMobile;
   isApiKeySet = this.appStore.isApiKeySet;
   selectedAsset = this.portfolioStore.asset;
   loading = this.portfolioStore.loading;

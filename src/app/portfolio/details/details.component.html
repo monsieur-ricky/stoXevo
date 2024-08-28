@@ -1,6 +1,6 @@
 <p-sidebar
   position="right"
-  [style]="{ width: '45rem' }"
+  [style]="{ width: isMobile() ? '25rem' : '45rem' }"
   [dismissible]="false"
   (onHide)="onClose()"
   [(visible)]="openSidebar"
@@ -17,15 +17,15 @@
         <sxe-symbol-search (selected)="onSymbolSelected($event)" />
       </div>
 
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="symbol">Symbol</label>
         <input pInputText id="symbol" formControlName="symbol" class="w-full" />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="name">Name</label>
         <input pInputText id="name" formControlName="name" class="w-full" />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="currency">Currency</label>
         <input
           pInputText
@@ -34,7 +34,7 @@
           class="w-full"
         />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="exchangeShortName">Exchange Name</label>
         <input
           pInputText
@@ -48,7 +48,7 @@
     <h3>Investment Information</h3>
 
     <div class="formgrid grid">
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="purchaseDate">Purchase Date</label>
         <p-calendar
           id="purchaseDate"
@@ -58,7 +58,7 @@
           [showIcon]="true"
         />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="purchasePrice">Purchase Price</label>
         <p-inputNumber
           id="purchasePrice"
@@ -69,7 +69,7 @@
           [maxFractionDigits]="5"
         />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="quantity">Quantity</label>
         <p-inputNumber
           id="quantity"
@@ -80,7 +80,7 @@
           [maxFractionDigits]="8"
         />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="type">Type</label>
         <p-dropdown
           id="type"
@@ -89,7 +89,7 @@
           [options]="types"
         />
       </div>
-      <div class="field col-6">
+      <div class="field col-12 md:col-6">
         <label for="value">Current Price</label>
         <p-inputNumber
           id="value"
@@ -100,7 +100,7 @@
           [maxFractionDigits]="5"
         />
       </div>
-      <div class="field col-6 flex align-items-center gap-2 mt-4">
+      <div class="field col-12 md:col-6 flex align-items-center gap-2 mt-4">
         <p-checkbox
           formControlName="manualUpdate"
           inputId="manualUpdate"

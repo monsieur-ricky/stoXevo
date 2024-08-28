@@ -4,13 +4,13 @@
 
   <h3>{{ title() }}</h3>
   <div class="grid">
-    <div class="col-3">
+    <div class="col-6 md:col-3">
       <section class="widget widget--small bg-blue-300">
         <h5>Total Investment</h5>
         <h1>{{ totalInvestment() | number: '1.2-2' }}</h1>
       </section>
     </div>
-    <div class="col-3">
+    <div class="col-6 md:col-3">
       <section
         class="widget widget--small"
         [class.bg-green-300]="stockValueDiff > 0"
@@ -20,7 +20,7 @@
         <h1>{{ totalValue() | number: '1.2-2' }}</h1>
       </section>
     </div>
-    <div class="col-3">
+    <div class="col-6 md:col-3">
       <section
         class="widget widget--small"
         [class.bg-green-300]="stockValueDiff > 0"
@@ -30,7 +30,7 @@
         <h1>{{ stockValueDiff | number: '1.2-2' }}</h1>
       </section>
     </div>
-    <div class="col-3">
+    <div class="col-6 md:col-3">
       <section
         class="widget widget--small"
         [class.bg-green-300]="stockValueDiff > 0"

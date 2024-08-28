@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { PortfolioStore } from '@shared/data';
+import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { assetTypes, Symbol } from '@shared/models';
 import { SymbolSearchComponent } from '@shared/ui';
 import { isFormValid } from '@shared/utils';
@@ -61,9 +61,12 @@ export class DetailsComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly portfolioStore = inject(PortfolioStore);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly appStore = inject(ApplicationStore);
 
   openSidebar = model.required<boolean>();
+
   asset = this.portfolioStore.asset;
+  isMobile = this.appStore.isMobile;
 
   isEditMode = computed(() => !!this.asset()?.symbol);
   sidebarTitle = computed(() =>

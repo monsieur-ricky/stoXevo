@@ -36,10 +36,8 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+.nx
 
 # System files
 .DS_Store
 Thumbs.db
-
-# Secrets
-*.secrets.ts

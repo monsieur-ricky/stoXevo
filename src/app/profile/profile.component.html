@@ -1,13 +1,17 @@
-<h1 class="flex align-items-center">
-  {{ profile()?.symbol }}
-  <p-avatar
-    styleClass="mr-2"
-    size="large"
-    class="ml-3"
-    [style]="{ 'background-color': '#ece9fc', padding: '0.2rem' }"
-    [image]="profile()?.image"
-  />
-</h1>
+<div class="header grid mb-3 md:mb-5">
+  <div class="col flex align-items-center">
+    <h1 class="flex align-items-center">
+      {{ profile()?.symbol }}
+      <p-avatar
+        styleClass="mr-2"
+        size="large"
+        class="ml-3"
+        [style]="{ 'background-color': '#ece9fc', padding: '0.2rem' }"
+        [image]="profile()?.image"
+      />
+    </h1>
+  </div>
+</div>
 
 <div class="grid">
   @let range = profile()?.range ?? '0-0';
@@ -18,7 +22,7 @@
   @let changePercent = changes / price;
 
   <div
-    class="col-3 mb-4 border-round-sm border-1"
+    class="col-6 md:col-3 mb-4 border-round-sm border-1 ml-2"
     [class.border-red-700]="changes < 0"
     [class.bg-red-50]="changes < 0"
     [class.border-green-700]="changes > 0"
@@ -48,7 +52,7 @@
 </div>
 
 <div class="grid">
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Symbol:
       <span>
@@ -57,7 +61,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Name:
       <span>
@@ -66,7 +70,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Exchange:
       <span>
@@ -75,7 +79,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       ISIN:
       <span>
@@ -84,7 +88,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Currency:
       <span>
@@ -93,7 +97,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Industry:
       <span>
@@ -102,7 +106,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Sector:
       <span>
@@ -111,7 +115,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Website:
       <span>
@@ -122,7 +126,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       CEO:
       <span>
@@ -131,7 +135,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Country:
       <span>
@@ -140,7 +144,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       State:
       <span>
@@ -149,7 +153,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       City:
       <span>
@@ -158,7 +162,7 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Employees:
       <span>
@@ -167,21 +171,21 @@
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       Last Dividend:
       <span> {{ profile()?.lastDiv }} {{ profile()?.currency }} </span>
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       52-Wk High:
       <span> {{ high }} {{ profile()?.currency }} </span>
     </span>
   </div>
 
-  <div class="col-3">
+  <div class="col-6 md:col-3">
     <span>
       52-Wk Low:
       <span> {{ low }} {{ profile()?.currency }} </span>

@@ -1,4 +1,6 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   patchState,
   signalStore,
@@ -8,18 +10,21 @@ import {
 } from '@ngrx/signals';
 import { ApplicationData, EncryptedAppData } from '@shared/models';
 import { LocalStorageService } from '@shared/services';
+import { map } from 'rxjs';
 import { IV_KEY, SALT_KEY, STORAGE_APP_DATA_KEY } from 'src/app/app.settings';
 
 export type ApplicationState = {
   apiKey: string | null;
   pin: string | null;
   dataImportDate: string | null;
+  showMenu: boolean;
 };
 
 const initialState: ApplicationState = {
   apiKey: null,
   pin: null,
-  dataImportDate: null
+  dataImportDate: null,
+  showMenu: false
 };
 
 export const ApplicationStore = signalStore(
@@ -32,6 +37,12 @@ export const ApplicationStore = signalStore(
         STORAGE_APP_DATA_KEY,
         store.pin()
       );
+
+    const setShowMenu = (show: boolean): void => {
+      patchState(store, {
+        showMenu: show
+      });
+    };
 
     const setPin = (pin: string): void => {
       patchState(store, {
@@ -87,6 +98,7 @@ export const ApplicationStore = signalStore(
 
     return {
       getDecryptedAppData,
+      setShowMenu,
       setPin,
       getApiKey,
       setApiKey,
@@ -95,10 +107,26 @@ export const ApplicationStore = signalStore(
   }),
 
   withComputed(store => {
+    const responsive = inject(BreakpointObserver);
+    const smWidth = '(max-width: 576px)';
+    const portrait = '(orientation: portrait)';
+
     const isApiKeySet = computed(() => !!store.apiKey());
 
+    const isMobile = toSignal(
+      responsive
+        .observe([smWidth, portrait])
+        .pipe(
+          map(
+            state => state.breakpoints[smWidth] && state.breakpoints[portrait]
+          )
+        ),
+      { initialValue: false }
+    );
+
     return {
-      isApiKeySet
+      isApiKeySet,
+      isMobile
     };
   })
 );

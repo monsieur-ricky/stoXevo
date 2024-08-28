@@ -1,1 +1,22 @@
-<p-menu [model]="items" />
+@if (isMobile()) {
+  <p-sidebar
+    position="right"
+    styleClass="w-15rem"
+    [(visible)]="visible"
+    (visibleChange)="onVisibleChange($event)"
+  >
+    <ng-template pTemplate="header">
+      <h2 class="m-0">Menu</h2>
+    </ng-template>
+
+    <p-menu [model]="items" />
+
+    <div class="absolute bottom-0 pl-4">
+      <ng-content select="bottom-menu"></ng-content>
+    </div>
+  </p-sidebar>
+} @else {
+  <aside class="hidden md:block">
+    <p-menu [model]="items" />
+  </aside>
+}

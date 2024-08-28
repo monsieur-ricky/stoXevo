@@ -14,6 +14,8 @@ import {
   SideMenuComponent,
   TopBarComponent
 } from '@shared/ui';
+import { ButtonModule } from 'primeng/button';
+import { SidebarModule } from 'primeng/sidebar';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -30,7 +32,9 @@ import { ToastModule } from 'primeng/toast';
 
     TopBarComponent,
     SideMenuComponent,
-    ToastModule
+    ToastModule,
+    SidebarModule,
+    ButtonModule
   ],
   selector: 'sxe-root',
   template: ` @if (!isPinSet()) {
@@ -44,17 +48,28 @@ import { ToastModule } from 'primeng/toast';
         />
         <ng-container ngProjectAs="menu">
           <div class="flex">
-            <sxe-import-data />
-            <sxe-export-data />
-            <sxe-app-settings />
+            <sxe-import-data class="hidden md:block" />
+            <sxe-export-data class="hidden md:block" />
+            <sxe-app-settings class="hidden md:block" />
+
+            <p-button
+              type="button"
+              class="block md:hidden"
+              (onClick)="onShowMenu()"
+              icon="pi pi-bars"
+            />
           </div>
         </ng-container>
       </sxe-ui-top-bar>
     </header>
     <div class="container">
-      <aside>
-        <sxe-ui-side-menu />
-      </aside>
+      <sxe-ui-side-menu>
+        <ng-container ngProjectAs="bottom-menu">
+          <sxe-import-data />
+          <sxe-export-data />
+          <sxe-app-settings />
+        </ng-container>
+      </sxe-ui-side-menu>
       <main>
         <p-toast />
         <router-outlet></router-outlet>
@@ -77,5 +92,9 @@ export class AppComponent {
 
   onSymbolSelected(symbol: Symbol) {
     this.router.navigate(['profile', symbol.symbol]);
+  }
+
+  onShowMenu() {
+    this.appStore.setShowMenu(true);
   }
 }
