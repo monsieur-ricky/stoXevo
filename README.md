@@ -6,6 +6,16 @@ This web app was created with privacy and simplicity in mind. All your data is s
 
 Whether you're an experienced investor or just getting started, this tool provides a straightforward and easy way to monitor your portfolio. With real market updates and a user-friendly interface, you can stay on top of your investments without the need for complex software or cloud storage.
 
+### Screenshots
+
+<img width="1279" alt="Dahsboard" src="https://github.com/user-attachments/assets/93ea07bd-21e6-4602-8114-8407484d7b71">
+
+<img width="1279" alt="Portfolio" src="https://github.com/user-attachments/assets/30140c26-6c36-4200-8a8b-99bbd7778156">
+
+<img width="1279" alt="Asset Details" src="https://github.com/user-attachments/assets/509e3a28-2b18-48d3-a482-723ce638661c">
+
+<img width="1279" alt="Profile Details" src="https://github.com/user-attachments/assets/e5bc4119-95be-414e-a4ae-cb7f5b999289">
+
 ## Settings
 
 ### PIN
@@ -38,6 +48,12 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-### Running unit tests
+## TODOs
 
-WIP
+- Unit Tests
+- Dark Mode
+- Find a financial market API that works with non-USD assets
+- Add asset currency stats
+- Add historical stats
+- Use IndexedDB instead of localStorage
+- ?
