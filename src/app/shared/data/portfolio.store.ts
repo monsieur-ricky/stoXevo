@@ -63,7 +63,7 @@ export const PortfolioStore = signalStore(
           loading: false
         });
 
-        // getQuotes(false);
+        getQuotes(false);
       };
 
       const addAsset = async (asset: Asset): Promise<void> => {

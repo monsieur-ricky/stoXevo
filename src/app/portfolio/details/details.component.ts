@@ -146,6 +146,8 @@ export class DetailsComponent implements OnInit {
 
       this.assetForm.patchValue({ ...asset, purchaseDate });
     }
+
+    this.setSymbolStatus();
   }
 
   private setValueStatusFromManualUpdate() {
@@ -183,5 +185,16 @@ export class DetailsComponent implements OnInit {
           manualUpdate?.enable();
         }
       });
+  }
+
+  private setSymbolStatus() {
+    const form = this.assetForm;
+    const symbol = form.get('symbol');
+
+    if (this.isEditMode()) {
+      symbol?.disable();
+    } else {
+      symbol?.enable();
+    }
   }
 }
