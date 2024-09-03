@@ -11,8 +11,7 @@ import {
   computed,
   effect,
   inject,
-  signal,
-  untracked
+  signal
 } from '@angular/core';
 import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { Asset } from '@shared/models';
@@ -78,8 +77,7 @@ export class PortfolioComponent {
   items = this.getMenuItems();
 
   constructor() {
-    effect(() => this.updateAssetsOnImport());
-    effect(() => (this.isPinSet() ? this.portfolioStore.getAssets() : null));
+    effect(() => this.getAssets());
   }
 
   onGetQuotes(): void {
@@ -96,9 +94,10 @@ export class PortfolioComponent {
     this.portfolioStore.setAsset(asset);
   }
 
-  private updateAssetsOnImport(): void {
-    if (this.appStore.dataImportDate()) {
-      untracked(() => this.portfolioStore.getAssets());
+  private getAssets(): void {
+    if (this.isPinSet()) {
+      this.appStore.dataImportDate();
+      this.portfolioStore.getAssets();
     }
   }
 

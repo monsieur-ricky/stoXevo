@@ -50,8 +50,13 @@ export class DashboardComponent {
   totalValueOfForex = this.dashboardStore.totalValueOfForex;
 
   constructor() {
-    effect(() =>
-      !!this.appStore.pin() ? this.portfolioStore.getAssets() : null
-    );
+    effect(() => this.getAssets());
+  }
+
+  private getAssets(): void {
+    if (this.appStore.pin()) {
+      this.appStore.dataImportDate();
+      this.portfolioStore.getAssets();
+    }
   }
 }
