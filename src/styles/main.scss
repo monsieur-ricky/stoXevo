@@ -79,9 +79,19 @@ footer {
   margin: 15px 0 0 0;
   color: var(--gray-400);
 
-  a {
-    color: var(--gray-400);
-    font-weight: 500;
+  > span {
+    &:not(:last-of-type) {
+      &::after {
+        content: '•';
+        margin: 0 5px;
+      }
+    }
+
+    a {
+      color: var(--gray-400);
+      font-weight: 700;
+      text-decoration: none;
+    }
   }
 }
 

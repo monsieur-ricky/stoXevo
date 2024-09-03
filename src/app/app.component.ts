@@ -51,7 +51,6 @@ import { ToastModule } from 'primeng/toast';
             <sxe-import-data class="hidden md:block" />
             <sxe-export-data class="hidden md:block" />
             <sxe-app-settings class="hidden md:block" />
-
             <p-button
               type="button"
               class="block md:hidden"
@@ -76,10 +75,21 @@ import { ToastModule } from 'primeng/toast';
       </main>
     </div>
     <footer>
-      Made with
-      <span style="transform: translateY(2px)" class="pi pi-heart-fill"></span>
-      by
-      <a href="https://blacklambs.net" target="_blank">Ricky</a>
+      <span>
+        Made with
+        <span
+          style="transform: translateY(2px)"
+          class="pi pi-heart-fill"
+        ></span>
+        by
+        <a href="https://blacklambs.net" target="_blank">Ricky</a>
+      </span>
+
+      <span>
+        <a href="https://github.com/monsieur-ricky/stoXevo" target="_blank">
+          <span class="pi pi-github"></span> Github
+        </a>
+      </span>
     </footer>`
 })
 export class AppComponent {
