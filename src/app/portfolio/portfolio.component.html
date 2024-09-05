@@ -31,7 +31,7 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th class="w-5rem">Symbol</th>
+        <th class="w-5rem" pFrozenColumn>Symbol</th>
         <th class="w-6rem">Type</th>
         <th>Name</th>
         <th class="w-8rem">Purchase Date</th>
@@ -42,7 +42,7 @@
         <th class="w-7rem">Total Value</th>
         <th class="w-7rem">Value Difference</th>
         <th class="w-7rem">Percentage Difference</th>
-        <th class="w-5rem"></th>
+        <th class="w-5rem" pFrozenColumn alignFrozen="right"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-asset>
@@ -53,7 +53,7 @@
       @let percentageDifference = valueDifference / totalInvestment | percent;
 
       <tr>
-        <td>{{ asset.symbol }}</td>
+        <td pFrozenColumn>{{ asset.symbol }}</td>
         <td>{{ asset.type | uppercase }}</td>
         <td>{{ asset.name }}</td>
         <td>{{ asset.purchaseDate | date: 'dd-MM-yyyy' }}</td>
@@ -88,7 +88,7 @@
         >
           {{ percentageDifference }}
         </td>
-        <td class="text-center">
+        <td class="text-center" pFrozenColumn alignFrozen="right">
           <p-menu
             #menu
             styleClass="w-10rem"
