@@ -106,7 +106,11 @@ export const PortfolioStore = signalStore(
               ...updatedAsset,
               value: quote?.price ?? updatedAsset.value
             };
+
+            console.log('quote', quote);
           }
+
+          console.log('updatedAsset', updatedAsset);
 
           patchState(store, {
             asset: updatedAsset,

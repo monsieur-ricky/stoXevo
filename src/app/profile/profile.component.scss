@@ -1,4 +1,15 @@
 :host {
+  h1 {
+    display: block;
+
+    small {
+      display: block;
+      color: var(--gray-900);
+      font-size: small;
+      margin-top: 5px;
+    }
+  }
+
   span {
     &:has(span) {
       display: block;
@@ -10,5 +21,15 @@
         color: var(--gray-900);
       }
     }
+  }
+
+  .spinner {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    width: 50px;
+    height: 50px;
+  }
+  ::ng-deep {
   }
 }

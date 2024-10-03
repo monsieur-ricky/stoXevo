@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { FMP_API_ENDPOINT_V3 } from '@app';
+import { STOXSCRAPER_API } from '@app';
 
-import { ShortQuote } from '@shared/models';
-import { firstValueFrom, map } from 'rxjs';
+import { Quote } from '@shared/models';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +11,11 @@ import { firstValueFrom, map } from 'rxjs';
 export class PortfolioService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = `${FMP_API_ENDPOINT_V3}/quote-short`;
+  private readonly apiUrl = `${STOXSCRAPER_API}/quote`;
 
-  getQuote(symbol: string): Promise<ShortQuote | undefined> {
+  getQuote(symbol: string): Promise<Quote | undefined> {
     const url = `${this.apiUrl}/${symbol}`;
 
-    return firstValueFrom(
-      this.http
-        .get<ShortQuote[]>(url)
-        .pipe(map(response => (response ? response[0] : undefined)))
-    );
+    return firstValueFrom(this.http.get<Quote>(url));
   }
 }

@@ -1,5 +1,14 @@
-export type ShortQuote = {
+export type Quote = {
   symbol: string;
   price: number;
-  volume: number;
+  changeValue: number;
+  changePercent: number;
+  range?: string;
+  fiftyDayAverage?: number;
+  fiftyTwoWeekHigh?: number;
+  fiftyTwoWeekLow?: number;
+  trailingAnnualDividendRate?: number;
+  dividendYield?: number;
+  regularMarketDayHigh?: number;
+  regularMarketDayLow?: number;
 };

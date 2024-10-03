@@ -1,52 +1,70 @@
-<div class="header grid mb-3 md:mb-5">
-  <div class="col flex align-items-center">
-    <h1 class="flex align-items-center">
-      {{ profile()?.symbol }}
-      <p-avatar
-        styleClass="mr-2"
-        size="large"
-        class="ml-3"
-        [style]="{ 'background-color': '#ece9fc', padding: '0.2rem' }"
-        [image]="profile()?.image"
-      />
-    </h1>
-  </div>
-</div>
+@if (loading()) {
+  <p-progressSpinner
+    ariaLabel="loading"
+    styleClass="absolute top-50 right-50 w-5rem h-5rem"
+    strokeWidth="4"
+  />
+}
+
+<h1 class="header mb-3 md:mb-5">
+  {{ profile()?.name }}
+
+  <small> {{ profile()?.symbol }} </small>
+</h1>
 
 <div class="grid">
-  @let range = profile()?.range ?? '0-0';
-  @let low = range.split('-')[0];
-  @let high = range.split('-')[1];
+  @let low = profile()?.regularMarketDayLow ?? 0;
+  @let high = profile()?.regularMarketDayHigh ?? 0;
   @let price = profile()?.price ?? 0;
-  @let changes = profile()?.changes ?? 0;
-  @let changePercent = changes / price;
+  @let changes = profile()?.changeValue ?? 0;
+  @let changePercent = profile()?.changePercent ?? 0;
+  @let currency = profile()?.currency ?? 'USD';
 
-  <div
-    class="col-6 md:col-3 mb-4 border-round-sm border-1 ml-2"
-    [class.border-red-700]="changes < 0"
-    [class.bg-red-50]="changes < 0"
-    [class.border-green-700]="changes > 0"
-    [class.bg-green-50]="changes > 0"
-  >
-    <span>
+  <div class="col-12 md:col-2 mb-4">
+    <span
+      class="border-round-sm border-1 p-3"
+      [class.border-red-700]="changes < 0"
+      [class.bg-red-50]="changes < 0"
+      [class.border-green-700]="changes > 0"
+      [class.bg-green-50]="changes > 0"
+    >
       <span
-        class="font-medium"
+        class="font-bold text-xl"
         [class.text-red-700]="changes < 0"
         [class.text-green-700]="changes > 0"
       >
-        {{ profile()?.price }} {{ profile()?.currency }}
+        {{ price | currency: currency }}
       </span>
 
       @if (changes) {
         <span
-          class="text-sm"
           [class.text-red-700]="changes < 0"
           [class.text-green-700]="changes > 0"
         >
-          {{ changes }}
-          ({{ changePercent | percent: '1.2' }})
+          {{ changes | currency: currency }}
+          ({{ changePercent / 100 | percent: '1.2' }})
         </span>
       }
+    </span>
+  </div>
+
+  <div class="col-6 md:col-2 mb-4">
+    <span class="border-round-sm border-1 p-3">
+      High
+
+      <span class="font-bold text-xl">
+        {{ high | currency: currency }}
+      </span>
+    </span>
+  </div>
+
+  <div class="col-6 md:col-2 mb-4">
+    <span class="border-round-sm border-1 p-3">
+      Low
+
+      <span class="font-bold text-xl">
+        {{ low | currency: currency }}
+      </span>
     </span>
   </div>
 </div>
@@ -65,7 +83,7 @@
     <span>
       Name:
       <span>
-        {{ profile()?.companyName }}
+        {{ profile()?.name }}
       </span>
     </span>
   </div>
@@ -75,15 +93,6 @@
       Exchange:
       <span>
         {{ profile()?.exchangeShortName }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-6 md:col-3">
-    <span>
-      ISIN:
-      <span>
-        {{ profile()?.isin }}
       </span>
     </span>
   </div>
@@ -137,27 +146,9 @@
 
   <div class="col-6 md:col-3">
     <span>
-      Country:
+      Address:
       <span>
-        {{ profile()?.country }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-6 md:col-3">
-    <span>
-      State:
-      <span>
-        {{ profile()?.state }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-6 md:col-3">
-    <span>
-      City:
-      <span>
-        {{ profile()?.city }}
+        {{ profile()?.address }}
       </span>
     </span>
   </div>
@@ -174,21 +165,37 @@
   <div class="col-6 md:col-3">
     <span>
       Last Dividend:
-      <span> {{ profile()?.lastDiv }} {{ profile()?.currency }} </span>
+      <span>
+        {{ profile()?.trailingAnnualDividendRate }} {{ profile()?.currency }}
+      </span>
     </span>
   </div>
 
   <div class="col-6 md:col-3">
     <span>
-      52-Wk High:
-      <span> {{ high }} {{ profile()?.currency }} </span>
+      Dividend Yield:
+      <span> {{ profile()?.dividendYield }} % </span>
+    </span>
+  </div>
+
+  <div class="col-6 md:col-3">
+    <span>
+      52-Wk Average:
+      <span> {{ profile()?.fiftyDayAverage }} </span>
     </span>
   </div>
 
   <div class="col-6 md:col-3">
     <span>
       52-Wk Low:
-      <span> {{ low }} {{ profile()?.currency }} </span>
+      <span> {{ profile()?.fiftyTwoWeekLow }} </span>
+    </span>
+  </div>
+
+  <div class="col-6 md:col-3">
+    <span>
+      52-Wk Low:
+      <span> {{ profile()?.fiftyTwoWeekLow }} </span>
     </span>
   </div>
 </div>

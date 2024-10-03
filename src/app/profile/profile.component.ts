@@ -1,4 +1,4 @@
-import { PercentPipe, TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, PercentPipe, TitleCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,12 +11,18 @@ import {
 import { RouterModule } from '@angular/router';
 import { ProfileService } from '@shared/data/api';
 import { Profile } from '@shared/models';
-import { AvatarModule } from 'primeng/avatar';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'sxe-profile',
   standalone: true,
-  imports: [RouterModule, PercentPipe, TitleCasePipe, AvatarModule],
+  imports: [
+    RouterModule,
+    PercentPipe,
+    TitleCasePipe,
+    CurrencyPipe,
+    ProgressSpinnerModule
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,6 +33,7 @@ export class ProfileComponent {
   symbol = input<string>();
 
   profile = signal<Profile | undefined>(undefined);
+  loading = signal(false);
 
   constructor() {
     effect(() => {
@@ -41,7 +48,9 @@ export class ProfileComponent {
       return;
     }
 
+    this.loading.set(true);
     const profile = await this.profileService.get(symbol);
     this.profile.set(profile);
+    this.loading.set(false);
   }
 }

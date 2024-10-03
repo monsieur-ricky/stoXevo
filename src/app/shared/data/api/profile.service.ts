@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { FMP_API_ENDPOINT_V3 } from '@app';
+import { STOXSCRAPER_API } from '@app';
 
 import { Profile } from '@shared/models';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +11,11 @@ import { firstValueFrom, map } from 'rxjs';
 export class ProfileService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = `${FMP_API_ENDPOINT_V3}/profile`;
+  private readonly apiUrl = `${STOXSCRAPER_API}/profile`;
 
   get(symbol: string): Promise<Profile> {
     const url = `${this.apiUrl}/${symbol}`;
 
-    return firstValueFrom(
-      this.http.get<Profile[]>(url).pipe(map(response => response[0]))
-    );
+    return firstValueFrom(this.http.get<Profile>(url));
   }
 }

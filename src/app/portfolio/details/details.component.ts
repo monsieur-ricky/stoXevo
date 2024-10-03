@@ -88,19 +88,12 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.setValueStatusFromManualUpdate();
-    this.setValueStatusFromCurrency();
   }
 
   onSymbolSelected(symbol: Symbol) {
     const form = this.assetForm;
 
     form.patchValue(symbol);
-
-    if (symbol.currency !== 'USD') {
-      form.get('value')?.enable();
-      form.get('manualUpdate')?.setValue(true);
-      form.get('manualUpdate')?.disable();
-    }
   }
 
   onSave(): void {
@@ -162,27 +155,6 @@ export class DetailsComponent implements OnInit {
           value?.enable();
         } else {
           value?.disable();
-        }
-      });
-  }
-
-  private setValueStatusFromCurrency() {
-    const form = this.assetForm;
-    const value = form.get('value');
-    const manualUpdate = form.get('manualUpdate');
-
-    form
-      .get('currency')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(curValue => {
-        if (curValue !== 'USD') {
-          value?.enable();
-          manualUpdate?.setValue(true);
-          manualUpdate?.disable();
-        } else {
-          value?.disable();
-          manualUpdate?.setValue(false);
-          manualUpdate?.enable();
         }
       });
   }

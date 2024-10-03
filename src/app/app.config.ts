@@ -9,7 +9,7 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { authInterceptor, httpCacheInterceptor } from '@shared/interceptors';
+import { authInterceptor } from '@shared/interceptors';
 import { MessageService } from 'primeng/api';
 import { routes } from './app.routes';
 
@@ -19,12 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),
     importProvidersFrom([BrowserModule, BrowserAnimationsModule]),
-    provideHttpClient(
-      withInterceptors([
-        authInterceptor,
-        httpCacheInterceptor({ globalTTL: 60 * 1000 * 60 })
-      ])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor])),
     MessageService
   ]
 };

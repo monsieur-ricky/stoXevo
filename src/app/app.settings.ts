@@ -1,5 +1,4 @@
-export const FMP_API_HOST = 'financialmodelingprep.com';
-export const FMP_API_ENDPOINT_V3 = `https://${FMP_API_HOST}/api/v3`;
+export const STOXSCRAPER_API = `https://stoxscraper.onrender.com/symbol`;
 
 export const STORAGE_APP_DATA_KEY = 'appData';
 

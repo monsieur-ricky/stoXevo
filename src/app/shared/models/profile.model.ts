@@ -1,38 +1,17 @@
-export type Profile = {
-  symbol: string;
-  price: number;
-  beta: number;
-  volAvg: number;
-  mktCap: number;
-  lastDiv: number;
-  range: string;
-  changes: number;
-  companyName: string;
-  currency: string;
-  cik: string;
-  isin: string;
-  cusip: string;
-  exchange: string;
-  exchangeShortName: string;
-  industry: string;
-  website: string;
-  description: string;
-  ceo: string;
-  sector: string;
-  country: string;
-  fullTimeEmployees: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  dcfDiff: number;
-  dcf: number;
-  image: string;
-  ipoDate: string;
-  defaultImage: boolean;
-  isEtf: boolean;
-  isActivelyTrading: boolean;
-  isAdr: boolean;
-  isFund: boolean;
-};
+import { Quote } from './quote.model';
+import { Symbol } from './symbol.model';
+
+export type Profile = Partial<Symbol> &
+  Partial<Quote> & {
+    companyName?: string;
+    industry?: string;
+    website?: string;
+    description?: string;
+    ceo?: string;
+    sector?: string;
+    country?: string;
+    fullTimeEmployees?: string;
+    phone?: string;
+    address?: string;
+    image?: string;
+  };

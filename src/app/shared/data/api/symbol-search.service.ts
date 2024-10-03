@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { FMP_API_ENDPOINT_V3 } from '@app';
+import { STOXSCRAPER_API } from '@app';
 import { Symbol } from '@shared/models';
 import { firstValueFrom } from 'rxjs';
 
@@ -10,10 +10,10 @@ import { firstValueFrom } from 'rxjs';
 export class SymbolSearchService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = `${FMP_API_ENDPOINT_V3}/search?query`;
+  private readonly apiUrl = `${STOXSCRAPER_API}/search`;
 
   searchSymbols(query: string): Promise<Symbol[]> {
-    const url = `${this.apiUrl}=${query}`;
+    const url = `${this.apiUrl}/${query}`;
 
     return firstValueFrom(this.http.get<Symbol[]>(url));
   }

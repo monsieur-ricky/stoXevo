@@ -1,6 +1,5 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ApplicationStore } from '@shared/data';
 import { LocalStorageService } from '@shared/services';
 import { Subject, filter, finalize, of, tap } from 'rxjs';
 
@@ -22,7 +21,6 @@ export const httpCacheInterceptor = (options?: {
 }) => {
   const { urlsNotToCache = [], ttls, globalTTL } = options ?? {};
   const fn: HttpInterceptorFn = (req, next) => {
-    const appStore = inject(ApplicationStore);
     const storageService = inject(LocalStorageService);
     const key = `${req.url}`;
 
