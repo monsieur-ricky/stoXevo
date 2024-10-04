@@ -2,6 +2,7 @@ import {
   CurrencyPipe,
   DatePipe,
   DecimalPipe,
+  JsonPipe,
   PercentPipe,
   UpperCasePipe
 } from '@angular/common';
@@ -24,6 +25,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Menu, MenuModule } from 'primeng/menu';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SidebarModule } from 'primeng/sidebar';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -38,6 +40,7 @@ import { DetailsComponent } from './details/details.component';
     CurrencyPipe,
     PercentPipe,
     DecimalPipe,
+    JsonPipe,
 
     DetailsComponent,
     PortfolioTotalsCalcPipe,
@@ -47,7 +50,8 @@ import { DetailsComponent } from './details/details.component';
     SidebarModule,
     MenuModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    ProgressSpinnerModule
   ],
   providers: [ConfirmationService],
   templateUrl: './portfolio.component.html',

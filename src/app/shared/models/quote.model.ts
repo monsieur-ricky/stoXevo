@@ -12,3 +12,13 @@ export type Quote = {
   regularMarketDayHigh?: number;
   regularMarketDayLow?: number;
 };
+
+export type MetalQuote = {
+  metal: string;
+  pricePerOunceEuro: number;
+  pricePerOunceDollar: number;
+  pricePerOuncePound: number;
+  pricePerGramEuro?: number;
+  pricePerGramDollar?: number;
+  pricePerGramPound?: number;
+};

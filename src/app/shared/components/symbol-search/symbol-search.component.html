@@ -11,7 +11,7 @@
     [minLength]="3"
     [virtualScroll]="true"
     [virtualScrollItemSize]="34"
-    [disabled]="!isApiKeySet()"
+    [disabled]="!isApiKeySet() || disabled()"
     (onSelect)="onSelect($event.value)"
     (completeMethod)="searchSymbols($event.query)"
     [(ngModel)]="selectedItem"

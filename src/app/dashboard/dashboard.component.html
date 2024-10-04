@@ -1,3 +1,11 @@
+@if (loading()) {
+  <p-progressSpinner
+    ariaLabel="loading"
+    styleClass="absolute top-50 right-50 w-5rem h-5rem z-1"
+    strokeWidth="4"
+  />
+}
+
 <div class="dashboard">
   <div class="grid">
     <div class="col-6 md:col-3">
@@ -28,7 +36,7 @@
     </div>
     <div class="col-6 md:col-3">
       <section
-        class="widget"
+        class="widget h-full"
         [class.bg-green-300]="valueDifference() > 0"
         [class.bg-red-300]="valueDifference() < 0"
       >
@@ -39,95 +47,25 @@
   </div>
 
   <div class="grid mt-2">
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Assets</h5>
-        <h1>{{ totalNumberOfAssets() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Stocks</h5>
-        <h1>{{ totalNumberOfStocks() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>ETFs</h5>
-        <h1>{{ totalNumberOfETFs() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Funds</h5>
-        <h1>{{ totalNumberOfFunds() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Bonds</h5>
-        <h1>{{ totalNumberOfBonds() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Commodity</h5>
-        <h1>{{ totalNumberOfCommodities() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Crypto</h5>
-        <h1>{{ totalNumberOfCryptos() }}</h1>
-      </section>
-    </div>
-    <div class="col">
-      <section class="widget widget--small widget--light">
-        <h5>Forex</h5>
-        <h1>{{ totalNumberOfForex() }}</h1>
-      </section>
-    </div>
+    @for (type of dashboardAssets(); track type.id) {
+      @if (type.totalNumberOfAssets()) {
+        <div class="col-3">
+          <section class="widget widget--small widget--light">
+            <h5 class="h-1rem overflow-hidden text-overflow-ellipsis">
+              {{ type.label }}
+            </h5>
+            <h1>{{ type.totalNumberOfAssets() }}</h1>
+          </section>
+        </div>
+      }
+    }
   </div>
 </div>
 
-<sxe-dashboard-asset-data
-  assetType="stock"
-  [totalInvestment]="totalInvestmentOfStocks()"
-  [totalValue]="totalValueOfStocks()"
-/>
-
-<sxe-dashboard-asset-data
-  assetType="etf"
-  [totalInvestment]="totalInvestmentOfETFs()"
-  [totalValue]="totalValueOfETFs()"
-/>
-
-<sxe-dashboard-asset-data
-  assetType="fund"
-  [totalInvestment]="totalInvestmentOfFunds()"
-  [totalValue]="totalValueOfFunds()"
-/>
-
-<sxe-dashboard-asset-data
-  assetType="bond"
-  [totalInvestment]="totalInvestmentOfBonds()"
-  [totalValue]="totalValueOfBonds()"
-/>
-
-<sxe-dashboard-asset-data
-  assetType="commodity"
-  [totalInvestment]="totalInvestmentOfCommodities()"
-  [totalValue]="totalValueOfCommodities()"
-/>
-
-<sxe-dashboard-asset-data
-  assetType="crypto"
-  [totalInvestment]="totalInvestmentOfCrypto()"
-  [totalValue]="totalValueOfCrypto()"
-/>
-
-<sxe-dashboard-asset-data
-  assetType="forex"
-  [totalInvestment]="totalInvestmentOfForex()"
-  [totalValue]="totalValueOfForex()"
-/>
+@for (type of dashboardAssets(); track type.id) {
+  <sxe-dashboard-asset-data
+    [assetType]="type.id"
+    [totalInvestment]="type.totalInvestment()"
+    [totalValue]="type.totalValue()"
+  />
+}

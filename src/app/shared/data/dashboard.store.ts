@@ -34,6 +34,10 @@ export const DashboardStore = signalStore(
     );
     const totalNumberOfCryptos = computed(() => getTotalAssetOfType('crypto'));
     const totalNumberOfForex = computed(() => getTotalAssetOfType('forex'));
+    const totalNumberOfPhysical = computed(() =>
+      getTotalAssetOfType('physical')
+    );
+    const totalNumberOfFutures = computed(() => getTotalAssetOfType('futures'));
 
     const totalInvestmentOfStocks = computed(() =>
       getTotalInvestmentOfType('stock')
@@ -56,6 +60,12 @@ export const DashboardStore = signalStore(
     const totalInvestmentOfForex = computed(() =>
       getTotalInvestmentOfType('forex')
     );
+    const totalInvestmentOfPhysical = computed(() =>
+      getTotalInvestmentOfType('physical')
+    );
+    const totalInvestmentOfFutures = computed(() =>
+      getTotalInvestmentOfType('futures')
+    );
 
     const totalValueOfStocks = computed(() => getTotalValueOfType('stock'));
     const totalValueOfETFs = computed(() => getTotalValueOfType('etf'));
@@ -66,6 +76,10 @@ export const DashboardStore = signalStore(
     );
     const totalValueOfCrypto = computed(() => getTotalValueOfType('crypto'));
     const totalValueOfForex = computed(() => getTotalValueOfType('forex'));
+    const totalValueOfPhysical = computed(() =>
+      getTotalValueOfType('physical')
+    );
+    const totalValueOfFutures = computed(() => getTotalValueOfType('futures'));
 
     const totalInvestment = computed(() => portfolioStore.totalInvestmentSum());
     const totalValue = computed(() => portfolioStore.totalValueSum());
@@ -85,6 +99,8 @@ export const DashboardStore = signalStore(
       totalNumberOfCommodities,
       totalNumberOfCryptos,
       totalNumberOfForex,
+      totalNumberOfPhysical,
+      totalNumberOfFutures,
       totalInvestment,
       totalValue,
       valueDifference,
@@ -96,13 +112,17 @@ export const DashboardStore = signalStore(
       totalInvestmentOfCommodities,
       totalInvestmentOfCrypto,
       totalInvestmentOfForex,
+      totalInvestmentOfPhysical,
+      totalInvestmentOfFutures,
       totalValueOfStocks,
       totalValueOfETFs,
       totalValueOfFunds,
       totalValueOfBonds,
       totalValueOfCommodities,
       totalValueOfCrypto,
-      totalValueOfForex
+      totalValueOfForex,
+      totalValueOfPhysical,
+      totalValueOfFutures
     };
   })
 );

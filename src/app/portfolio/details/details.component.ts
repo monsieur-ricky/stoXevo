@@ -6,11 +6,9 @@ import {
   effect,
   inject,
   model,
-  OnInit,
   untracked,
   viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormControl,
@@ -21,9 +19,9 @@ import {
   Validators
 } from '@angular/forms';
 import { ApplicationStore, PortfolioStore } from '@shared/data';
-import { assetTypes, Symbol } from '@shared/models';
+import { AssetType, assetTypes, AssetTypeSelect, Symbol } from '@shared/models';
 import { SymbolSearchComponent } from '@shared/ui';
-import { isFormValid } from '@shared/utils';
+import { getIdFromSentence, isFormValid } from '@shared/utils';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -57,7 +55,7 @@ import { SidebarModule } from 'primeng/sidebar';
   styleUrl: './details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly portfolioStore = inject(PortfolioStore);
   private readonly destroyRef = inject(DestroyRef);
@@ -67,6 +65,7 @@ export class DetailsComponent implements OnInit {
 
   asset = this.portfolioStore.asset;
   isMobile = this.appStore.isMobile;
+  isApiKeySet = this.appStore.isApiKeySet;
 
   isEditMode = computed(() => !!this.asset()?.symbol);
   sidebarTitle = computed(() =>
@@ -77,6 +76,8 @@ export class DetailsComponent implements OnInit {
 
   assetForm = this.createForm();
   types = assetTypes;
+  subTypes: AssetTypeSelect[] = [];
+  isSearchDisabled = false;
 
   ngForm = viewChild<NgForm>('form');
 
@@ -86,14 +87,8 @@ export class DetailsComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    this.setValueStatusFromManualUpdate();
-  }
-
   onSymbolSelected(symbol: Symbol) {
-    const form = this.assetForm;
-
-    form.patchValue(symbol);
+    this.assetForm.patchValue(symbol);
   }
 
   onSave(): void {
@@ -113,6 +108,53 @@ export class DetailsComponent implements OnInit {
     this.portfolioStore.setAsset(undefined);
   }
 
+  onTypeChange(type: AssetType): void {
+    const subTypes = this.types.find(t => t.id === type)?.subTypes;
+
+    this.subTypes = subTypes ?? [];
+    this.assetForm.patchValue({ subType: 'gold' });
+    this.disableControlsBasedOnType(type);
+  }
+
+  onSubTypeChange(type: AssetType): void {
+    const form = this.assetForm;
+    form.patchValue({ symbol: type.toUpperCase() });
+    this.onGenerateSymbolFromName(form.get('name')?.value ?? undefined);
+  }
+
+  onGenerateSymbolFromName(name: string): void {
+    const form = this.assetForm;
+    const type = form.get('type');
+    const subType = form.get('subType');
+    const symbol = form.get('symbol');
+
+    if (type?.value !== 'physical' && type?.value !== 'commodity') {
+      return;
+    }
+
+    if (!name) {
+      symbol?.setValue(subType?.value?.toUpperCase());
+      return;
+    }
+
+    if (symbol?.disabled) {
+      const newSymbol = getIdFromSentence(`${subType?.value} ${name}`);
+
+      symbol?.setValue(newSymbol);
+    }
+  }
+
+  onManualUpdateChange(manualUpdate: boolean): void {
+    const form = this.assetForm;
+    const value = form.get('value');
+
+    if (manualUpdate) {
+      value?.enable();
+    } else {
+      value?.disable();
+    }
+  }
+
   private createForm(): FormGroup {
     return this.fb.group({
       symbol: [undefined, Validators.required],
@@ -122,44 +164,30 @@ export class DetailsComponent implements OnInit {
       purchaseDate: [undefined, Validators.required],
       quantity: [undefined, Validators.required],
       purchasePrice: [undefined, Validators.required],
-      value: new FormControl(
-        { value: undefined, disabled: true },
-        Validators.required
-      ),
-      type: [undefined, Validators.required],
+      value: new FormControl(undefined, Validators.required),
+      type: ['stock', Validators.required],
+      subType: ['gold', Validators.required],
       manualUpdate: false
     });
   }
 
-  private setFormValues() {
+  private setFormValues(): void {
     const asset = this.asset();
+    const form = this.assetForm;
+
+    form.reset({ type: 'stock', subType: 'gold' });
 
     if (asset?.symbol) {
       const purchaseDate = new Date(asset.purchaseDate);
 
-      this.assetForm.patchValue({ ...asset, purchaseDate });
+      form.patchValue({ ...asset, purchaseDate });
     }
 
     this.setSymbolStatus();
+    this.setManualUpdateStatus();
   }
 
-  private setValueStatusFromManualUpdate() {
-    const form = this.assetForm;
-    const value = form.get('value');
-
-    form
-      .get('manualUpdate')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(manualUpdate => {
-        if (manualUpdate) {
-          value?.enable();
-        } else {
-          value?.disable();
-        }
-      });
-  }
-
-  private setSymbolStatus() {
+  private setSymbolStatus(): void {
     const form = this.assetForm;
     const symbol = form.get('symbol');
 
@@ -167,6 +195,63 @@ export class DetailsComponent implements OnInit {
       symbol?.disable();
     } else {
       symbol?.enable();
+    }
+  }
+
+  private setManualUpdateStatus(value = false, enable = true): void {
+    const form = this.assetForm;
+    const manualUpdate = form.get('manualUpdate');
+
+    if (this.isApiKeySet() && enable) {
+      manualUpdate?.enable();
+      manualUpdate?.setValue(this.asset()?.manualUpdate ?? value);
+    } else {
+      manualUpdate?.disable();
+      manualUpdate?.setValue(true);
+    }
+
+    if (manualUpdate?.value) {
+      form.get('value')?.enable();
+    } else {
+      form.get('value')?.disable();
+    }
+  }
+
+  private disableControlsBasedOnType(type: AssetType): void {
+    const form = this.assetForm;
+    const exchangeShortName = form.get('exchangeShortName');
+    const symbol = form.get('symbol');
+    const subType = form.get('subType');
+    const value = form.get('value');
+
+    switch (type) {
+      case 'physical':
+        exchangeShortName?.disable();
+        symbol?.disable();
+        symbol?.setValue(type?.toUpperCase());
+
+        this.isSearchDisabled = true;
+        this.setManualUpdateStatus(true, false);
+        break;
+
+      case 'commodity':
+        exchangeShortName?.disable();
+        symbol?.disable();
+        symbol?.setValue(subType?.value?.toUpperCase());
+
+        this.isSearchDisabled = true;
+        this.setManualUpdateStatus();
+        break;
+
+      default:
+        exchangeShortName?.enable();
+        symbol?.enable();
+        symbol?.setValue(undefined);
+        value?.enable();
+
+        this.isSearchDisabled = false;
+        this.setManualUpdateStatus();
+        break;
     }
   }
 }

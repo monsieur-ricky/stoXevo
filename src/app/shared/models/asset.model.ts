@@ -1,7 +1,8 @@
 import { SelectList, Symbol } from '@shared/models';
 
-type AssetTypeSelect = SelectList<AssetType> & {
+export type AssetTypeSelect = SelectList<AssetType> & {
   id: AssetType;
+  subTypes?: AssetTypeSelect[];
 };
 
 export type AssetType =
@@ -11,7 +12,11 @@ export type AssetType =
   | 'bond'
   | 'commodity'
   | 'crypto'
-  | 'forex';
+  | 'forex'
+  | 'futures'
+  | 'gold'
+  | 'silver'
+  | 'physical';
 
 export type Asset = Symbol & {
   purchaseDate: string;
@@ -20,6 +25,7 @@ export type Asset = Symbol & {
   value: number;
   type: AssetType;
   manualUpdate: boolean;
+  subType?: string;
 };
 
 export const assetTypes: AssetTypeSelect[] = [
@@ -41,7 +47,17 @@ export const assetTypes: AssetTypeSelect[] = [
   },
   {
     id: 'commodity',
-    label: 'Commodity'
+    label: 'Commodity',
+    subTypes: [
+      {
+        id: 'gold',
+        label: 'Gold'
+      },
+      {
+        id: 'silver',
+        label: 'Silver'
+      }
+    ]
   },
   {
     id: 'crypto',
@@ -50,5 +66,13 @@ export const assetTypes: AssetTypeSelect[] = [
   {
     id: 'forex',
     label: 'Forex'
+  },
+  {
+    id: 'futures',
+    label: 'Futures'
+  },
+  {
+    id: 'physical',
+    label: 'Physical Assets'
   }
 ];

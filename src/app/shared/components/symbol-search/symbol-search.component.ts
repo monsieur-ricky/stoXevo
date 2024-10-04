@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   output,
   signal
 } from '@angular/core';
@@ -33,6 +34,8 @@ import { InputIconModule } from 'primeng/inputicon';
 export class SymbolSearchComponent {
   private readonly symbolService = inject(SymbolSearchService);
   private readonly appStore = inject(ApplicationStore);
+
+  disabled = input<boolean>(false);
 
   isApiKeySet = this.appStore.isApiKeySet;
 

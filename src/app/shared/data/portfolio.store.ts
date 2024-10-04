@@ -11,18 +11,21 @@ import { ApplicationStore } from '@shared/data';
 import { PortfolioService } from '@shared/data/api';
 import { Asset } from '@shared/models';
 import { LocalStorageService } from '@shared/services';
+import { getMetalPriceFromCurrency } from '@shared/utils';
 import { MessageService } from 'primeng/api';
 
 export type PortfolioState = {
   assets: Asset[];
   asset: Asset | undefined;
   loading: boolean;
+  initialLoadDone: boolean;
 };
 
 const initialState: PortfolioState = {
   assets: [],
   asset: undefined,
-  loading: false
+  loading: false,
+  initialLoadDone: false
 };
 
 export const PortfolioStore = signalStore(
@@ -63,7 +66,10 @@ export const PortfolioStore = signalStore(
           loading: false
         });
 
-        getQuotes(false);
+        if (!store.initialLoadDone()) {
+          getQuotes(false);
+          patchState(store, { initialLoadDone: true });
+        }
       };
 
       const addAsset = async (asset: Asset): Promise<void> => {
@@ -71,8 +77,16 @@ export const PortfolioStore = signalStore(
 
         try {
           if (!asset.manualUpdate) {
-            const quote = await portfolioService.getQuote(asset.symbol);
-            asset = { ...asset, value: quote?.price ?? asset.value };
+            if (asset.type === 'commodity') {
+              const quote = await portfolioService.getMetalQuote(asset.subType);
+              const price = getMetalPriceFromCurrency(quote, asset.currency);
+
+              asset = { ...asset, value: price ?? asset.value };
+            } else {
+              const quote = await portfolioService.getQuote(asset.symbol);
+
+              asset = { ...asset, value: quote?.price ?? asset.value };
+            }
           }
 
           patchState(store, { asset, assets: [...store.assets(), asset] });
@@ -101,16 +115,29 @@ export const PortfolioStore = signalStore(
 
         try {
           if (!updatedAsset.manualUpdate) {
-            const quote = await portfolioService.getQuote(updatedAsset.symbol);
-            updatedAsset = {
-              ...updatedAsset,
-              value: quote?.price ?? updatedAsset.value
-            };
+            if (updatedAsset.type === 'commodity') {
+              const quote = await portfolioService.getMetalQuote(
+                updatedAsset.subType
+              );
+              const price = getMetalPriceFromCurrency(
+                quote,
+                updatedAsset.currency
+              );
 
-            console.log('quote', quote);
+              updatedAsset = {
+                ...updatedAsset,
+                value: price ?? updatedAsset.value
+              };
+            } else {
+              const quote = await portfolioService.getQuote(
+                updatedAsset.symbol
+              );
+              updatedAsset = {
+                ...updatedAsset,
+                value: quote?.price ?? updatedAsset.value
+              };
+            }
           }
-
-          console.log('updatedAsset', updatedAsset);
 
           patchState(store, {
             asset: updatedAsset,
@@ -158,28 +185,31 @@ export const PortfolioStore = signalStore(
         patchState(store, { loading: true });
 
         try {
-          const symbols = store
-            .assets()
-            .filter(asset => !asset.manualUpdate)
-            .map(asset => asset.symbol);
-          const quotes = await Promise.all(
-            symbols.map(symbol => portfolioService.getQuote(symbol))
-          );
+          const updatedAssets: Asset[] = [];
 
-          patchState(store, {
-            assets: store.assets().map(asset => {
-              const quote = quotes.find(
-                quote => quote?.symbol === asset.symbol
-              );
-              const updatedAsset = {
+          for (const asset of store.assets()) {
+            if (asset.manualUpdate) {
+              updatedAssets.push(asset);
+              continue;
+            }
+
+            if (asset.type === 'commodity') {
+              const quote = await portfolioService.getMetalQuote(asset.subType);
+              const price = getMetalPriceFromCurrency(quote, asset.currency);
+
+              updatedAssets.push({ ...asset, value: price ?? asset.value });
+            } else {
+              const quote = await portfolioService.getQuote(asset.symbol);
+
+              updatedAssets.push({
                 ...asset,
                 value: quote?.price ?? asset.value
-              };
+              });
+            }
+          }
 
-              return asset.symbol === updatedAsset.symbol
-                ? updatedAsset
-                : asset;
-            })
+          patchState(store, {
+            assets: updatedAssets
           });
 
           storeAssets();
@@ -232,9 +262,11 @@ export const PortfolioStore = signalStore(
       () => totalValueSum() - totalInvestmentSum()
     );
 
-    const totalPercentageDifferenceSum = computed(
-      () => totalValueDifferenceSum() / totalInvestmentSum()
-    );
+    const totalPercentageDifferenceSum = computed(() => {
+      const percentage = totalValueDifferenceSum() / totalInvestmentSum();
+
+      return !isNaN(percentage) ? percentage : 0;
+    });
 
     return {
       totalInvestmentSum,

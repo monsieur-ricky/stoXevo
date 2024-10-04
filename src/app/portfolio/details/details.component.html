@@ -10,21 +10,60 @@
   </ng-template>
 
   <form [formGroup]="assetForm">
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label for="type">Asset Type</label>
+        <p-dropdown
+          id="type"
+          formControlName="type"
+          optionValue="id"
+          [options]="types"
+          (onChange)="onTypeChange($event.value)"
+        />
+      </div>
+
+      @if (
+        assetForm.get('type')?.value === 'commodity' && subTypes.length > 0
+      ) {
+        <div class="field col-12 md:col-6">
+          <label for="type">Commodity Type</label>
+          <p-dropdown
+            id="subType"
+            formControlName="subType"
+            optionValue="id"
+            [options]="subTypes"
+            (onChange)="onSubTypeChange($event.value)"
+          />
+        </div>
+      }
+    </div>
+
     <h3>Asset Information</h3>
 
     <div class="formgrid grid">
       <div class="col-12 mb-5">
-        <sxe-symbol-search (selected)="onSymbolSelected($event)" />
+        <sxe-symbol-search
+          [disabled]="isSearchDisabled"
+          (selected)="onSymbolSelected($event)"
+        />
       </div>
 
       <div class="field col-12 md:col-6">
         <label for="symbol">Symbol</label>
         <input pInputText id="symbol" formControlName="symbol" class="w-full" />
       </div>
+
       <div class="field col-12 md:col-6">
         <label for="name">Name</label>
-        <input pInputText id="name" formControlName="name" class="w-full" />
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          class="w-full"
+          (ngModelChange)="onGenerateSymbolFromName($event)"
+        />
       </div>
+
       <div class="field col-12 md:col-6">
         <label for="currency">Currency</label>
         <input
@@ -34,6 +73,7 @@
           class="w-full"
         />
       </div>
+
       <div class="field col-12 md:col-6">
         <label for="exchangeShortName">Exchange Name</label>
         <input
@@ -58,6 +98,7 @@
           [showIcon]="true"
         />
       </div>
+
       <div class="field col-12 md:col-6">
         <label for="purchasePrice">Purchase Price</label>
         <p-inputNumber
@@ -69,6 +110,7 @@
           [maxFractionDigits]="5"
         />
       </div>
+
       <div class="field col-12 md:col-6">
         <label for="quantity">Quantity</label>
         <p-inputNumber
@@ -80,15 +122,7 @@
           [maxFractionDigits]="8"
         />
       </div>
-      <div class="field col-12 md:col-6">
-        <label for="type">Type</label>
-        <p-dropdown
-          id="type"
-          formControlName="type"
-          optionValue="id"
-          [options]="types"
-        />
-      </div>
+
       <div class="field col-12 md:col-6">
         <label for="value">Current Price</label>
         <p-inputNumber
@@ -100,14 +134,16 @@
           [maxFractionDigits]="5"
         />
       </div>
+
       <div class="field col-12 md:col-6 flex align-items-center gap-2 mt-4">
         <p-checkbox
           formControlName="manualUpdate"
           inputId="manualUpdate"
           [binary]="true"
+          (onChange)="onManualUpdateChange($event.checked)"
         />
         <label class="mt-2" for="manualUpdate">
-          Disable auto value updates?
+          Enable manual value updates?
         </label>
       </div>
     </div>
