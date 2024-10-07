@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { Asset } from '@shared/models';
-import { PortfolioTotalsCalcPipe } from '@shared/pipes';
+import { HideValuePipe, PortfolioTotalsCalcPipe } from '@shared/pipes';
 import {
   ConfirmationService,
   MenuItem,
@@ -44,6 +44,7 @@ import { DetailsComponent } from './details/details.component';
 
     DetailsComponent,
     PortfolioTotalsCalcPipe,
+    HideValuePipe,
 
     TableModule,
     ButtonModule,

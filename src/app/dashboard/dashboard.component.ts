@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ApplicationStore, DashboardStore, PortfolioStore } from '@shared/data';
 import { AssetTypeSelect } from '@shared/models';
+import { HideValuePipe } from '@shared/pipes';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AssetDataComponent } from './asset-data/asset-data.component';
 
@@ -26,8 +27,10 @@ type DashboardAssetType = AssetTypeSelect & {
     CurrencyPipe,
     DecimalPipe,
     PercentPipe,
+
     AssetDataComponent,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    HideValuePipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

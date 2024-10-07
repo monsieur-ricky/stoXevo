@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   AppSettingsComponent,
@@ -12,7 +12,8 @@ import { Symbol } from '@shared/models';
 import {
   ApplicationPinComponent,
   SideMenuComponent,
-  TopBarComponent
+  TopBarComponent,
+  ValueVisibilityComponent
 } from '@shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
@@ -29,6 +30,7 @@ import { ToastModule } from 'primeng/toast';
     ImportDataComponent,
     AppSettingsComponent,
     ApplicationPinComponent,
+    ValueVisibilityComponent,
 
     TopBarComponent,
     SideMenuComponent,
@@ -48,6 +50,7 @@ import { ToastModule } from 'primeng/toast';
         />
         <ng-container ngProjectAs="menu">
           <div class="flex">
+            <sxe-ui-value-visibility class="hidden md:block" />
             <sxe-import-data class="hidden md:block" />
             <sxe-export-data class="hidden md:block" />
             <sxe-app-settings class="hidden md:block" />
@@ -64,6 +67,7 @@ import { ToastModule } from 'primeng/toast';
     <div class="container">
       <sxe-ui-side-menu>
         <ng-container ngProjectAs="bottom-menu">
+          <sxe-ui-value-visibility />
           <sxe-import-data />
           <sxe-export-data />
           <sxe-app-settings />
@@ -76,29 +80,32 @@ import { ToastModule } from 'primeng/toast';
     </div>
     <footer>
       <span>
-        Made with
+        <span>Made with</span>
         <span
           style="transform: translateY(2px)"
           class="pi pi-heart-fill"
         ></span>
-        by
+        <span>by</span>
         <a href="https://blacklambs.net" target="_blank">Ricky</a>
       </span>
-
       <span>
         <a href="https://github.com/monsieur-ricky/stoXevo" target="_blank">
-          <span class="pi pi-github"></span> Github
+          <span class="pi pi-github"></span>Github
         </a>
       </span>
     </footer>`
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly appStore = inject(ApplicationStore);
 
   isPinSet = computed(() => !!this.appStore.pin());
 
   title = 'stoXevo';
+
+  ngOnInit(): void {
+    this.appStore.getShowValues();
+  }
 
   onSymbolSelected(symbol: Symbol) {
     this.router.navigate(['profile', symbol.symbol]);

@@ -41,7 +41,7 @@
         <th class="w-5rem" pFrozenColumn>Symbol</th>
         <th class="w-6rem">Type</th>
         <th>Name</th>
-        <th class="w-8rem">Purchase Date</th>
+        <th class="w-9rem">Purchase Date</th>
         <th class="w-5rem">Qty</th>
         <th class="w-7rem">Purchase Price</th>
         <th class="w-7rem">Total Investment</th>
@@ -63,31 +63,35 @@
         <td pFrozenColumn>{{ asset.symbol }}</td>
         <td>{{ asset.type | uppercase }}</td>
         <td>{{ asset.name }}</td>
-        <td>{{ asset.purchaseDate | date: 'dd-MM-yyyy' }}</td>
-        <td>{{ asset.quantity }}</td>
-        <td>{{ asset.purchasePrice | currency: currency }}</td>
         <td>
-          {{ totalInvestment | currency: currency }}
+          {{ asset.purchaseDate | date: 'dd-MM-yyyy' }}
+        </td>
+        <td>{{ asset.quantity }}</td>
+        <td>
+          {{ asset.purchasePrice | currency: currency | hideValue }}
+        </td>
+        <td>
+          {{ totalInvestment | currency: currency | hideValue }}
         </td>
         <td
           [class.text-green-700]="asset.value > asset.purchasePrice"
           [class.text-red-700]="asset.value < asset.purchasePrice"
           class="font-bold"
         >
-          {{ asset.value | currency: currency }}
+          {{ asset.value | currency: currency | hideValue }}
         </td>
         <td
           [class.text-green-700]="totalValue > totalInvestment"
           [class.text-red-700]="totalValue < totalInvestment"
           class="font-bold"
         >
-          {{ totalValue | currency: currency }}
+          {{ totalValue | currency: currency | hideValue }}
         </td>
         <td
           [class.text-green-700]="asset.value > asset.purchasePrice"
           [class.text-red-700]="asset.value < asset.purchasePrice"
         >
-          {{ valueDifference | currency: currency }}
+          {{ valueDifference | currency: currency | hideValue }}
         </td>
         <td
           [class.text-green-700]="asset.value > asset.purchasePrice"
@@ -117,19 +121,19 @@
     <ng-template pTemplate="footer">
       <tr>
         <td colspan="6" class="text-right">Totals</td>
-        <td>{{ totalInvestmentSum() | number: '1.2-2' }}</td>
+        <td>{{ totalInvestmentSum() | number: '1.2-2' | hideValue }}</td>
         <td></td>
         <td
           [class.bg-green-100]="totalValueDifferenceSum() > 0"
           [class.bg-red-100]="totalValueDifferenceSum() < 0"
         >
-          {{ totalValueSum() | number: '1.2-2' }}
+          {{ totalValueSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
           [class.bg-green-100]="totalValueDifferenceSum() > 0"
           [class.bg-red-100]="totalValueDifferenceSum() < 0"
         >
-          {{ totalValueDifferenceSum() | number: '1.2-2' }}
+          {{ totalValueDifferenceSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
           [class.bg-green-100]="totalValueDifferenceSum() > 0"

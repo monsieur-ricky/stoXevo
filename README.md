@@ -86,7 +86,6 @@ Contributions are welcome! If you'd like to improve **stoXevo**, feel free to op
 
 - Unit Tests
 - Dark Mode
-- Find a financial market API that works with non-USD assets
 - Add asset currency stats
 - Add historical stats
 - Use IndexedDB instead of localStorage

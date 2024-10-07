@@ -18,13 +18,15 @@ export type ApplicationState = {
   pin: string | null;
   dataImportDate: string | null;
   showMenu: boolean;
+  showValues: boolean;
 };
 
 const initialState: ApplicationState = {
   apiKey: null,
   pin: null,
   dataImportDate: null,
-  showMenu: false
+  showMenu: false,
+  showValues: true
 };
 
 export const ApplicationStore = signalStore(
@@ -96,13 +98,27 @@ export const ApplicationStore = signalStore(
       });
     };
 
+    const setShowValues = (showValues: boolean): void => {
+      patchState(store, { showValues });
+
+      storageService.setPlainValue('showValues', showValues.toString());
+    };
+
+    const getShowValues = (): void => {
+      const showValues = storageService.getPlainValue('showValues');
+
+      patchState(store, { showValues: !!showValues });
+    };
+
     return {
       getDecryptedAppData,
       setShowMenu,
       setPin,
       getApiKey,
       setApiKey,
-      importData
+      importData,
+      setShowValues,
+      getShowValues
     };
   }),
 

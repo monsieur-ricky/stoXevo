@@ -11,7 +11,9 @@
     <div class="col-6 md:col-3">
       <section class="widget bg-blue-300">
         <h5>Total Investment</h5>
-        <h1>{{ totalInvestment() | number: '1.2-2' }}</h1>
+        <h1>
+          {{ totalInvestment() | number: '1.2-2' | hideValue }}
+        </h1>
       </section>
     </div>
     <div class="col-6 md:col-3">
@@ -21,7 +23,7 @@
         [class.bg-red-300]="valueDifference() < 0"
       >
         <h5>Total Value</h5>
-        <h1>{{ totalValue() | number: '1.2-2' }}</h1>
+        <h1>{{ totalValue() | number: '1.2-2' | hideValue }}</h1>
       </section>
     </div>
     <div class="col-6 md:col-3">
@@ -31,7 +33,9 @@
         [class.bg-red-300]="valueDifference() < 0"
       >
         <h5>Value Difference</h5>
-        <h1>{{ valueDifference() | number: '1.2-2' }}</h1>
+        <h1>
+          {{ valueDifference() | number: '1.2-2' | hideValue }}
+        </h1>
       </section>
     </div>
     <div class="col-6 md:col-3">
@@ -49,7 +53,7 @@
   <div class="grid mt-2">
     @for (type of dashboardAssets(); track type.id) {
       @if (type.totalNumberOfAssets()) {
-        <div class="col-3">
+        <div class="col md:col-3">
           <section class="widget widget--small widget--light">
             <h5 class="h-1rem overflow-hidden text-overflow-ellipsis">
               {{ type.label }}

@@ -6,11 +6,12 @@ import {
   input
 } from '@angular/core';
 import { AssetType, assetTypes } from '@shared/models';
+import { HideValuePipe } from '@shared/pipes';
 
 @Component({
   selector: 'sxe-dashboard-asset-data',
   standalone: true,
-  imports: [DecimalPipe, PercentPipe],
+  imports: [DecimalPipe, PercentPipe, HideValuePipe],
   templateUrl: './asset-data.component.html',
   styleUrl: './asset-data.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
