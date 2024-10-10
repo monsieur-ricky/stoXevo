@@ -16,7 +16,7 @@
       icon="pi pi-sync"
       class="mr-3"
       [label]="isMobile() ? undefined : 'Update'"
-      [disabled]="!isApiKeySet()"
+      [disabled]="!isApiKeySet() || !isOnline()"
       [loading]="loading()"
       (onClick)="onGetQuotes()"
     />

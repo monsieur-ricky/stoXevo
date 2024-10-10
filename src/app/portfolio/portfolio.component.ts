@@ -17,6 +17,7 @@ import {
 import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { Asset } from '@shared/models';
 import { HideValuePipe, PortfolioTotalsCalcPipe } from '@shared/pipes';
+import { NetworkStatusService } from '@shared/services';
 import {
   ConfirmationService,
   MenuItem,
@@ -63,9 +64,11 @@ export class PortfolioComponent {
   private readonly portfolioStore = inject(PortfolioStore);
   private readonly appStore = inject(ApplicationStore);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly networkService = inject(NetworkStatusService);
 
   isMobile = this.appStore.isMobile;
   isApiKeySet = this.appStore.isApiKeySet;
+  isOnline = this.networkService.isOnline;
   selectedAsset = this.portfolioStore.asset;
   loading = this.portfolioStore.loading;
   totalInvestmentSum = this.portfolioStore.totalInvestmentSum;
