@@ -1,4 +1,4 @@
-export const STOXSCRAPER_API = `https://stoxscraper.onrender.com/asset`;
+export const STOXSCRAPER_API = 'https://stoxscraper.blacklambs.eu/asset';
 
 export const STORAGE_APP_DATA_KEY = 'appData';
 
