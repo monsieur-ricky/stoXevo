@@ -107,7 +107,7 @@ export const ApplicationStore = signalStore(
     const getShowValues = (): void => {
       const showValues = storageService.getPlainValue('showValues');
 
-      patchState(store, { showValues: !!showValues });
+      patchState(store, { showValues: showValues === 'true' });
     };
 
     return {
