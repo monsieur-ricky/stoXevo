@@ -28,7 +28,7 @@ Whether you're an experienced investor or just getting started, this tool provid
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
+- [Online Demo](#online-demo)
 
 ## Prerequisites
 
@@ -91,6 +91,14 @@ Contributions are welcome! If you'd like to improve **stoXevo**, feel free to op
 - Use IndexedDB instead of localStorage
 - ?
 
+## Online Demo
+
+Want to try out the app without setting it up locally or deploying it yourself? Check out the online version: **[stoXeveo Online](https://stoxevo.blacklambs.eu)**
+
+This will give you a quick and easy way to experience the app's features and functionality.
+
+**Note: In order to have access to the full features, an API key is necessary. [Please get in touch and request one from me](https://blacklambs.net).**
+
 ---
 
-Enjoy managing your financial portfolio securely with **stoXevo**!
+Enjoy managing your financial portfolio securely with **[stoXevo](https://stoxevo.blacklambs.eu)**!
