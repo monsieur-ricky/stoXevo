@@ -1,4 +1,4 @@
-import { CurrencyPipe, PercentPipe, TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,24 +11,20 @@ import {
 import { RouterModule } from '@angular/router';
 import { ProfileService } from '@shared/data/api';
 import { Profile } from '@shared/models';
+import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'sxe-profile',
   standalone: true,
-  imports: [
-    RouterModule,
-    PercentPipe,
-    TitleCasePipe,
-    CurrencyPipe,
-    ProgressSpinnerModule
-  ],
+  imports: [RouterModule, PercentPipe, CurrencyPipe, ProgressSpinnerModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
   private readonly profileService = inject(ProfileService);
+  private readonly messageService = inject(MessageService);
 
   symbol = input<string>();
 
@@ -48,9 +44,19 @@ export class ProfileComponent {
       return;
     }
 
-    this.loading.set(true);
-    const profile = await this.profileService.get(symbol);
-    this.profile.set(profile);
-    this.loading.set(false);
+    try {
+      this.loading.set(true);
+      const profile = await this.profileService.get(symbol);
+      this.profile.set(profile);
+    } catch (error) {
+      console.error(error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Oops!',
+        detail: 'Failed to load the asset profile.'
+      });
+    } finally {
+      this.loading.set(false);
+    }
   }
 }

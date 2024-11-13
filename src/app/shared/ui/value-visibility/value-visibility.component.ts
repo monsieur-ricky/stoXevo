@@ -21,7 +21,7 @@ export class ValueVisibilityComponent {
 
   showValues = this.appStore.showValues;
 
-  icon = computed(() => (this.showValues() ? 'pi pi-eye' : 'pi pi-eye-slash'));
+  icon = computed(() => (this.showValues() ? 'pi pi-eye-slash' : 'pi pi-eye'));
   tooltip = computed(() => (this.showValues() ? 'Hide Values' : 'Show Values'));
 
   onShowValuesChange(): void {

@@ -29,7 +29,7 @@ const initialState: PortfolioState = {
 };
 
 export const PortfolioStore = signalStore(
-  { providedIn: 'root' },
+  { providedIn: 'root', protectedState: false },
   withState(initialState),
 
   withMethods(
@@ -226,7 +226,7 @@ export const PortfolioStore = signalStore(
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
-            detail: error.error['Error Message'] ?? 'Failed to update quotes!',
+            detail: error.error['Error Message'] ?? 'Failed to update quotes.',
             life: 10000
           });
         } finally {

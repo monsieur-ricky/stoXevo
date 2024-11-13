@@ -4,6 +4,21 @@
   div:has(table) {
     height: calc(100vh - (200px + 87px));
 
+    th {
+      &.w-5rem {
+        min-width: 5rem;
+      }
+      &.w-7rem {
+        min-width: 7rem;
+      }
+      &.w-9rem {
+        min-width: 9rem;
+      }
+      &.w-18rem {
+        min-width: 18rem;
+      }
+    }
+
     @media screen and (max-width: #{var.$sm}) {
       height: calc(100vh - (100px + 88px));
       border: 1px solid var(--gray-200);

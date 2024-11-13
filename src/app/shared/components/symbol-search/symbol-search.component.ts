@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ApplicationStore } from '@shared/data';
 import { SymbolSearchService } from '@shared/data/api';
 import { Symbol } from '@shared/models';
+import { MessageService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -34,6 +35,7 @@ import { InputIconModule } from 'primeng/inputicon';
 export class SymbolSearchComponent {
   private readonly symbolService = inject(SymbolSearchService);
   private readonly appStore = inject(ApplicationStore);
+  private readonly messageService = inject(MessageService);
 
   disabled = input<boolean>(false);
 
@@ -46,8 +48,20 @@ export class SymbolSearchComponent {
   selected = output<Symbol>();
 
   async searchSymbols(query: string): Promise<void> {
-    const symbols = await this.symbolService.searchSymbols(query);
-    this.symbols.set(symbols);
+    try {
+      const symbols = await this.symbolService.searchSymbols(query);
+      this.symbols.set(symbols);
+    } catch (error) {
+      console.error(error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Oops!',
+        detail: 'Failed to load the search results.'
+      });
+    } finally {
+      this.symbols.set([]);
+      this.selectedItem = undefined;
+    }
   }
 
   onSelect(symbol: Symbol): void {

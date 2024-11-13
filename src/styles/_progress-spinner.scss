@@ -1,0 +1,10 @@
+.p-progress-spinner {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 70px;
+  height: calc(100% - 70px);
+}
