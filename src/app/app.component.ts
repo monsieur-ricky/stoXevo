@@ -11,6 +11,7 @@ import { ApplicationStore } from '@shared/data';
 import { Symbol } from '@shared/models';
 import {
   ApplicationPinComponent,
+  DarkModeSwitchComponent,
   SideMenuComponent,
   TopBarComponent,
   ValueVisibilityComponent
@@ -31,6 +32,7 @@ import { ToastModule } from 'primeng/toast';
     AppSettingsComponent,
     ApplicationPinComponent,
     ValueVisibilityComponent,
+    DarkModeSwitchComponent,
 
     TopBarComponent,
     SideMenuComponent,
@@ -50,6 +52,7 @@ import { ToastModule } from 'primeng/toast';
         />
         <ng-container ngProjectAs="menu">
           <div class="flex">
+            <sxe-ui-dark-mode-switch class="hidden md:block" />
             <sxe-ui-value-visibility class="hidden md:block" />
             <sxe-import-data class="hidden md:block" />
             <sxe-export-data class="hidden md:block" />
@@ -67,6 +70,7 @@ import { ToastModule } from 'primeng/toast';
     <div class="container">
       <sxe-ui-side-menu>
         <ng-container ngProjectAs="bottom-menu">
+          <sxe-ui-dark-mode-switch />
           <sxe-ui-value-visibility />
           <sxe-import-data />
           <sxe-export-data />
@@ -105,6 +109,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.appStore.getShowValues();
+    this.appStore.getDarkMode();
   }
 
   onSymbolSelected(symbol: Symbol) {

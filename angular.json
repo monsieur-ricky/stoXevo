@@ -38,11 +38,20 @@
               }
             ],
             "styles": [
-              "node_modules/primeng/resources/themes/lara-light-amber/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeflex/primeflex.min.css",
               "node_modules/primeicons/primeicons.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              {
+                "input": "src/theme-dark.css",
+                "bundleName": "theme-dark",
+                "inject": false
+              },
+              {
+                "input": "src/theme-light.css",
+                "bundleName": "theme-light",
+                "inject": false
+              }
             ],
             "scripts": [],
             "stylePreprocessorOptions": {

@@ -27,8 +27,8 @@
 
               .p-menuitem-text,
               .p-menuitem-icon {
-                color: #ffffff;
-                font-weight: 500;
+                color: var(--active-menu-color);
+                font-weight: 600;
               }
             }
           }
@@ -41,6 +41,7 @@
         padding: 0;
         box-shadow: none;
         border: none;
+        background: transparent;
 
         .p-menuitem {
           margin: 0;

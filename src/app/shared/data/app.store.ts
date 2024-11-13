@@ -19,6 +19,7 @@ export type ApplicationState = {
   dataImportDate: string | null;
   showMenu: boolean;
   showValues: boolean;
+  isDarkMode: boolean;
 };
 
 const initialState: ApplicationState = {
@@ -26,7 +27,8 @@ const initialState: ApplicationState = {
   pin: null,
   dataImportDate: null,
   showMenu: false,
-  showValues: true
+  showValues: true,
+  isDarkMode: false
 };
 
 export const ApplicationStore = signalStore(
@@ -110,6 +112,20 @@ export const ApplicationStore = signalStore(
       patchState(store, { showValues: showValues === 'true' });
     };
 
+    const setDarkMode = (isDarkMode: boolean): void => {
+      patchState(store, { isDarkMode });
+
+      console.log('setDarkMode', isDarkMode);
+
+      storageService.setPlainValue('isDarkMode', isDarkMode.toString());
+    };
+
+    const getDarkMode = (): void => {
+      const isDarkMode = storageService.getPlainValue('isDarkMode');
+
+      patchState(store, { isDarkMode: isDarkMode === 'true' });
+    };
+
     return {
       getDecryptedAppData,
       setShowMenu,
@@ -118,7 +134,9 @@ export const ApplicationStore = signalStore(
       setApiKey,
       importData,
       setShowValues,
-      getShowValues
+      getShowValues,
+      setDarkMode,
+      getDarkMode
     };
   }),
 

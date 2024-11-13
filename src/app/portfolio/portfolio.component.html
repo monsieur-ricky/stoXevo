@@ -1,9 +1,5 @@
 @if (loading()) {
-  <p-progressSpinner
-    ariaLabel="loading"
-    styleClass="absolute top-50 right-50 w-5rem h-5rem z-1"
-    strokeWidth="4"
-  />
+  <p-progressSpinner ariaLabel="loading" strokeWidth="4" />
 }
 
 <div class="header grid mb-3 md:mb-5">
@@ -39,16 +35,16 @@
     <ng-template pTemplate="header">
       <tr>
         <th class="w-5rem" pFrozenColumn>Symbol</th>
-        <th class="w-6rem">Type</th>
-        <th>Name</th>
+        <th class="w-7rem">Type</th>
+        <th class="w-18rem">Name</th>
         <th class="w-9rem">Purchase Date</th>
         <th class="w-5rem">Qty</th>
-        <th class="w-7rem">Purchase Price</th>
-        <th class="w-7rem">Total Investment</th>
-        <th class="w-7rem">Current Value</th>
-        <th class="w-7rem">Total Value</th>
-        <th class="w-7rem">Value Difference</th>
-        <th class="w-7rem">Percentage Difference</th>
+        <th class="w-9rem">Purchase Price</th>
+        <th class="w-9rem">Total Investment</th>
+        <th class="w-9rem">Current Value</th>
+        <th class="w-9rem">Total Value</th>
+        <th class="w-9rem">Value Difference</th>
+        <th class="w-5rem">Percentage Difference</th>
         <th class="w-5rem" pFrozenColumn alignFrozen="right"></th>
       </tr>
     </ng-template>
@@ -124,20 +120,20 @@
         <td>{{ totalInvestmentSum() | number: '1.2-2' | hideValue }}</td>
         <td></td>
         <td
-          [class.bg-green-100]="totalValueDifferenceSum() > 0"
-          [class.bg-red-100]="totalValueDifferenceSum() < 0"
+          [class.bg-green-400]="totalValueDifferenceSum() > 0"
+          [class.bg-red-400]="totalValueDifferenceSum() < 0"
         >
           {{ totalValueSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
-          [class.bg-green-100]="totalValueDifferenceSum() > 0"
-          [class.bg-red-100]="totalValueDifferenceSum() < 0"
+          [class.bg-green-400]="totalValueDifferenceSum() > 0"
+          [class.bg-red-400]="totalValueDifferenceSum() < 0"
         >
           {{ totalValueDifferenceSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
-          [class.bg-green-100]="totalValueDifferenceSum() > 0"
-          [class.bg-red-100]="totalValueDifferenceSum() < 0"
+          [class.bg-green-400]="totalValueDifferenceSum() > 0"
+          [class.bg-red-400]="totalValueDifferenceSum() < 0"
         >
           {{ totalPercentageDifferenceSum() | percent }}
         </td>
