@@ -85,7 +85,6 @@ Contributions are welcome! If you'd like to improve **stoXevo**, feel free to op
 ### TODOs
 
 - Unit Tests
-- Dark Mode
 - Add asset currency stats
 - Add historical stats
 - Use IndexedDB instead of localStorage
@@ -96,8 +95,6 @@ Contributions are welcome! If you'd like to improve **stoXevo**, feel free to op
 Want to try out the app without setting it up locally or deploying it yourself? Check out the online version: **[stoXeveo Online](https://stoxevo.blacklambs.eu)**
 
 This will give you a quick and easy way to experience the app's features and functionality.
-
-**Note: In order to have access to the full features, an API key is necessary. [Please get in touch and request one from me](https://blacklambs.net).**
 
 ---
 
