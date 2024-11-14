@@ -44,7 +44,5 @@ export class DarkModeSwitchComponent {
     ) as HTMLLinkElement;
 
     linkElement.href = theme;
-
-    console.log('Theme applied:', theme);
   }
 }
