@@ -52,15 +52,15 @@ export class SymbolSearchComponent {
       const symbols = await this.symbolService.searchSymbols(query);
       this.symbols.set(symbols);
     } catch (error) {
-      console.error(error);
+      this.symbols.set([]);
+      this.selectedItem = undefined;
       this.messageService.add({
         severity: 'error',
         summary: 'Oops!',
         detail: 'Failed to load the search results.'
       });
-    } finally {
-      this.symbols.set([]);
-      this.selectedItem = undefined;
+
+      console.error(error);
     }
   }
 

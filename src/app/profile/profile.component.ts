@@ -49,12 +49,13 @@ export class ProfileComponent {
       const profile = await this.profileService.get(symbol);
       this.profile.set(profile);
     } catch (error) {
-      console.error(error);
       this.messageService.add({
         severity: 'error',
         summary: 'Oops!',
         detail: 'Failed to load the asset profile.'
       });
+
+      console.error(error);
     } finally {
       this.loading.set(false);
     }
