@@ -99,12 +99,13 @@ export const PortfolioStore = signalStore(
             detail: 'Asset was added to portfolio!'
           });
         } catch (error) {
-          console.error(error);
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
             detail: 'Failed to add the asset to the portfolio!'
           });
+
+          console.error(error);
         } finally {
           patchState(store, { loading: false });
         }
@@ -156,12 +157,13 @@ export const PortfolioStore = signalStore(
             detail: 'Asset was updated!'
           });
         } catch (error) {
-          console.error(error);
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
             detail: 'Failed to update the asset!'
           });
+
+          console.error(error);
         } finally {
           patchState(store, { loading: false });
         }
@@ -222,13 +224,14 @@ export const PortfolioStore = signalStore(
             });
           }
         } catch (error: any) {
-          console.error(error);
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
             detail: error.error['Error Message'] ?? 'Failed to update quotes.',
             life: 10000
           });
+
+          console.error(error);
         } finally {
           patchState(store, { loading: false });
         }
