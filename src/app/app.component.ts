@@ -56,7 +56,7 @@ import { ToastModule } from 'primeng/toast';
             <sxe-ui-value-visibility class="hidden md:block" />
             <sxe-import-data class="hidden md:block" />
             <sxe-export-data class="hidden md:block" />
-            <sxe-app-settings class="hidden md:block" />
+            <!-- <sxe-app-settings class="hidden md:block" /> -->
             <p-button
               type="button"
               class="block md:hidden"
@@ -74,7 +74,7 @@ import { ToastModule } from 'primeng/toast';
           <sxe-ui-value-visibility />
           <sxe-import-data />
           <sxe-export-data />
-          <sxe-app-settings />
+          <!-- <sxe-app-settings /> -->
         </ng-container>
       </sxe-ui-side-menu>
       <main>

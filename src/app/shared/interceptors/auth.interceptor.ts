@@ -1,5 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { STOXSCRAPER_API_KEY } from '@app';
 import { ApplicationStore } from '@shared/data';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -7,7 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authReq = req.clone({
     headers: req.headers.set(
       'stoxscraper-api-key',
-      inject(ApplicationStore).apiKey() ?? ''
+      inject(ApplicationStore).apiKey() ?? STOXSCRAPER_API_KEY
     )
   });
 
