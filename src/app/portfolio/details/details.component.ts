@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
   inject,
   model,
@@ -58,7 +57,6 @@ import { SidebarModule } from 'primeng/sidebar';
 export class DetailsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly portfolioStore = inject(PortfolioStore);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly appStore = inject(ApplicationStore);
 
   openSidebar = model.required<boolean>();
@@ -87,8 +85,9 @@ export class DetailsComponent {
     );
   }
 
-  onSymbolSelected(symbol: Symbol) {
-    this.assetForm.patchValue(symbol);
+  onSymbolSelected(selectedAsset: Symbol) {
+    const { symbol, name, currency, exchangeShortName } = selectedAsset;
+    this.assetForm.patchValue({ symbol, name, currency, exchangeShortName });
   }
 
   onSave(): void {
@@ -96,8 +95,9 @@ export class DetailsComponent {
       if (this.isEditMode()) {
         this.portfolioStore.updateAsset(this.assetForm.getRawValue());
       } else {
-        this.portfolioStore.addAsset(this.assetForm.getRawValue());
-        this.onClose();
+        this.portfolioStore
+          .addAsset(this.assetForm.getRawValue())
+          .then(res => (res ? this.onClose() : null));
       }
     }
   }
@@ -227,6 +227,7 @@ export class DetailsComponent {
     switch (type) {
       case 'physical':
         exchangeShortName?.disable();
+        exchangeShortName?.setValue(undefined);
         symbol?.disable();
         symbol?.setValue(type?.toUpperCase());
 
@@ -236,6 +237,7 @@ export class DetailsComponent {
 
       case 'commodity':
         exchangeShortName?.disable();
+        exchangeShortName?.setValue(undefined);
         symbol?.disable();
         symbol?.setValue(subType?.value?.toUpperCase());
 
@@ -245,12 +247,13 @@ export class DetailsComponent {
 
       default:
         exchangeShortName?.enable();
-        symbol?.enable();
-        symbol?.setValue(undefined);
+        exchangeShortName?.setValue(this.asset()?.exchangeShortName);
         value?.enable();
+        symbol?.setValue(this.asset()?.symbol);
 
         this.isSearchDisabled = false;
         this.setManualUpdateStatus();
+        this.setSymbolStatus();
         break;
     }
   }

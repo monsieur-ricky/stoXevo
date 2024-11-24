@@ -2,7 +2,6 @@ import {
   CurrencyPipe,
   DatePipe,
   DecimalPipe,
-  JsonPipe,
   PercentPipe,
   UpperCasePipe
 } from '@angular/common';
@@ -41,7 +40,6 @@ import { DetailsComponent } from './details/details.component';
     CurrencyPipe,
     PercentPipe,
     DecimalPipe,
-    JsonPipe,
 
     DetailsComponent,
     PortfolioTotalsCalcPipe,
