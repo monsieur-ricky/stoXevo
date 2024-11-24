@@ -72,10 +72,24 @@ export const PortfolioStore = signalStore(
         }
       };
 
-      const addAsset = async (asset: Asset): Promise<void> => {
+      const addAsset = async (asset: Asset): Promise<boolean> => {
         patchState(store, { loading: true });
 
         try {
+          const symbolExists = !!store
+            .assets()
+            .find(a => a.symbol === asset.symbol);
+
+          if (symbolExists) {
+            messageService.add({
+              severity: 'error',
+              summary: 'Oops!',
+              detail: 'Asset with this symbol already exists in the portfolio!'
+            });
+
+            return false;
+          }
+
           if (!asset.manualUpdate) {
             if (asset.type === 'commodity') {
               const quote = await portfolioService.getMetalQuote(asset.subType);
@@ -98,6 +112,8 @@ export const PortfolioStore = signalStore(
             summary: 'Yay!',
             detail: 'Asset was added to portfolio!'
           });
+
+          return true;
         } catch (error) {
           messageService.add({
             severity: 'error',
@@ -106,6 +122,7 @@ export const PortfolioStore = signalStore(
           });
 
           console.error(error);
+          return false;
         } finally {
           patchState(store, { loading: false });
         }
