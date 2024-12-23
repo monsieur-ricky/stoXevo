@@ -1,8 +1,0 @@
-@import 'primeng/resources/themes/lara-light-amber/theme.css';
-
-:root {
-  --bg-color: #dddddd;
-  --main-bg-color: #ffffff;
-  --active-menu-color: #ffffff;
-  --scrollbar-color: var(--gray-400);
-}

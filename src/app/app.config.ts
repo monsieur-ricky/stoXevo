@@ -1,7 +1,8 @@
 import {
   ApplicationConfig,
   importProvidersFrom,
-  provideZoneChangeDetection, isDevMode
+  isDevMode,
+  provideZoneChangeDetection
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,10 +14,12 @@ import {
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideServiceWorker } from '@angular/service-worker';
 import { authInterceptor } from '@shared/interceptors';
 import { MessageService } from 'primeng/api';
+import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
-import { provideServiceWorker } from '@angular/service-worker';
+import { MyThemePreset } from './my-theme.present';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,9 +28,18 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     importProvidersFrom([BrowserModule, BrowserAnimationsModule]),
     provideHttpClient(withInterceptors([authInterceptor])),
-    MessageService, provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
+    MessageService,
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    providePrimeNG({
+      theme: {
+        preset: MyThemePreset,
+        options: {
+          darkModeSelector: '.dark-mode'
+        }
+      }
+    })
   ]
 };

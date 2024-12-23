@@ -6,29 +6,16 @@ import {
   signal,
   untracked
 } from '@angular/core';
-import {
-  AppSettingsComponent,
-  ExportDataComponent,
-  ImportDataComponent
-} from '@shared/components';
 import { ApplicationStore } from '@shared/data';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { DrawerModule } from 'primeng/drawer';
 import { MenuModule } from 'primeng/menu';
-import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'sxe-ui-side-menu',
   standalone: true,
-  imports: [
-    ExportDataComponent,
-    ImportDataComponent,
-    AppSettingsComponent,
-
-    MenuModule,
-    SidebarModule,
-    ButtonModule
-  ],
+  imports: [MenuModule, DrawerModule, ButtonModule],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

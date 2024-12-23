@@ -115,8 +115,6 @@ export const ApplicationStore = signalStore(
     const setDarkMode = (isDarkMode: boolean): void => {
       patchState(store, { isDarkMode });
 
-      console.log('setDarkMode', isDarkMode);
-
       storageService.setPlainValue('isDarkMode', isDarkMode.toString());
     };
 

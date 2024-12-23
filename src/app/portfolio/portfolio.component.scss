@@ -1,28 +1,44 @@
 @use 'variables' as var;
 
 :host {
-  div:has(table) {
+  .table-container {
     height: calc(100vh - (200px + 87px));
 
-    th {
-      &.w-5rem {
-        min-width: 5rem;
-      }
-      &.w-7rem {
-        min-width: 7rem;
-      }
-      &.w-9rem {
-        min-width: 9rem;
-      }
-      &.w-18rem {
-        min-width: 18rem;
+    ::ng-deep {
+      .p-datatable {
+        &-scrollable {
+          td.p-datatable-frozen-column {
+            background: inherit;
+          }
+        }
+
+        &-tbody {
+          td {
+            padding: 0.15rem 1rem;
+          }
+
+          tr:hover {
+            td {
+              background: var(--table-row-highlight);
+            }
+          }
+        }
+
+        &-tfoot {
+          position: sticky;
+          bottom: 0;
+          z-index: 1;
+
+          td {
+            font-weight: 700;
+          }
+        }
       }
     }
 
     @media screen and (max-width: #{var.$sm}) {
-      height: calc(100vh - (100px + 88px));
-      border: 1px solid var(--gray-200);
-      border-radius: var(--border-radius);
+      height: calc(100vh - (100px + 50px));
+      border-radius: var(--p-button-border-radius);
     }
   }
 }
