@@ -21,15 +21,13 @@ import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { AssetType, assetTypes, AssetTypeSelect, Symbol } from '@shared/models';
 import { SymbolSearchComponent } from '@shared/ui';
 import { getIdFromSentence, isFormValid } from '@shared/utils';
-import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputTextModule } from 'primeng/inputtext';
-import { SidebarModule } from 'primeng/sidebar';
+import { Button } from 'primeng/button';
+import { Checkbox } from 'primeng/checkbox';
+import { DatePicker } from 'primeng/datepicker';
+import { DrawerModule } from 'primeng/drawer';
+import { InputNumber } from 'primeng/inputnumber';
+import { InputText } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'sxe-portfolio-details',
@@ -40,15 +38,13 @@ import { SidebarModule } from 'primeng/sidebar';
 
     SymbolSearchComponent,
 
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    SidebarModule,
-    CalendarModule,
-    DropdownModule,
-    InputNumberModule,
-    ButtonModule,
-    CheckboxModule
+    InputText,
+    DrawerModule,
+    DatePicker,
+    Select,
+    InputNumber,
+    Button,
+    Checkbox
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',

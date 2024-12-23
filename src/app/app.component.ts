@@ -17,7 +17,6 @@ import {
   ValueVisibilityComponent
 } from '@shared/ui';
 import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -37,7 +36,6 @@ import { ToastModule } from 'primeng/toast';
     TopBarComponent,
     SideMenuComponent,
     ToastModule,
-    SidebarModule,
     ButtonModule
   ],
   selector: 'sxe-root',
@@ -59,15 +57,15 @@ import { ToastModule } from 'primeng/toast';
             <sxe-app-settings class="hidden md:block" />
             <p-button
               type="button"
-              class="block md:hidden"
-              (onClick)="onShowMenu()"
               icon="pi pi-bars"
+              class="block md:hidden ml-2"
+              (onClick)="onShowMenu()"
             />
           </div>
         </ng-container>
       </sxe-ui-top-bar>
     </header>
-    <div class="container">
+    <div class="content">
       <sxe-ui-side-menu>
         <ng-container ngProjectAs="bottom-menu">
           <sxe-ui-dark-mode-switch />

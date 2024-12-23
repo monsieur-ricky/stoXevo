@@ -2,13 +2,13 @@
   <p-progressSpinner ariaLabel="loading" strokeWidth="4" />
 }
 
-<h1 class="header mb-3 md:mb-5">
+<h1 class="header mb-4 md:mb-8">
   {{ profile()?.name }}
 
   <small> {{ profile()?.symbol }} </small>
 </h1>
 
-<div class="grid">
+<div class="grid grid-cols-12 gap-4">
   @let low = profile()?.regularMarketDayLow ?? 0;
   @let high = profile()?.regularMarketDayHigh ?? 0;
   @let price = profile()?.price ?? 0;
@@ -16,57 +16,56 @@
   @let changePercent = profile()?.changePercent ?? 0;
   @let currency = profile()?.currency ?? 'USD';
 
-  <div class="col-12 md:col-2 mb-4">
-    <span
-      class="border-round-sm border-1 p-3"
-      [class.border-red-700]="changes < 0"
-      [class.bg-red-50]="changes < 0"
-      [class.border-green-700]="changes > 0"
-      [class.bg-green-50]="changes > 0"
+  <div class="col-span-12 md:col-span-3 mb-6">
+    <section
+      class="widget widget--small border"
+      [class.border-red-400]="changes < 0"
+      [class.bg-red-100]="changes < 0"
+      [class.border-green-400]="changes > 0"
+      [class.bg-green-100]="changes > 0"
     >
-      <span
-        class="font-bold text-xl"
-        [class.text-red-700]="changes < 0"
-        [class.text-green-700]="changes > 0"
+      <h5
+        [class.!text-red-700]="changes < 0"
+        [class.!text-green-700]="changes > 0"
       >
-        {{ price | currency: currency }}
-      </span>
-
-      @if (changes) {
-        <span
-          [class.text-red-700]="changes < 0"
-          [class.text-green-700]="changes > 0"
-        >
+        @if (changes) {
           {{ changes | currency: currency }}
           ({{ changePercent / 100 | percent: '1.2' }})
-        </span>
-      }
-    </span>
+        }
+      </h5>
+
+      <h1
+        [class.!text-red-700]="changes < 0"
+        [class.!text-green-700]="changes > 0"
+      >
+        {{ price | currency: currency }}
+      </h1>
+    </section>
   </div>
 
-  <div class="col-6 md:col-2 mb-4">
-    <span class="border-round-sm border-1 p-3">
-      High
+  <div class="col-span-6 md:col-span-3 mb-6">
+    <section class="widget widget--small border bg-gray-300 border-gray-400">
+      <h5>High</h5>
 
-      <span class="font-bold text-xl">
+      <h1>
         {{ high | currency: currency }}
-      </span>
-    </span>
+      </h1>
+    </section>
   </div>
 
-  <div class="col-6 md:col-2 mb-4">
-    <span class="border-round-sm border-1 p-3">
-      Low
+  <div class="col-span-6 md:col-span-3 mb-6">
+    <section class="widget widget--small border bg-gray-300 border-gray-400">
+      <h5>Low</h5>
 
-      <span class="font-bold text-xl">
+      <h1>
         {{ low | currency: currency }}
-      </span>
-    </span>
+      </h1>
+    </section>
   </div>
 </div>
 
-<div class="grid">
-  <div class="col-6 md:col-3">
+<div class="grid grid-cols-12 gap-4">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Symbol:
       <span>
@@ -75,7 +74,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Name:
       <span>
@@ -84,7 +83,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Exchange:
       <span>
@@ -93,7 +92,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Currency:
       <span>
@@ -102,7 +101,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Industry:
       <span>
@@ -111,7 +110,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Sector:
       <span>
@@ -120,7 +119,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Website:
       <span>
@@ -131,7 +130,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       CEO:
       <span>
@@ -140,7 +139,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Address:
       <span>
@@ -149,7 +148,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Employees:
       <span>
@@ -158,7 +157,7 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Last Dividend:
       <span>
@@ -167,28 +166,28 @@
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       Dividend Yield:
       <span> {{ profile()?.dividendYield }} % </span>
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       52-Wk Average:
       <span> {{ profile()?.fiftyDayAverage }} </span>
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       52-Wk Low:
       <span> {{ profile()?.fiftyTwoWeekLow }} </span>
     </span>
   </div>
 
-  <div class="col-6 md:col-3">
+  <div class="col-span-6 md:col-span-3">
     <span>
       52-Wk Low:
       <span> {{ profile()?.fiftyTwoWeekLow }} </span>
@@ -196,8 +195,8 @@
   </div>
 </div>
 
-<div class="grid mt-3">
-  <div class="col-12">
+<div class="grid grid-cols-12 gap-4 mt-4">
+  <div class="col-span-12">
     <span>
       About:
       <span>

@@ -1,0 +1,15 @@
+.p-drawer {
+  --p-drawer-header-padding: 0.6rem 1rem;
+
+  border: 0;
+
+  &-header {
+    h2 {
+      margin: 0;
+    }
+  }
+}
+
+.p-drawer-mask {
+  backdrop-filter: blur(2px);
+}

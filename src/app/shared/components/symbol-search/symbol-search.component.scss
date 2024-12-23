@@ -1,3 +1,18 @@
 :host {
   width: 100%;
+
+  ::ng-deep .p-iconfield-left {
+    &:has(.p-autocomplete) {
+      .p-inputicon {
+        z-index: 1;
+      }
+    }
+    .p-autocomplete,
+    .p-autocomplete-clearable {
+      .p-autocomplete-input {
+        font-size: inherit;
+        padding-left: 35px;
+      }
+    }
+  }
 }

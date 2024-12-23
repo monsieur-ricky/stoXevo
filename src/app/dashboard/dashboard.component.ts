@@ -1,4 +1,4 @@
-import { CurrencyPipe, DecimalPipe, PercentPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,7 +24,6 @@ type DashboardAssetType = AssetTypeSelect & {
   selector: 'sxe-dashboard',
   standalone: true,
   imports: [
-    CurrencyPipe,
     DecimalPipe,
     PercentPipe,
 

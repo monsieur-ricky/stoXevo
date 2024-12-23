@@ -3,21 +3,25 @@
 
 .widget {
   padding: 1rem;
-  background: var(--gray-400);
-  border-radius: var(--border-radius);
+  border-radius: var(--p-button-border-radius);
   display: flex;
   justify-content: center;
   flex-direction: column;
 
   h1,
   h5 {
-    color: #ffffff;
+    color: var(--widget-text-color);
     margin: 0;
   }
 
   h1 {
     font-size: 2.5rem;
-    transform: translateY(3px);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  h5 {
+    font-size: 0.85rem;
   }
 
   @include mixins.main-shadow;
@@ -29,7 +33,7 @@
   }
 
   &--light {
-    background: var(--gray-400);
+    background: var(--p-gray-400);
 
     h1,
     h5 {

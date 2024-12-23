@@ -2,15 +2,12 @@
 @use 'mixins';
 @use 'typography';
 @use 'input-group';
-@use 'menu';
-@use 'calendar';
-@use 'dropdown';
+@use 'datepicker';
+@use 'select';
 @use 'input-number';
-@use 'icon-field';
 @use 'widget';
-@use 'sidebar';
+@use 'drawer';
 @use 'progress-spinner';
-@use 'datatable';
 
 *:focus {
   outline: none;
@@ -18,25 +15,34 @@
 }
 
 input:disabled {
-  background-color: var(--gray-100);
-  color: #4b5563;
   cursor: not-allowed;
 }
 
 html,
 body {
+  font-family: 'Open Sans', serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
   font-size: 14px;
-  padding: 0;
-  margin: var(--main-spacing);
+}
+
+body {
   background: var(--bg-color);
+  height: calc(100vh - 55px);
+
+  padding: var(--main-spacing);
+  margin: var(--main-spacing);
 
   @media screen and (max-width: #{var.$sm}) {
     margin: 0;
+    padding: 0;
   }
 }
 
-.container {
+.content {
   display: flex;
+  width: 100%;
   height: calc(100vh - 145px);
   margin-top: var(--main-spacing);
 
@@ -48,7 +54,7 @@ body {
     flex: 1;
     padding: 2rem;
     margin: var(--main-spacing) 0 0 var(--main-spacing);
-    border-radius: var(--border-radius);
+    border-radius: var(--p-button-border-radius);
     overflow: auto;
     background: var(--main-bg-color);
 
@@ -63,10 +69,10 @@ body {
   }
 
   @media screen and (max-width: #{var.$sm}) {
-    height: calc(100vh - 105px);
+    height: calc(100vh - 100px);
 
     main {
-      padding: var(--main-spacing);
+      padding: 0 var(--main-spacing) 0 var(--main-spacing);
       background: none;
       box-shadow: none;
       margin: 0;
@@ -81,7 +87,7 @@ body {
 footer {
   text-align: center;
   margin: 15px 0 0 0;
-  color: var(--gray-400);
+  color: var(--p-gray-400);
 
   > span {
     &:not(:last-of-type) {
@@ -96,10 +102,14 @@ footer {
     }
 
     a {
-      color: var(--gray-400);
+      color: var(--p-gray-400);
       font-weight: 700;
       text-decoration: none;
     }
+  }
+
+  @media screen and (max-width: #{var.$sm}) {
+    margin: 7px 0 0 0;
   }
 }
 

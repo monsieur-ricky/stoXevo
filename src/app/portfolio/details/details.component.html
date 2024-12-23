@@ -1,4 +1,4 @@
-<p-sidebar
+<p-drawer
   position="right"
   [style]="{ width: isMobile() ? '25rem' : '45rem' }"
   [dismissible]="false"
@@ -10,10 +10,10 @@
   </ng-template>
 
   <form [formGroup]="assetForm">
-    <div class="formgrid grid">
-      <div class="field col-12 md:col-6">
+    <div class="formgrid grid grid-cols-12 gap-4">
+      <div class="field col-span-12 md:col-span-6">
         <label for="type">Asset Type</label>
-        <p-dropdown
+        <p-select
           id="type"
           formControlName="type"
           optionValue="id"
@@ -25,9 +25,9 @@
       @if (
         assetForm.get('type')?.value === 'commodity' && subTypes.length > 0
       ) {
-        <div class="field col-12 md:col-6">
+        <div class="field col-span-12 md:col-span-6">
           <label for="type">Commodity Type</label>
-          <p-dropdown
+          <p-select
             id="subType"
             formControlName="subType"
             optionValue="id"
@@ -40,20 +40,20 @@
 
     <h3>Asset Information</h3>
 
-    <div class="formgrid grid">
-      <div class="col-12 mb-5">
+    <div class="formgrid grid grid-cols-12 gap-4">
+      <div class="col-span-12 mb-8">
         <sxe-symbol-search
           [disabled]="isSearchDisabled"
           (selected)="onSymbolSelected($event)"
         />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-3">
         <label for="symbol">Symbol</label>
         <input pInputText id="symbol" formControlName="symbol" class="w-full" />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-9">
         <label for="name">Name</label>
         <input
           pInputText
@@ -64,7 +64,7 @@
         />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-3">
         <label for="currency">Currency</label>
         <input
           pInputText
@@ -74,7 +74,7 @@
         />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-9">
         <label for="exchangeShortName">Exchange Name</label>
         <input
           pInputText
@@ -87,10 +87,10 @@
 
     <h3>Investment Information</h3>
 
-    <div class="formgrid grid">
-      <div class="field col-12 md:col-6">
+    <div class="formgrid grid grid-cols-12 gap-4">
+      <div class="field col-span-12 md:col-span-4">
         <label for="purchaseDate">Purchase Date</label>
-        <p-calendar
+        <p-datepicker
           id="purchaseDate"
           formControlName="purchaseDate"
           dateFormat="dd-mm-yy"
@@ -99,7 +99,7 @@
         />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-4">
         <label for="purchasePrice">Purchase Price</label>
         <p-inputNumber
           id="purchasePrice"
@@ -111,7 +111,7 @@
         />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-4">
         <label for="quantity">Quantity</label>
         <p-inputNumber
           id="quantity"
@@ -123,7 +123,7 @@
         />
       </div>
 
-      <div class="field col-12 md:col-6">
+      <div class="field col-span-12 md:col-span-4">
         <label for="value">Current Price</label>
         <p-inputNumber
           id="value"
@@ -135,22 +135,20 @@
         />
       </div>
 
-      <div class="field col-12 md:col-6 flex align-items-center gap-2 mt-4">
+      <div class="field col-span-12 md:col-span-6 flex items-center gap-2 mt-6">
         <p-checkbox
           formControlName="manualUpdate"
           inputId="manualUpdate"
           [binary]="true"
           (onChange)="onManualUpdateChange($event.checked)"
         />
-        <label class="mt-2" for="manualUpdate">
-          Enable manual value updates?
-        </label>
+        <label for="manualUpdate"> Enable manual value updates? </label>
       </div>
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <div class="flex justify-content-between flex-wrap">
+    <div class="flex justify-between flex-wrap">
       <p-button
         icon="pi pi-save"
         [label]="saveBtnText()"
@@ -165,4 +163,4 @@
       />
     </div>
   </ng-template>
-</p-sidebar>
+</p-drawer>

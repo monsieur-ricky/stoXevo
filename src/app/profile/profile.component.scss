@@ -1,10 +1,9 @@
 :host {
   h1 {
-    display: block;
+    margin-top: 0;
 
     small {
       display: block;
-      color: var(--gray-900);
       font-size: small;
       margin-top: 5px;
     }
@@ -13,12 +12,11 @@
   span {
     &:has(span) {
       display: block;
-      color: var(--gray-500);
+      color: var(--p-primary-color);
 
       span {
-        font-weight: 400;
         display: block;
-        color: var(--gray-900);
+        color: var(--p-text-color);
       }
     }
   }

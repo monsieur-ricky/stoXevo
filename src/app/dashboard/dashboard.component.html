@@ -3,8 +3,8 @@
 }
 
 <div class="dashboard">
-  <div class="grid">
-    <div class="col-6 md:col-3">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-6 md:col-span-3">
       <section class="widget bg-blue-300">
         <h5>Total Investment</h5>
         <h1>
@@ -12,7 +12,7 @@
         </h1>
       </section>
     </div>
-    <div class="col-6 md:col-3">
+    <div class="col-span-6 md:col-span-3">
       <section
         class="widget"
         [class.bg-green-300]="valueDifference() > 0"
@@ -22,7 +22,7 @@
         <h1>{{ totalValue() | number: '1.2-2' | hideValue }}</h1>
       </section>
     </div>
-    <div class="col-6 md:col-3">
+    <div class="col-span-6 md:col-span-3">
       <section
         class="widget"
         [class.bg-green-300]="valueDifference() > 0"
@@ -34,7 +34,7 @@
         </h1>
       </section>
     </div>
-    <div class="col-6 md:col-3">
+    <div class="col-span-6 md:col-span-3">
       <section
         class="widget h-full"
         [class.bg-green-300]="valueDifference() > 0"
@@ -46,12 +46,12 @@
     </div>
   </div>
 
-  <div class="grid mt-2">
+  <div class="grid grid-cols-12 gap-4 mt-4">
     @for (type of dashboardAssets(); track type.id) {
       @if (type.totalNumberOfAssets()) {
-        <div class="col md:col-3">
+        <div class="col-span-4 md:col-span-3">
           <section class="widget widget--small widget--light">
-            <h5 class="h-1rem overflow-hidden text-overflow-ellipsis">
+            <h5 class="overflow-hidden text-ellipsis">
               {{ type.label }}
             </h5>
             <h1>{{ type.totalNumberOfAssets() }}</h1>

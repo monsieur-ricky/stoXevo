@@ -23,11 +23,11 @@
     chooseIcon="pi pi-upload"
     accept=".json"
     maxFileSize="1000000"
-    styleClass="w-full surface-200 border-300 text-color-secondary"
+    styleClass="w-full bg-surface-200 dark:bg-surface-600 border-surface-300 dark:border-surface-500 text-muted-color"
     (onSelect)="onFileSelect($event)"
   />
 
-  <div class="flex justify-content-end mt-5 gap-3">
+  <div class="flex justify-end mt-8 gap-4">
     <p-button
       label="Cancel"
       severity="secondary"

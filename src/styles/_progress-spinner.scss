@@ -1,10 +1,10 @@
-.p-progress-spinner {
-  position: absolute;
+.p-progressspinner {
+  position: absolute !important;
   z-index: 100;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  width: 70px;
-  margin: auto;
+  width: 70px !important;
+  margin: auto !important;
 }

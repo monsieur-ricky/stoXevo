@@ -1,0 +1,23 @@
+@use 'mixins' as mixin;
+@use 'variables' as var;
+
+:host {
+  ::ng-deep .p-menubar {
+    padding: 0.56rem 0.8rem;
+    border: none;
+
+    @include mixin.main-shadow;
+
+    .p-menubar-end {
+      width: 900px;
+    }
+
+    @media screen and (max-width: #{var.$sm}) {
+      border-radius: 0;
+
+      .p-button {
+        display: block;
+      }
+    }
+  }
+}

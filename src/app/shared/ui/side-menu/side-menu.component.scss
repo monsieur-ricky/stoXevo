@@ -1,52 +1,57 @@
 @use 'mixins' as mixin;
-@use 'variables' as var;
 
-:host {
-  ::ng-deep {
-    .p-menu {
-      width: 15rem;
-      padding: 0.8rem;
-      border: none;
+@mixin main-navigation {
+  width: 10rem;
+  padding: 1rem 0.4rem;
+  background: var(--p-menubar-background);
+  border: none;
 
-      @include mixin.main-shadow;
+  @include mixin.main-shadow;
 
-      .p-menuitem {
-        margin: var(--main-spacing);
-        font-size: 1.1rem;
+  .p-menu-item {
+    margin: 0.2rem var(--main-spacing);
 
-        .p-menuitem-content {
-          border-radius: var(--border-radius);
-          transition: all 0.3s ease-in-out;
+    .p-menu-item-content {
+      border-radius: var(--p-button-border-radius);
+      transition: all 0.3s ease-in-out;
 
-          .p-menuitem-link {
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease-in-out;
+      .p-menu-item-link {
+        border-radius: var(--p-button-border-radius);
+        transition: all 0.3s ease-in-out;
 
-            &.p-menuitem-link-active {
-              background-color: var(--primary-color);
+        &.p-menu-item-link-active {
+          --p-menu-item-icon-focus-color: var(--active-menu-color);
+          background-color: var(--p-primary-color);
 
-              .p-menuitem-text,
-              .p-menuitem-icon {
-                color: var(--active-menu-color);
-                font-weight: 600;
-              }
-            }
+          .p-menu-item-label,
+          .p-menu-item-icon {
+            color: var(--active-menu-color);
+            font-weight: 700;
           }
         }
       }
-
-      @media screen and (max-width: #{var.$sm}) {
-        width: 100%;
-        margin-top: 1.5rem;
-        padding: 0;
-        box-shadow: none;
-        border: none;
-        background: transparent;
-
-        .p-menuitem {
-          margin: 0;
-        }
-      }
     }
+  }
+}
+
+:host {
+  ::ng-deep {
+    aside .p-menu {
+      @include main-navigation;
+    }
+  }
+}
+
+::ng-deep .p-drawer .mobile-menu {
+  @include main-navigation;
+
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0;
+  box-shadow: none;
+  background: transparent;
+
+  .p-menu-item {
+    margin: 0;
   }
 }

@@ -2,15 +2,15 @@
   <p-progressSpinner ariaLabel="loading" strokeWidth="4" />
 }
 
-<div class="header grid mb-3 md:mb-5">
-  <div class="col-6 md:col flex align-items-center">
+<div class="header grid grid-cols-12 mb-3 md:mb-8">
+  <div class="col-span-6 md:col flex items-center">
     <h1>Portfolio</h1>
   </div>
-  <div class="col-6 md:col flex align-items-center justify-content-end">
+  <div class="col-span-6 md:col flex items-center justify-end">
     <p-button
       severity="info"
       icon="pi pi-sync"
-      class="mr-3"
+      class="mr-4"
       [label]="isMobile() ? undefined : 'Update'"
       [disabled]="!isApiKeySet() || !isOnline()"
       [loading]="loading()"
@@ -24,28 +24,29 @@
   </div>
 </div>
 
-<div>
+<div class="table-container">
   <p-table
     scrollHeight="flex"
-    styleClass="p-datatable-sm p-datatable-striped"
+    styleClass="p-datatable-sm"
+    stripedRows
     [value]="portfolio()"
     [tableStyle]="{ 'min-width': '10rem' }"
     [scrollable]="true"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th class="w-5rem" pFrozenColumn>Symbol</th>
-        <th class="w-7rem">Type</th>
-        <th class="w-18rem">Name</th>
-        <th class="w-9rem">Purchase Date</th>
-        <th class="w-5rem">Qty</th>
-        <th class="w-9rem">Purchase Price</th>
-        <th class="w-9rem">Total Investment</th>
-        <th class="w-9rem">Current Value</th>
-        <th class="w-9rem">Total Value</th>
-        <th class="w-9rem">Value Difference</th>
-        <th class="w-5rem">Percentage Difference</th>
-        <th class="w-5rem" pFrozenColumn alignFrozen="right"></th>
+        <th pFrozenColumn>Symbol</th>
+        <th>Type</th>
+        <th class="min-w-80">Name</th>
+        <th class="min-w-32">Purchase Date</th>
+        <th>Qty</th>
+        <th>Purchase Price</th>
+        <th>Total Investment</th>
+        <th>Current Value</th>
+        <th>Total Value</th>
+        <th class="min-w-40">Value Difference</th>
+        <th>Percentage Difference</th>
+        <th pFrozenColumn alignFrozen="right"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-asset>
@@ -95,14 +96,8 @@
         >
           {{ percentageDifference }}
         </td>
-        <td class="text-center" pFrozenColumn alignFrozen="right">
-          <p-menu
-            #menu
-            styleClass="w-10rem"
-            appendTo="body"
-            [model]="items"
-            [popup]="true"
-          />
+        <td class="text-center w-5rem" pFrozenColumn alignFrozen="right">
+          <p-menu #menu appendTo="body" [model]="items" [popup]="true" />
           <p-button
             icon="pi pi-ellipsis-v"
             severity="secondary"
@@ -116,24 +111,24 @@
     </ng-template>
     <ng-template pTemplate="footer">
       <tr>
-        <td colspan="6" class="text-right">Totals</td>
+        <td colspan="6" class="!text-end">Totals</td>
         <td>{{ totalInvestmentSum() | number: '1.2-2' | hideValue }}</td>
         <td></td>
         <td
-          [class.bg-green-400]="totalValueDifferenceSum() > 0"
-          [class.bg-red-400]="totalValueDifferenceSum() < 0"
+          [class.!bg-green-400]="totalValueDifferenceSum() > 0"
+          [class.!bg-red-400]="totalValueDifferenceSum() < 0"
         >
           {{ totalValueSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
-          [class.bg-green-400]="totalValueDifferenceSum() > 0"
-          [class.bg-red-400]="totalValueDifferenceSum() < 0"
+          [class.!bg-green-400]="totalValueDifferenceSum() > 0"
+          [class.!bg-red-400]="totalValueDifferenceSum() < 0"
         >
           {{ totalValueDifferenceSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
-          [class.bg-green-400]="totalValueDifferenceSum() > 0"
-          [class.bg-red-400]="totalValueDifferenceSum() < 0"
+          [class.!bg-green-400]="totalValueDifferenceSum() > 0"
+          [class.!bg-red-400]="totalValueDifferenceSum() < 0"
         >
           {{ totalPercentageDifferenceSum() | percent }}
         </td>

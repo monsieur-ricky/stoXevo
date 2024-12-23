@@ -38,11 +38,7 @@ export class DarkModeSwitchComponent {
   }
 
   private applyCssTheme(): void {
-    const theme = this.isDarkMode() ? 'theme-dark.css' : 'theme-light.css';
-    const linkElement = this.document.getElementById(
-      'app-theme'
-    ) as HTMLLinkElement;
-
-    linkElement.href = theme;
+    const bodyElement = this.document.querySelector('html');
+    bodyElement?.classList.toggle('dark-mode', this.isDarkMode());
   }
 }

@@ -1,1 +1,24 @@
+@use 'primeicons/primeicons.css';
+@use 'styles/tailwind.scss';
+@use 'styles/variables';
 @use 'styles/main';
+
+:root {
+  --bg-color: #e6e6e6;
+  --main-bg-color: #ffffff;
+  --active-menu-color: #ffffff;
+  --scrollbar-color: var(--p-gray-400);
+  --p-button-icon-only-width: 2.5rem;
+  --widget-text-color: #ffffff;
+  --table-row-highlight: var(--p-primary-50);
+}
+
+html.dark-mode {
+  --bg-color: #111111;
+  --main-bg-color: var(--p-menubar-background);
+  --active-menu-color: var(--p-surface-900);
+  --scrollbar-color: var(--p-gray-500);
+  --widget-text-color: #000000;
+  --p-menu-item-focus-background: var(--p-gray-700);
+  --table-row-highlight: var(--p-primary-900);
+}
