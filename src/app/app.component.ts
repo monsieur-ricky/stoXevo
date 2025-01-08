@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {
-  AppSettingsComponent,
   ExportDataComponent,
   ImportDataComponent,
   SymbolSearchComponent
@@ -28,7 +27,6 @@ import { ToastModule } from 'primeng/toast';
     SymbolSearchComponent,
     ExportDataComponent,
     ImportDataComponent,
-    AppSettingsComponent,
     ApplicationPinComponent,
     ValueVisibilityComponent,
     DarkModeSwitchComponent,
