@@ -7,8 +7,9 @@
     ::ng-deep {
       .p-datatable {
         &-scrollable {
-          td.p-datatable-frozen-column {
-            background: inherit;
+          .p-datatable-frozen-column {
+            position: sticky;
+            background: var(--p-datatable-header-cell-background);
           }
         }
 
