@@ -46,7 +46,7 @@
         <th>Total Value</th>
         <th class="min-w-40">Value Difference</th>
         <th>Percentage Difference</th>
-        <th pFrozenColumn alignFrozen="right"></th>
+        <th class="actions" pFrozenColumn alignFrozen="right"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-asset>
@@ -96,7 +96,7 @@
         >
           {{ percentageDifference }}
         </td>
-        <td class="text-center w-5rem" pFrozenColumn alignFrozen="right">
+        <td class="actions" pFrozenColumn alignFrozen="right">
           <p-menu #menu appendTo="body" [model]="items" [popup]="true" />
           <p-button
             icon="pi pi-ellipsis-v"
