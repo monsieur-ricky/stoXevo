@@ -16,6 +16,12 @@
         &-tbody {
           td {
             padding: 0.15rem 1rem;
+            overflow-wrap: break-word;
+
+            &.actions {
+              text-align: center;
+              width: 5rem;
+            }
           }
 
           tr:hover {
@@ -40,6 +46,23 @@
     @media screen and (max-width: #{var.$sm}) {
       height: calc(100vh - (100px + 50px));
       border-radius: var(--p-button-border-radius);
+
+      ::ng-deep {
+        .p-datatable {
+          &-scrollable {
+            .p-datatable-frozen-column {
+              &:first-of-type {
+                max-width: 6.5rem;
+              }
+
+              &.actions {
+                position: relative;
+                background: inherit;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
