@@ -5,7 +5,7 @@
   <h3>{{ title() }}</h3>
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-6 md:col-span-3">
-      <section class="widget widget--small bg-blue-300">
+      <section class="widget widget--small bg-blue-400">
         <h5>Total Investment</h5>
         <h1>{{ totalInvestment() | number: '1.2-2' | hideValue }}</h1>
       </section>
@@ -13,8 +13,8 @@
     <div class="col-span-6 md:col-span-3">
       <section
         class="widget widget--small"
-        [class.bg-green-300]="stockValueDiff > 0"
-        [class.bg-red-300]="stockValueDiff < 0"
+        [class.bg-green-500]="stockValueDiff > 0"
+        [class.bg-red-500]="stockValueDiff < 0"
       >
         <h5>Total Value</h5>
         <h1>{{ totalValue() | number: '1.2-2' | hideValue }}</h1>
@@ -23,8 +23,8 @@
     <div class="col-span-6 md:col-span-3">
       <section
         class="widget widget--small"
-        [class.bg-green-300]="stockValueDiff > 0"
-        [class.bg-red-300]="stockValueDiff < 0"
+        [class.bg-green-500]="stockValueDiff > 0"
+        [class.bg-red-500]="stockValueDiff < 0"
       >
         <h5>Value Difference</h5>
         <h1>{{ stockValueDiff | number: '1.2-2' | hideValue }}</h1>
@@ -33,8 +33,8 @@
     <div class="col-span-6 md:col-span-3">
       <section
         class="widget widget--small"
-        [class.bg-green-300]="stockValueDiff > 0"
-        [class.bg-red-300]="stockValueDiff < 0"
+        [class.bg-green-500]="stockValueDiff > 0"
+        [class.bg-red-500]="stockValueDiff < 0"
       >
         <h5>Percentage Difference</h5>
         <h1>{{ stockPercentageDiff }}</h1>

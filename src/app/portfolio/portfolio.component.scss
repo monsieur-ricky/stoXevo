@@ -38,6 +38,10 @@
 
           td {
             font-weight: 700;
+
+            &[class*='bg-'] {
+              color: var(--table-footer-color);
+            }
           }
         }
       }

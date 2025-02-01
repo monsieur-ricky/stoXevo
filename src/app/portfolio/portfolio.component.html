@@ -71,28 +71,28 @@
           {{ totalInvestment | currency: currency | hideValue }}
         </td>
         <td
-          [class.text-green-700]="asset.value > asset.purchasePrice"
-          [class.text-red-700]="asset.value < asset.purchasePrice"
+          [class.text-green-600]="asset.value > asset.purchasePrice"
+          [class.text-red-600]="asset.value < asset.purchasePrice"
           class="font-bold"
         >
           {{ asset.value | currency: currency | hideValue }}
         </td>
         <td
-          [class.text-green-700]="totalValue > totalInvestment"
-          [class.text-red-700]="totalValue < totalInvestment"
+          [class.text-green-600]="totalValue > totalInvestment"
+          [class.text-red-600]="totalValue < totalInvestment"
           class="font-bold"
         >
           {{ totalValue | currency: currency | hideValue }}
         </td>
         <td
-          [class.text-green-700]="asset.value > asset.purchasePrice"
-          [class.text-red-700]="asset.value < asset.purchasePrice"
+          [class.text-green-600]="asset.value > asset.purchasePrice"
+          [class.text-red-600]="asset.value < asset.purchasePrice"
         >
           {{ valueDifference | currency: currency | hideValue }}
         </td>
         <td
-          [class.text-green-700]="asset.value > asset.purchasePrice"
-          [class.text-red-700]="asset.value < asset.purchasePrice"
+          [class.text-green-600]="asset.value > asset.purchasePrice"
+          [class.text-red-600]="asset.value < asset.purchasePrice"
         >
           {{ percentageDifference }}
         </td>
@@ -115,20 +115,20 @@
         <td>{{ totalInvestmentSum() | number: '1.2-2' | hideValue }}</td>
         <td></td>
         <td
-          [class.!bg-green-400]="totalValueDifferenceSum() > 0"
-          [class.!bg-red-400]="totalValueDifferenceSum() < 0"
+          [class.!bg-green-600]="totalValueDifferenceSum() > 0"
+          [class.!bg-red-600]="totalValueDifferenceSum() < 0"
         >
           {{ totalValueSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
-          [class.!bg-green-400]="totalValueDifferenceSum() > 0"
-          [class.!bg-red-400]="totalValueDifferenceSum() < 0"
+          [class.!bg-green-600]="totalValueDifferenceSum() > 0"
+          [class.!bg-red-600]="totalValueDifferenceSum() < 0"
         >
           {{ totalValueDifferenceSum() | number: '1.2-2' | hideValue }}
         </td>
         <td
-          [class.!bg-green-400]="totalValueDifferenceSum() > 0"
-          [class.!bg-red-400]="totalValueDifferenceSum() < 0"
+          [class.!bg-green-600]="totalValueDifferenceSum() > 0"
+          [class.!bg-red-600]="totalValueDifferenceSum() < 0"
         >
           {{ totalPercentageDifferenceSum() | percent }}
         </td>

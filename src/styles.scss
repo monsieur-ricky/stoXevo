@@ -11,6 +11,7 @@
   --p-button-icon-only-width: 2.5rem;
   --widget-text-color: #ffffff;
   --table-row-highlight: var(--p-primary-50);
+  --table-footer-color: #ffffff;
 }
 
 html.dark-mode {
@@ -18,7 +19,8 @@ html.dark-mode {
   --main-bg-color: var(--p-menubar-background);
   --active-menu-color: var(--p-surface-900);
   --scrollbar-color: var(--p-gray-500);
-  --widget-text-color: #000000;
+  --widget-text-color: #ffffff;
   --p-menu-item-focus-background: var(--p-gray-700);
-  --table-row-highlight: var(--p-primary-900);
+  --table-row-highlight: var(--p-gray-800);
+  --table-footer-color: #ffffff;
 }
