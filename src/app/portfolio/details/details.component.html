@@ -10,7 +10,7 @@
   </ng-template>
 
   <form [formGroup]="assetForm">
-    <div class="formgrid grid grid-cols-12 gap-4">
+    <div class="grid grid-cols-12 gap-6">
       <div class="field col-span-12 md:col-span-6">
         <label for="type">Asset Type</label>
         <p-select
@@ -40,8 +40,8 @@
 
     <h3>Asset Information</h3>
 
-    <div class="formgrid grid grid-cols-12 gap-4">
-      <div class="col-span-12 mb-8">
+    <div class="grid grid-cols-12 gap-6">
+      <div class="col-span-12 mb-6">
         <sxe-symbol-search
           [disabled]="isSearchDisabled"
           (selected)="onSymbolSelected($event)"
@@ -87,42 +87,11 @@
 
     <h3>Investment Information</h3>
 
-    <div class="formgrid grid grid-cols-12 gap-4">
-      <div class="field col-span-12 md:col-span-4">
-        <label for="purchaseDate">Purchase Date</label>
-        <p-datepicker
-          id="purchaseDate"
-          formControlName="purchaseDate"
-          dateFormat="dd-mm-yy"
-          [iconDisplay]="'input'"
-          [showIcon]="true"
-        />
-      </div>
+    @if (!asset()?.symbol) {
+      <sxe-ui-purchase-form class="mb-6" [form]="assetForm" />
+    }
 
-      <div class="field col-span-12 md:col-span-4">
-        <label for="purchasePrice">Purchase Price</label>
-        <p-inputNumber
-          id="purchasePrice"
-          formControlName="purchasePrice"
-          mode="decimal"
-          class="w-full"
-          [minFractionDigits]="2"
-          [maxFractionDigits]="5"
-        />
-      </div>
-
-      <div class="field col-span-12 md:col-span-4">
-        <label for="quantity">Quantity</label>
-        <p-inputNumber
-          id="quantity"
-          formControlName="quantity"
-          mode="decimal"
-          class="w-full"
-          [min]="0"
-          [maxFractionDigits]="8"
-        />
-      </div>
-
+    <div class="grid grid-cols-12 gap-6">
       <div class="field col-span-12 md:col-span-4">
         <label for="value">Current Price</label>
         <p-inputNumber

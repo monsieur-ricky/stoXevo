@@ -1,0 +1,99 @@
+<p-drawer
+  position="right"
+  [style]="{ width: isMobile() ? '25rem' : '45rem' }"
+  [dismissible]="false"
+  (onHide)="onClose()"
+  [(visible)]="openSidebar"
+>
+  <ng-template pTemplate="header">
+    <h2>{{ sidebarTitle() }}</h2>
+  </ng-template>
+
+  <form [formGroup]="purchaseForm">
+    <h3>Add New Purchase</h3>
+
+    <div class="mb-10">
+      <sxe-ui-purchase-form class="mb-6" [form]="purchaseForm" />
+
+      <p-button
+        severity="primary"
+        icon="pi pi-plus-circle"
+        label="Add Purchase"
+        (onClick)="onAddPurchase()"
+      />
+    </div>
+
+    <h3>Purchase History</h3>
+
+    @let currency = asset()?.currency;
+
+    <div class="table-container">
+      <p-table
+        scrollHeight="flex"
+        styleClass="p-datatable-sm"
+        stripedRows
+        [value]="purchases()"
+        [scrollable]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th class="actions"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-purchase let-index="rowIndex">
+          <tr>
+            <td>{{ purchase.date | date: 'dd-MM-yyyy' }}</td>
+            <td>{{ purchase.price | currency: currency }}</td>
+            <td>{{ purchase.quantity }}</td>
+            <td>
+              {{ purchase.price * purchase.quantity | currency: currency }}
+            </td>
+            <td class="actions">
+              @if (purchases().length > 1) {
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  pTooltip="Delete"
+                  tooltipPosition="top"
+                  [rounded]="true"
+                  [text]="true"
+                  [outlined]="true"
+                  (onClick)="onDeletePurchase($event, index)"
+                />
+              }
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          @let price = asset()?.purchasePrice ?? 0;
+          @let quantity = asset()?.quantity ?? 0;
+
+          <tr>
+            <td></td>
+            <td>{{ price | currency: currency }}</td>
+            <td>{{ quantity }}</td>
+            <td>
+              {{ price * quantity | currency: currency }}
+            </td>
+            <td></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-between flex-wrap">
+      <p-button
+        severity="secondary"
+        icon="pi pi-times"
+        label="Close"
+        (onClick)="onClose()"
+      />
+    </div>
+  </ng-template>
+</p-drawer>

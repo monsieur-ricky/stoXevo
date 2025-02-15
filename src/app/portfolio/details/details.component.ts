@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   model,
+  OnInit,
   untracked,
   viewChild
 } from '@angular/core';
@@ -18,12 +19,18 @@ import {
   Validators
 } from '@angular/forms';
 import { ApplicationStore, PortfolioStore } from '@shared/data';
-import { AssetType, assetTypes, AssetTypeSelect, Symbol } from '@shared/models';
-import { SymbolSearchComponent } from '@shared/ui';
+import {
+  Asset,
+  AssetType,
+  assetTypes,
+  AssetTypeSelect,
+  Purchase,
+  Symbol
+} from '@shared/models';
+import { PurchaseFormComponent, SymbolSearchComponent } from '@shared/ui';
 import { getIdFromSentence, isFormValid } from '@shared/utils';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
-import { DatePicker } from 'primeng/datepicker';
 import { DrawerModule } from 'primeng/drawer';
 import { InputNumber } from 'primeng/inputnumber';
 import { InputText } from 'primeng/inputtext';
@@ -37,10 +44,10 @@ import { Select } from 'primeng/select';
     ReactiveFormsModule,
 
     SymbolSearchComponent,
+    PurchaseFormComponent,
 
     InputText,
     DrawerModule,
-    DatePicker,
     Select,
     InputNumber,
     Button,
@@ -50,7 +57,7 @@ import { Select } from 'primeng/select';
   styleUrl: './details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly portfolioStore = inject(PortfolioStore);
   private readonly appStore = inject(ApplicationStore);
@@ -68,7 +75,7 @@ export class DetailsComponent {
   saveBtnText = computed(() => (this.isEditMode() ? 'Save' : 'Add'));
   cancelBtnText = computed(() => (this.isEditMode() ? 'Close' : 'Cancel'));
 
-  assetForm = this.createForm();
+  assetForm!: FormGroup;
   types = assetTypes;
   subTypes: AssetTypeSelect[] = [];
   isSearchDisabled = false;
@@ -81,6 +88,10 @@ export class DetailsComponent {
     );
   }
 
+  ngOnInit(): void {
+    this.createForm();
+  }
+
   onSymbolSelected(selectedAsset: Symbol) {
     const { symbol, name, currency, exchangeShortName } = selectedAsset;
     this.assetForm.patchValue({ symbol, name, currency, exchangeShortName });
@@ -88,13 +99,30 @@ export class DetailsComponent {
 
   onSave(): void {
     if (isFormValid(this.assetForm)) {
+      const { purchase: _, ...formValue } = this.assetForm.getRawValue();
+
       if (this.isEditMode()) {
-        this.portfolioStore.updateAsset(this.assetForm.getRawValue());
-      } else {
-        this.portfolioStore
-          .addAsset(this.assetForm.getRawValue())
-          .then(res => (res ? this.onClose() : null));
+        const asset = {
+          ...(formValue as Asset),
+          purchases: this.asset()?.purchases ?? []
+        };
+
+        this.portfolioStore.updateAsset(asset);
+        return;
       }
+
+      const purchase = this.assetForm.get('purchase')?.value as Purchase;
+      const asset = {
+        ...(formValue as Asset),
+        purchaseDate: new Date(purchase.date).toISOString(),
+        purchasePrice: purchase.price,
+        quantity: purchase.quantity,
+        purchases: [purchase]
+      };
+
+      this.portfolioStore
+        .addAsset(asset)
+        .then(res => (res ? this.onClose() : null));
     }
   }
 
@@ -151,15 +179,12 @@ export class DetailsComponent {
     }
   }
 
-  private createForm(): FormGroup {
-    return this.fb.group({
+  private createForm(): void {
+    this.assetForm = this.fb.group({
       symbol: [undefined, Validators.required],
       name: [undefined, Validators.required],
       currency: [undefined, Validators.required],
       exchangeShortName: [undefined, Validators.required],
-      purchaseDate: [undefined, Validators.required],
-      quantity: [undefined, Validators.required],
-      purchasePrice: [undefined, Validators.required],
       value: new FormControl(undefined, Validators.required),
       type: ['stock', Validators.required],
       subType: ['gold', Validators.required],
@@ -174,9 +199,10 @@ export class DetailsComponent {
     form.reset({ type: 'stock', subType: 'gold' });
 
     if (asset?.symbol) {
-      const purchaseDate = new Date(asset.purchaseDate);
-
-      form.patchValue({ ...asset, purchaseDate });
+      form.removeControl('purchase');
+      form.patchValue({ ...asset });
+    } else {
+      this.assetForm.addControl('purchase', new FormGroup({}));
     }
 
     this.setSymbolStatus();
