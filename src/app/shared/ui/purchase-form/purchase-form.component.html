@@ -1,0 +1,39 @@
+<form [formGroup]="form()">
+  <div class="grid grid-cols-12 gap-6" formGroupName="purchase">
+    <div class="field col-span-12 md:col-span-4">
+      <label for="date">Purchase Date</label>
+      <p-datepicker
+        id="date"
+        formControlName="date"
+        dateFormat="dd-mm-yy"
+        appendTo="body"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+      />
+    </div>
+
+    <div class="field col-span-12 md:col-span-4">
+      <label for="price">Purchase Price</label>
+      <p-inputNumber
+        id="price"
+        formControlName="price"
+        mode="decimal"
+        class="w-full"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="5"
+      />
+    </div>
+
+    <div class="field col-span-12 md:col-span-4">
+      <label for="quantity">Quantity</label>
+      <p-inputNumber
+        id="quantity"
+        formControlName="quantity"
+        mode="decimal"
+        class="w-full"
+        [min]="0"
+        [maxFractionDigits]="8"
+      />
+    </div>
+  </div>
+</form>

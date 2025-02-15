@@ -9,9 +9,9 @@ import {
 } from '@ngrx/signals';
 import { ApplicationStore } from '@shared/data';
 import { PortfolioService } from '@shared/data/api';
-import { Asset } from '@shared/models';
+import { Asset, Purchase } from '@shared/models';
 import { LocalStorageService } from '@shared/services';
-import { getMetalPriceFromCurrency } from '@shared/utils';
+import { getAveragePrice, getMetalPriceFromCurrency } from '@shared/utils';
 import { MessageService } from 'primeng/api';
 
 export type PortfolioState = {
@@ -58,7 +58,25 @@ export const PortfolioStore = signalStore(
 
       const getAssets = async (): Promise<void> => {
         const decryptedAppData = await appStore.getDecryptedAppData();
-        const assets = (decryptedAppData?.assets as Asset[]) ?? [];
+        const decryptedAssets = (decryptedAppData?.assets as Asset[]) ?? [];
+
+        // This is a workaround to update previous version assets to the new version
+        const assets = decryptedAssets.map(asset => {
+          if (asset.purchases?.length) {
+            return asset;
+          }
+
+          const purchase: Purchase = {
+            date: new Date(asset.purchaseDate).toISOString(),
+            price: asset.purchasePrice,
+            quantity: asset.quantity
+          };
+
+          return {
+            ...asset,
+            purchases: [purchase]
+          };
+        });
 
         patchState(store, {
           assets,
@@ -156,6 +174,17 @@ export const PortfolioStore = signalStore(
               };
             }
           }
+
+          const purchases = updatedAsset.purchases ?? [];
+          const purchaseDate =
+            purchases?.at(-1)?.date ?? new Date().toISOString();
+
+          updatedAsset = {
+            ...updatedAsset,
+            purchaseDate: new Date(purchaseDate).toISOString(),
+            purchasePrice: getAveragePrice(purchases),
+            quantity: purchases.reduce((sum, { quantity }) => sum + quantity, 0)
+          };
 
           patchState(store, {
             asset: updatedAsset,

@@ -13,6 +13,7 @@ import {
   inject,
   signal
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { Asset } from '@shared/models';
 import { HideValuePipe, PortfolioTotalsCalcPipe } from '@shared/pipes';
@@ -23,13 +24,17 @@ import {
   MenuItemCommandEvent
 } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { Menu, MenuModule } from 'primeng/menu';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SidebarModule } from 'primeng/sidebar';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { DetailsComponent } from './details/details.component';
+import { PurchasesComponent } from './purchases/purchases.component';
 
 @Component({
   selector: 'sxe-portfolio',
@@ -44,6 +49,7 @@ import { DetailsComponent } from './details/details.component';
     DetailsComponent,
     PortfolioTotalsCalcPipe,
     HideValuePipe,
+    PurchasesComponent,
 
     TableModule,
     ButtonModule,
@@ -51,7 +57,11 @@ import { DetailsComponent } from './details/details.component';
     MenuModule,
     ConfirmDialogModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule,
+    InputNumberModule,
+    CalendarModule,
+    FormsModule
   ],
   providers: [ConfirmationService],
   templateUrl: './portfolio.component.html',
@@ -76,6 +86,7 @@ export class PortfolioComponent {
     this.portfolioStore.totalPercentageDifferenceSum;
 
   sidebarVisible = signal(false);
+  purchaseSidebarVisible = signal(false);
 
   portfolio = computed(() => this.portfolioStore.assets());
   isPinSet = computed(() => !!this.appStore.pin());
@@ -137,6 +148,11 @@ export class PortfolioComponent {
         label: 'Edit',
         icon: 'pi pi-pen-to-square',
         command: () => this.sidebarVisible.set(true)
+      },
+      {
+        label: 'Manage Purchases',
+        icon: 'pi pi-file-plus',
+        command: () => this.purchaseSidebarVisible.set(true)
       },
       {
         label: 'Delete',
