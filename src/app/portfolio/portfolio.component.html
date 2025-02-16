@@ -2,7 +2,7 @@
   <p-progressSpinner ariaLabel="loading" strokeWidth="4" />
 }
 
-<div class="header grid grid-cols-12 mb-3 md:mb-8">
+<div class="header grid grid-cols-12 gap-4 grid-cols-12 mb-4 md:mb-8">
   <div class="col-span-6 md:col flex items-center">
     <h1>Portfolio</h1>
   </div>
@@ -10,7 +10,7 @@
     <p-button
       severity="info"
       icon="pi pi-sync"
-      class="mr-4"
+      class="mr-6"
       [label]="isMobile() ? undefined : 'Update'"
       [disabled]="!isApiKeySet() || !isOnline()"
       [loading]="loading()"
@@ -144,5 +144,7 @@
 </div>
 
 <sxe-portfolio-details [(openSidebar)]="sidebarVisible" />
+
+<sxe-portfolio-purchases [(openSidebar)]="purchaseSidebarVisible" />
 
 <p-confirmDialog />

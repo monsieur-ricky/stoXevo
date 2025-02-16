@@ -18,6 +18,12 @@ export type AssetType =
   | 'silver'
   | 'physical';
 
+export type Purchase = {
+  date: string;
+  price: number;
+  quantity: number;
+};
+
 export type Asset = Symbol & {
   purchaseDate: string;
   purchasePrice: number;
@@ -26,6 +32,7 @@ export type Asset = Symbol & {
   type: AssetType;
   manualUpdate: boolean;
   subType?: string;
+  purchases: Purchase[];
 };
 
 export const assetTypes: AssetTypeSelect[] = [

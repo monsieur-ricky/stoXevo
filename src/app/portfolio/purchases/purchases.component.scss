@@ -1,0 +1,9 @@
+@use 'variables' as var;
+
+.table-container {
+  height: calc(100vh - 390px);
+
+  @media screen and (max-width: #{var.$sm}) {
+    height: 100%;
+  }
+}
