@@ -8,8 +8,7 @@ export const MyThemePreset = definePreset(Lara, {
       width: '1px',
       style: 'solid',
       color: '{primary.color}',
-      offset: '2px',
-      shadow: 'none'
+      offset: '2px'
     },
     disabledOpacity: '0.6',
     primary: {
@@ -40,20 +39,15 @@ export const MyThemePreset = definePreset(Lara, {
     content: {
       borderRadius: '{border.radius.md}'
     },
-    mask: {
-      transition: 'ease-in-out 0.25s'
-    },
     navigation: {
       list: {
         padding: '0.5rem',
-        gap: '0.5rem',
-        transition: 'ease-in-out 0.25s'
+        gap: '0.5rem'
       },
       item: {
         padding: '0.6rem 0.75rem',
         borderRadius: '{border.radius.md}',
-        gap: '0.5rem',
-        transition: 'ease-in-out 0.25s'
+        gap: '0.5rem'
       }
     },
     overlay: {

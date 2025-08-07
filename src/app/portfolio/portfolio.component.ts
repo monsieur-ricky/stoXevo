@@ -24,13 +24,13 @@ import {
   MenuItemCommandEvent
 } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
+import { DrawerModule } from 'primeng/drawer';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Menu, MenuModule } from 'primeng/menu';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { SidebarModule } from 'primeng/sidebar';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { DetailsComponent } from './details/details.component';
@@ -53,14 +53,14 @@ import { PurchasesComponent } from './purchases/purchases.component';
 
     TableModule,
     ButtonModule,
-    SidebarModule,
+    DrawerModule,
     MenuModule,
     ConfirmDialogModule,
     ToastModule,
     ProgressSpinnerModule,
     DialogModule,
     InputNumberModule,
-    CalendarModule,
+    DatePickerModule,
     FormsModule
   ],
   providers: [ConfirmationService],
