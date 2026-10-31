@@ -9,7 +9,7 @@ import { IV_KEY, SALT_KEY } from '@app';
  */
 const deriveKey = async (
   password: string,
-  salt: Uint8Array
+  salt: Uint8Array<ArrayBuffer>
 ): Promise<CryptoKey> => {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
@@ -52,8 +52,8 @@ const storeSaltAndIV = (salt: Uint8Array, iv: Uint8Array): void => {
  * @returns An object containing the salt and IV as Uint8Array.
  */
 const getSaltAndIV = (): {
-  salt: Uint8Array;
-  iv: Uint8Array;
+  salt: Uint8Array<ArrayBuffer>;
+  iv: Uint8Array<ArrayBuffer>;
 } => {
   const saltArray = JSON.parse(atob(localStorage.getItem(SALT_KEY) ?? ''));
   const ivArray = JSON.parse(atob(localStorage.getItem(IV_KEY) ?? ''));

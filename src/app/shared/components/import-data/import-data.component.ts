@@ -44,7 +44,7 @@ export class ImportDataComponent {
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = () => {
         const content = reader.result as string;
         this.importedData.set(JSON.parse(content));
       };

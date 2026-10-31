@@ -6,7 +6,7 @@ import { Asset } from '@shared/models';
   standalone: true
 })
 export class PortfolioTotalsCalcPipe implements PipeTransform {
-  transform(asset: Asset, field: 'investment' | 'value'): any {
+  transform(asset: Asset, field: 'investment' | 'value'): number {
     if (field === 'investment') {
       return asset.purchasePrice * asset.quantity;
     } else {
