@@ -27,8 +27,8 @@
 - [ ] Run all gates; record results and create PR 1 from the existing branch.
 
 ### 2. Angular 21 compatibility bridge
-- [ ] Run official Angular 20 → 21 migrations; align NgRx, CDK, UI and TypeScript peers.
-- [ ] Preserve production/PWA build; validate lint, tests, build and dependency peers.
+- [x] Run official Angular 20 → 21 migrations; align NgRx, CDK, UI and TypeScript peers.
+- [x] Preserve production/PWA build; validate lint, tests, build and dependency peers.
 - [ ] Update this log and create stacked PR 2.
 
 ### 3. Optimus UI replacement
@@ -62,3 +62,7 @@ A step is ready only after its lint, tests and production build pass. Use determ
 - Baseline lint and production/PWA build pass. TypeScript's stricter Web Crypto buffer types fixed without changing encryption bytes; a fixed legacy ciphertext fixture verifies compatibility. UI integration test uses zoneless TestBed to await signal-driven rendering.
 - PR publication blocker: GitHub HTTPS credentials are unavailable and the in-app browser is signed out. SSH git access is available. Continue implementation and keep validated commits/branches and PR descriptions ready; never fabricate PR URLs or merge changes.
 - Step 1 validation complete: lint has zero warnings/errors; 18 tests pass; production/PWA build passes; production dependency audit has zero findings. PR body: `docs/pull-requests/01-baseline.md`. PR publication remains authentication-blocked, so the combined validation/publication checkbox stays open.
+- Step 1 committed as `ae9e023` and pushed to the existing branch. GitHub CLI installed, but `gh auth status` confirms no authenticated GitHub host; PR API creation cannot proceed unattended.
+- Step 2: official Angular CLI/core/CDK and NgRx migrations completed on `improvement/angular-21-bridge` (Angular 21.2.25, CLI 21.2.29, CDK 21.2.14, NgRx 21.1.1, PrimeNG 21.1.10, Vitest 4.1.12). Added real asset drawer form integration checks and testing contributor guidance. Supported temporary Node runtime is 24.22.2.
+- Step 2 form checks exercise manual asset creation via the actual drawer's Add button and invalid-form rejection. The invalid-state assertion follows the existing dirty-control validation contract rather than requiring touched controls.
+- Step 2 validation complete: `npm run check` passes with zero lint warnings, 20 tests and production/PWA build. PR body: `docs/pull-requests/02-angular-21.md`; publication still authentication-blocked.
