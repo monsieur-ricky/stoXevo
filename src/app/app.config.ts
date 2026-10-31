@@ -1,23 +1,15 @@
 import {
   ApplicationConfig,
-  importProvidersFrom,
   isDevMode,
-  provideZoneChangeDetection
+  provideZonelessChangeDetection
 } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   provideRouter,
   withComponentInputBinding,
   withViewTransitions
 } from '@angular/router';
 
-import {
-  provideHttpClient,
-  withInterceptors,
-  withXhr
-} from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
 import { authInterceptor } from '@shared/interceptors';
 import { MessageService } from '@openng/optimus-ui/api';
@@ -27,11 +19,9 @@ import { MyThemePreset } from './my-theme.present';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
-    provideAnimationsAsync(),
-    importProvidersFrom([BrowserModule, BrowserAnimationsModule]),
-    provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor])),
     MessageService,
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

@@ -9,10 +9,13 @@ describe('theme integration', () => {
   });
 
   it('switches the Optimus and Tailwind dark-mode selector and saves the preference', async () => {
-    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()]
+    });
     const fixture = TestBed.createComponent(DarkModeSwitchComponent);
     await fixture.whenStable();
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    const button: HTMLButtonElement =
+      fixture.nativeElement.querySelector('button');
     expect(button.getAttribute('aria-label')).toBe('Enable Dark Theme');
     button.click();
     await fixture.whenStable();
@@ -21,6 +24,8 @@ describe('theme integration', () => {
     expect(button.getAttribute('aria-label')).toBe('Enable Light Theme');
     button.click();
     await fixture.whenStable();
-    expect(document.documentElement.classList.contains('dark-mode')).toBe(false);
+    expect(document.documentElement.classList.contains('dark-mode')).toBe(
+      false
+    );
   });
 });

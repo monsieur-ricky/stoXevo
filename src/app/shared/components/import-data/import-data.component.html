@@ -28,6 +28,10 @@
     (onSelect)="onFileSelect($event)"
   />
 
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  }
+
   <div class="flex justify-end mt-20 gap-6">
     <p-button
       label="Cancel"
@@ -37,7 +41,8 @@
     <p-button
       label="Import"
       (onClick)="onImportData()"
-      [disabled]="!importedData()"
+      [disabled]="!importedData() || importing()"
+      [loading]="importing()"
     />
   </div>
 </p-dialog>

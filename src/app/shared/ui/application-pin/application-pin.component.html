@@ -7,6 +7,9 @@
     [ngModel]="pin"
     (ngModelChange)="onPinChange($event)"
   />
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  }
   <p>
     This PIN is used to access the application and encrypt/decrypt the data.
   </p>

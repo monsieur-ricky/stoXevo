@@ -24,30 +24,35 @@
 - [x] Repair reproducible Angular 20 install and flat ESLint configuration.
 - [x] Add a runnable test harness and focused baseline unit/integration coverage.
 - [x] Add CI quality gates (lint, tests, production build).
-- [ ] Run all gates; record results and create PR 1 from the existing branch.
+- [x] Run all gates and record results.
+- [x] Publish PR 1 from the existing branch: [#13](https://github.com/monsieur-ricky/stoXevo/pull/13).
 
 ### 2. Angular 21 compatibility bridge
 - [x] Run official Angular 20 → 21 migrations; align NgRx, CDK, UI and TypeScript peers.
 - [x] Preserve production/PWA build; validate lint, tests, build and dependency peers.
-- [ ] Update this log and create stacked PR 2.
+- [x] Update this log and prepare stacked PR 2.
+- [x] Publish PR 2: [#14](https://github.com/monsieur-ricky/stoXevo/pull/14).
 
 ### 3. Optimus UI replacement
 - [x] Apply supported PrimeNG → Optimus migration (PrimeNG 21 bridge if required).
 - [x] Migrate theme/provider/imports, icons, Tailwind plugin and styling overrides; remove unused PrimeNG dependencies/configurations.
 - [x] Cover real UI integration behavior and visually smoke-check critical screens.
-- [ ] Validate lint, tests, build, remaining references and dependency audit; create stacked PR 3.
+- [x] Validate lint, tests, build, remaining references and dependency audit; prepare stacked PR 3.
+- [x] Publish PR 3: [#15](https://github.com/monsieur-ricky/stoXevo/pull/15).
 
 ### 4. Angular 22 and Optimus UI 2
 - [x] Run official Angular 21 → 22 and Optimus UI 1 → 2 migrations, with compatible NgRx/CDK/tooling/TypeScript.
 - [x] Use a supported Node runtime (Angular 22.2.4 needs Node ^22.22.3, ^24.15.0 or >=26).
-- [ ] Validate lint, tests, production/PWA build and dependency peers; create stacked PR 4.
+- [x] Validate lint, tests, production/PWA build and dependency peers; prepare stacked PR 4.
+- [x] Publish PR 4: [#16](https://github.com/monsieur-ricky/stoXevo/pull/16).
 
 ### 5. Angular modernization and final regression coverage
-- [ ] Apply applicable official Angular code-modernization schematics.
-- [ ] Remove redundant legacy bootstrap/animation/Zone.js code when UI compatibility permits.
-- [ ] Expand integration-first tests for asset CRUD, calculations, persistence, PIN/import/export and stoXscraper HTTP boundaries, including failures.
-- [ ] Update contributor/runtime/test documentation and resolve migration-related regressions.
-- [ ] Run clean-install quality gates, production/PWA checks and final browser smoke checks; create stacked PR 5.
+- [x] Apply applicable official Angular code-modernization schematics.
+- [x] Remove redundant legacy bootstrap/animation/Zone.js code when UI compatibility permits.
+- [x] Expand integration-first tests for asset CRUD, calculations, persistence, PIN/import/export and stoXscraper HTTP boundaries, including failures.
+- [x] Update contributor/runtime/test documentation and resolve migration-related regressions.
+- [x] Run clean-install quality gates, production/PWA checks and final browser smoke checks; prepare stacked PR 5.
+- [x] Publish PR 5: [#17](https://github.com/monsieur-ricky/stoXevo/pull/17).
 
 ## Validation policy
 
@@ -61,7 +66,7 @@ A step is ready only after its lint, tests and production build pass. Use determ
 - Registry peer checks require an ordering adjustment: PrimeNG 21 requires Angular 21, Optimus 1 is the supported migration bridge, and Optimus 2 requires Angular 22. Split the framework upgrade into independently validated bridge and final-version PRs. Node 24.11.1 is too old for Angular 22.2.4; provisioning a temporary supported Node 24 runtime without modifying the user's system installation.
 - Baseline lint and production/PWA build pass. TypeScript's stricter Web Crypto buffer types fixed without changing encryption bytes; a fixed legacy ciphertext fixture verifies compatibility. UI integration test uses zoneless TestBed to await signal-driven rendering.
 - PR publication blocker: GitHub HTTPS credentials are unavailable and the in-app browser is signed out. SSH git access is available. Continue implementation and keep validated commits/branches and PR descriptions ready; never fabricate PR URLs or merge changes.
-- Step 1 validation complete: lint has zero warnings/errors; 18 tests pass; production/PWA build passes; production dependency audit has zero findings. PR body: `docs/pull-requests/01-baseline.md`. PR publication remains authentication-blocked, so the combined validation/publication checkbox stays open.
+- Step 1 validation complete: lint has zero warnings/errors; 18 tests pass; production/PWA build passes; production dependency audit has zero findings. PR body: `docs/pull-requests/01-baseline.md`. PR publication remains authentication-blocked.
 - Step 1 committed as `ae9e023` and pushed to the existing branch. GitHub CLI installed, but `gh auth status` confirms no authenticated GitHub host; PR API creation cannot proceed unattended.
 - Step 2: official Angular CLI/core/CDK and NgRx migrations completed on `improvement/angular-21-bridge` (Angular 21.2.25, CLI 21.2.29, CDK 21.2.14, NgRx 21.1.1, PrimeNG 21.1.10, Vitest 4.1.12). Added real asset drawer form integration checks and testing contributor guidance. Supported temporary Node runtime is 24.22.2.
 - Step 2 form checks exercise manual asset creation via the actual drawer's Add button and invalid-form rejection. The invalid-state assertion follows the existing dirty-control validation contract rather than requiring touched controls.
@@ -74,3 +79,29 @@ A step is ready only after its lint, tests and production build pass. Use determ
 - Step 4: official migrations completed (Angular 22.2.4, CLI/CDK/build 22.2.5, NgRx 22.0.1, Optimus suite 2.0.2, TypeScript 6.0.3). Root component explicitly uses OnPush rather than the migration's conservative Eager fallback.
 - TypeScript 6 rejects deprecated `baseUrl`; removed it, made path mappings explicitly relative and replaced two bare `src/` imports. No TypeScript deprecation suppression added. Updating compatible Vitest 5, ESLint 10 and jsdom 29; removed unused Prettier/ESLint bridge packages and Autoprefixer.
 - Step 4 validation complete: `npm run check` passes (zero-warning lint, 21 tests, production/PWA build). Dependency count reduced from 704 to 440; audit reduced to 18 moderate development findings and no high/critical findings. PR body: `docs/pull-requests/04-angular-22.md`.
+- Step 4 committed as `8798545` and pushed. Final work is on `improvement/angular-modernization`, stacked on `improvement/angular-22`.
+- Step 5: official self-closing-tag schematic modernized 3 files; unused-import schematic found no unused component imports. Existing signal inputs/outputs/queries and block control flow were already modern. Converted bootstrap to zoneless/default Fetch HTTP and removed Zone.js plus legacy animation/bootstrap packages/providers. Existing 21 tests and production/PWA build still pass after this change.
+- Replaced imperative profile loading with cancellation-aware `httpResource`, mirrored menu-state effect with `linkedSignal`, and leaking network event listeners with lifecycle-managed `toSignal`. Re-enabled the template diagnostics that the Angular compatibility migration had suppressed and removed its temporary safe-navigation helper.
+- Expanding integration coverage for route-bound profiles/cancellation/errors, network teardown, PIN retry and encrypted file import/export. Regression fixes keep a wrong PIN locked, validate/decrypt backups before overwriting current data, surface import errors, await persistence and allow manual-only portfolio exports without an API key. Encryption/export format is unchanged.
+- Step 5 interim validation: 37 tests, zero-warning lint and zoneless production build pass. Added API-key origin isolation, legacy purchase loading and quote failure checks, plus a service-worker artifact/hash verifier in both local checks and CI. Running final clean-install checks next. Production initial bundle is approximately 1.22 MB, down from the 1.33 MB Angular 22 compatibility checkpoint.
+- Final validation after clean `npm ci`: `npm run check` passes (40 tests across 13 files, zero lint warnings, production build and all 26 PWA cache hashes). `npm ls --depth=0` is clean; production audit has zero findings. Full audit retains 18 moderate development-only minimatch findings, documented without unsafe cross-major overrides.
+- Final browser smoke on isolated synthetic data passes: real manual asset creation, portfolio table, light/dark and privacy controls, dashboard calculations (20 investment / 30 value / 10 gain / 50%), encrypted persistence after reload, wrong-PIN error and successful retry. No Zone.js at runtime and zero console errors. No real user portfolio or deployed origin was accessed.
+- No legacy UI/Zone.js/Angular-animation imports remain in source. Local and remote `main` remain unchanged at `701ec580e4a23ffca689fbdd3ac97c65462146fc`. PR 5 body: `docs/pull-requests/05-modernization.md`.
+- Final implementation checkpoint `6379b4a` is pushed to `improvement/angular-modernization`; all five checkpoint branches are on origin. Executed the PR publication helper after pushing: GitHub CLI exits at its authentication check because no GitHub host is logged in. No PRs were created, and no merge was attempted. Temporary smoke-test server stopped; synthetic browser fixtures remain isolated from deployed data.
+- Final shutdown-log review surfaced Angular 22's NG01354 warning for the search-only autocomplete nested in the asset reactive form. Explicitly opted that control out of parent form registration, updated its label API to `optionLabel`, and added a warning regression assertion to the drawer integration test. Revalidating the final checkpoint before completion.
+- Follow-up validation passes: zero-warning lint, all 40 tests (including the NG01354 guard), production build and all 26 PWA hashes. Final initial bundle is 1.23 MB. The final follow-up is included on the same modernization review branch; only GitHub-authenticated PR publication remains outstanding.
+- GitHub authentication is now available. Published PRs #13–#17 and verified their stacked base/head branches; all remain open and unmerged. Linux CI exposed missing optional `@emnapi/core` / `@emnapi/runtime` lockfile entries in the Angular 22 and modernization checkpoints. Repairing these with the same npm version as CI (11.19.1), without bypassing clean-install validation.
+- Repaired both lockfiles with npm 11.19.1: existing package versions are unchanged; missing optional WASM peers and bundled metadata are now recorded. Fresh `npm ci` and all local gates pass on both checkpoints (21 tests for PR #16; 40 tests and 26 PWA hashes for PR #17). PRs #13–#15 have green GitHub checks; awaiting Linux CI confirmation of the two lockfile repairs.
+
+## Review checkpoints
+
+| Step | Branch | Validation | Publication |
+| --- | --- | --- | --- |
+| 1 | `improvement/angular-optimus-update` | lint, 18 tests, build | [#13](https://github.com/monsieur-ricky/stoXevo/pull/13) |
+| 2 | `improvement/angular-21-bridge` | lint, 20 tests, build | [#14](https://github.com/monsieur-ricky/stoXevo/pull/14) |
+| 3 | `improvement/optimus-ui` | lint, 21 tests, build, browser | [#15](https://github.com/monsieur-ricky/stoXevo/pull/15) |
+| 4 | `improvement/angular-22` | lint, 21 tests, build; repaired lockfile, Linux CI confirmation pending | [#16](https://github.com/monsieur-ricky/stoXevo/pull/16) |
+| 5 | `improvement/angular-modernization` | clean install, lint, 40 tests, build, PWA hashes, browser; repaired lockfile, Linux CI confirmation pending | [#17](https://github.com/monsieur-ricky/stoXevo/pull/17) |
+
+All five PRs are published. Confirm Linux CI for the lockfile repairs before approval.
+Review and approve PRs in order; **nothing is merged**.

@@ -21,3 +21,4 @@ jobs:
       - run: npm run lint -- --max-warnings=0
       - run: npm test -- --watch=false
       - run: npm run build
+      - run: npm run check:pwa

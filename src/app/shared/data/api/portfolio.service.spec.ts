@@ -1,7 +1,7 @@
 import {
+  HttpClient,
   provideHttpClient,
-  withInterceptors,
-  withXhr
+  withInterceptors
 } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -20,7 +20,7 @@ describe('stoXscraper HTTP integration', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
+        provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
         {
           provide: ApplicationStore,
@@ -51,6 +51,15 @@ describe('stoXscraper HTTP integration', () => {
       .expectOne(`${STOXSCRAPER_API}/quote/metal/gold`)
       .flush({ pricePerGramEuro: 80 });
     expect(await quote).toEqual({ pricePerGramEuro: 80 });
+  });
+
+  it('never sends the financial API key to an unrelated HTTP origin', () => {
+    TestBed.inject(HttpClient)
+      .get('https://example.test/unrelated')
+      .subscribe();
+    const request = http.expectOne('https://example.test/unrelated');
+    expect(request.request.headers.has('stoxscraper-api-key')).toBe(false);
+    request.flush({});
   });
 
   it('propagates API errors to the caller', async () => {

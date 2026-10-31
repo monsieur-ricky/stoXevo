@@ -29,7 +29,7 @@ const initialState: PortfolioState = {
 };
 
 export const PortfolioStore = signalStore(
-  { providedIn: 'root', protectedState: false },
+  { providedIn: 'root' },
   withState(initialState),
 
   withMethods(
@@ -46,7 +46,7 @@ export const PortfolioStore = signalStore(
         const decryptedAppData = await appStore.getDecryptedAppData();
         const appData = { ...decryptedAppData, assets: store.assets() };
 
-        storageService.set(STORAGE_APP_DATA_KEY, appData, pin());
+        await storageService.set(STORAGE_APP_DATA_KEY, appData, pin());
       };
 
       const setAsset = (asset: Asset | undefined): void => {
@@ -85,8 +85,8 @@ export const PortfolioStore = signalStore(
         });
 
         if (!store.initialLoadDone()) {
-          getQuotes(false);
           patchState(store, { initialLoadDone: true });
+          if (appStore.isApiKeySet()) await getQuotes(false);
         }
       };
 
@@ -123,7 +123,7 @@ export const PortfolioStore = signalStore(
 
           patchState(store, { asset, assets: [...store.assets(), asset] });
 
-          storeAssets();
+          await storeAssets();
 
           messageService.add({
             severity: 'success',
@@ -195,7 +195,7 @@ export const PortfolioStore = signalStore(
               )
           });
 
-          storeAssets();
+          await storeAssets();
 
           messageService.add({
             severity: 'success',
@@ -215,12 +215,12 @@ export const PortfolioStore = signalStore(
         }
       };
 
-      const removeAsset = (symbol: string): void => {
+      const removeAsset = async (symbol: string): Promise<void> => {
         patchState(store, {
           assets: store.assets().filter(asset => asset.symbol !== symbol)
         });
 
-        storeAssets();
+        await storeAssets();
 
         messageService.add({
           severity: 'success',
@@ -260,7 +260,7 @@ export const PortfolioStore = signalStore(
             assets: updatedAssets
           });
 
-          storeAssets();
+          await storeAssets();
 
           if (showSuccessMessage) {
             messageService.add({

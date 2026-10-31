@@ -17,10 +17,22 @@ describe('LocalStorageService integration', () => {
   });
 
   it('decrypts a fixed legacy export fixture, not just newly generated data', async () => {
-    service.setPlainValue(SALT_KEY, 'WzAsMSwyLDMsNCw1LDYsNyw4LDksMTAsMTEsMTIsMTMsMTQsMTVd');
-    service.setPlainValue(IV_KEY, 'WzE2LDE3LDE4LDE5LDIwLDIxLDIyLDIzLDI0LDI1LDI2LDI3XQ==');
-    service.setPlainValue('legacy', '9UqY/FAyPbp1DBqupcTwhhYuyCkvBs22tYZrmCeYMp6RsTqH+mUogiPuXY6HX1nVxWJSflc=');
-    expect(await service.get('legacy', '1234')).toEqual({ assets: [], apiKey: 'fixture-only' });
+    service.setPlainValue(
+      SALT_KEY,
+      'WzAsMSwyLDMsNCw1LDYsNyw4LDksMTAsMTEsMTIsMTMsMTQsMTVd'
+    );
+    service.setPlainValue(
+      IV_KEY,
+      'WzE2LDE3LDE4LDE5LDIwLDIxLDIyLDIzLDI0LDI1LDI2LDI3XQ=='
+    );
+    service.setPlainValue(
+      'legacy',
+      '9UqY/FAyPbp1DBqupcTwhhYuyCkvBs22tYZrmCeYMp6RsTqH+mUogiPuXY6HX1nVxWJSflc='
+    );
+    expect(await service.get('legacy', '1234')).toEqual({
+      assets: [],
+      apiKey: 'fixture-only'
+    });
   });
 
   it('retains the existing unencrypted base64 JSON format', async () => {
@@ -31,7 +43,10 @@ describe('LocalStorageService integration', () => {
   });
 
   it('round trips encrypted financial data without storing plaintext', async () => {
-    const data = { assets: [{ symbol: 'PRIVATE', value: 123 }], name: 'Épargne €' };
+    const data = {
+      assets: [{ symbol: 'PRIVATE', value: 123 }],
+      name: 'Épargne €'
+    };
     await service.set('test-data', data, '123456');
     expect(localStorage.getItem('test-data')).not.toContain('PRIVATE');
     expect(localStorage.getItem(SALT_KEY)).toBeTruthy();

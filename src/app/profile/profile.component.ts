@@ -2,15 +2,13 @@ import { CurrencyPipe, PercentPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
-  input,
-  signal,
-  untracked
+  input
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ProfileService } from '@shared/data/api';
-import { Profile } from '@shared/models';
 import { MessageService } from '@openng/optimus-ui/api';
 import { ProgressSpinnerModule } from '@openng/optimus-ui/progressspinner';
 
@@ -28,36 +26,21 @@ export class ProfileComponent {
 
   symbol = input<string>();
 
-  profile = signal<Profile | undefined>(undefined);
-  loading = signal(false);
+  private readonly profileResource = this.profileService.resource(this.symbol);
+  profile = computed(() =>
+    this.profileResource.hasValue() ? this.profileResource.value() : undefined
+  );
+  loading = this.profileResource.isLoading;
 
   constructor() {
     effect(() => {
-      const symbol = this.symbol();
-      untracked(() => this.getProfile(symbol));
+      if (this.profileResource.error()) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Oops!',
+          detail: 'Failed to load the asset profile.'
+        });
+      }
     });
-  }
-
-  private async getProfile(symbol: string | undefined): Promise<void> {
-    if (!symbol) {
-      this.profile.set(undefined);
-      return;
-    }
-
-    try {
-      this.loading.set(true);
-      const profile = await this.profileService.get(symbol);
-      this.profile.set(profile);
-    } catch (error) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Oops!',
-        detail: 'Failed to load the asset profile.'
-      });
-
-      console.error(error);
-    } finally {
-      this.loading.set(false);
-    }
   }
 }

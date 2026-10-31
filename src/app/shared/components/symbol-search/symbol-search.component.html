@@ -2,7 +2,7 @@
   <p-inputIcon styleClass="pi pi-search" />
 
   <p-autoComplete
-    field="name"
+    optionLabel="name"
     placeholder="Search Asset..."
     [showClear]="true"
     [style]="{ width: '100%' }"
@@ -15,6 +15,7 @@
     (onSelect)="onSelect($event.value)"
     (completeMethod)="searchSymbols($event.query)"
     [(ngModel)]="selectedItem"
+    [ngModelOptions]="{ standalone: true }"
   >
     <ng-template #item let-symbol>
       <div class="flex items-center gap-2">

@@ -102,6 +102,8 @@ The UI uses [Optimus UI](https://github.com/openng-org/optimus-ui) 2 (MIT),
 its Lara theme, OpenNG Icons and Tailwind CSS 4. `p-*` selectors and `--p-*`
 design tokens are retained by Optimus; they do not imply a PrimeNG dependency.
 See [docs/TESTING.md](docs/TESTING.md) for test conventions.
+Compatibility decisions, audit findings and pre-existing privacy/security
+limitations are documented in [docs/MIGRATION_NOTES.md](docs/MIGRATION_NOTES.md).
 
 ### TODOs
 

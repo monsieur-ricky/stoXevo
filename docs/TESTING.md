@@ -1,7 +1,8 @@
 # Testing trophy
 
 Run `npm run check` before proposing a change. CI runs the same lint, non-watch
-Vitest suite and production build after a clean `npm ci`.
+Vitest suite, production build and service-worker asset/hash verification after
+a clean `npm ci`.
 
 ## What belongs where
 
