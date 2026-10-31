@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {
@@ -22,9 +21,7 @@ import { ToastModule } from 'primeng/toast';
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
     RouterOutlet,
-
     SymbolSearchComponent,
     AppSettingsComponent,
     ExportDataComponent,
@@ -32,7 +29,6 @@ import { ToastModule } from 'primeng/toast';
     ApplicationPinComponent,
     ValueVisibilityComponent,
     DarkModeSwitchComponent,
-
     TopBarComponent,
     SideMenuComponent,
     ToastModule,
