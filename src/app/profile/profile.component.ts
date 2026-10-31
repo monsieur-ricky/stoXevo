@@ -11,8 +11,8 @@ import {
 import { RouterModule } from '@angular/router';
 import { ProfileService } from '@shared/data/api';
 import { Profile } from '@shared/models';
-import { MessageService } from 'primeng/api';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageService } from '@openng/optimus-ui/api';
+import { ProgressSpinnerModule } from '@openng/optimus-ui/progressspinner';
 
 @Component({
   selector: 'sxe-profile',

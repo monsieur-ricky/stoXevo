@@ -33,7 +33,7 @@
     [tableStyle]="{ 'min-width': '10rem' }"
     [scrollable]="true"
   >
-    <ng-template pTemplate="header">
+    <ng-template #header>
       <tr>
         <th pFrozenColumn>Symbol</th>
         <th>Type</th>
@@ -49,7 +49,7 @@
         <th class="actions" pFrozenColumn alignFrozen="right"></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-asset>
+    <ng-template #body let-asset>
       @let currency = asset.currency;
       @let totalInvestment = asset | portfolioTotalsCalc: 'investment';
       @let totalValue = asset | portfolioTotalsCalc: 'value';
@@ -109,7 +109,7 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="footer">
+    <ng-template #footer>
       <tr>
         <td colspan="6" class="!text-end">Totals</td>
         <td>{{ totalInvestmentSum() | number: '1.2-2' | hideValue }}</td>
@@ -135,7 +135,7 @@
         <td></td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="emptymessage">
+    <ng-template #emptymessage>
       <tr>
         <td colspan="6">No assets in portfolio</td>
       </tr>

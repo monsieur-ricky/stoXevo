@@ -12,8 +12,8 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { DatePicker } from 'primeng/datepicker';
-import { InputNumber } from 'primeng/inputnumber';
+import { DatePicker } from '@openng/optimus-ui/datepicker';
+import { InputNumber } from '@openng/optimus-ui/inputnumber';
 
 @Component({
   selector: 'sxe-ui-purchase-form',

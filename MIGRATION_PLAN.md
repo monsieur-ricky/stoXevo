@@ -32,9 +32,9 @@
 - [ ] Update this log and create stacked PR 2.
 
 ### 3. Optimus UI replacement
-- [ ] Apply supported PrimeNG → Optimus migration (PrimeNG 21 bridge if required).
-- [ ] Migrate theme/provider/imports, icons, Tailwind plugin and styling overrides; remove unused PrimeNG dependencies/configurations.
-- [ ] Cover real UI integration behavior and visually smoke-check critical screens.
+- [x] Apply supported PrimeNG → Optimus migration (PrimeNG 21 bridge if required).
+- [x] Migrate theme/provider/imports, icons, Tailwind plugin and styling overrides; remove unused PrimeNG dependencies/configurations.
+- [x] Cover real UI integration behavior and visually smoke-check critical screens.
 - [ ] Validate lint, tests, build, remaining references and dependency audit; create stacked PR 3.
 
 ### 4. Angular 22 and Optimus UI 2
@@ -66,3 +66,7 @@ A step is ready only after its lint, tests and production build pass. Use determ
 - Step 2: official Angular CLI/core/CDK and NgRx migrations completed on `improvement/angular-21-bridge` (Angular 21.2.25, CLI 21.2.29, CDK 21.2.14, NgRx 21.1.1, PrimeNG 21.1.10, Vitest 4.1.12). Added real asset drawer form integration checks and testing contributor guidance. Supported temporary Node runtime is 24.22.2.
 - Step 2 form checks exercise manual asset creation via the actual drawer's Add button and invalid-form rejection. The invalid-state assertion follows the existing dirty-control validation contract rather than requiring touched controls.
 - Step 2 validation complete: `npm run check` passes with zero lint warnings, 20 tests and production/PWA build. PR body: `docs/pull-requests/02-angular-21.md`; publication still authentication-blocked.
+- Step 2 committed as `5626ef7` and pushed. Step 3 uses `improvement/optimus-ui` stacked on that branch.
+- Step 3: official Optimus 1.0.2 migration rewrote providers/component/service imports, icon styles and package names. Manually replaced the older `@primeng/themes` package that the schematic does not recognize. Historical documentation references intentionally remain.
+- Replaced ignored legacy Tailwind configs with Tailwind 4's CSS-first Optimus plugin and matching `.dark-mode` variant; retained custom `--p-*` tokens and `p-*` selectors (Optimus preserves these APIs). Updated deprecated `pTemplate` slots to named templates, fixed input-label associations and added accessible privacy/theme button names.
+- Step 3 validation complete: zero-warning lint, 21 passing tests, production/PWA build and zero production audit findings. No legacy UI imports remain in source/manifest. Browser smoke on isolated `127.0.0.1:4307`: PIN entry, dashboard, mobile navigation, dark theme, portfolio table and manual-entry drawer; zero console errors. PR body: `docs/pull-requests/03-optimus-ui.md`.

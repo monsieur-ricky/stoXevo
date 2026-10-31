@@ -15,8 +15,8 @@ import {
   TopBarComponent,
   ValueVisibilityComponent
 } from '@shared/ui';
-import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { ToastModule } from '@openng/optimus-ui/toast';
 
 @Component({
   standalone: true,

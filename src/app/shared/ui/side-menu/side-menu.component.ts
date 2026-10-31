@@ -7,10 +7,10 @@ import {
   untracked
 } from '@angular/core';
 import { ApplicationStore } from '@shared/data';
-import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { DrawerModule } from 'primeng/drawer';
-import { MenuModule } from 'primeng/menu';
+import { MenuItem } from '@openng/optimus-ui/api';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { DrawerModule } from '@openng/optimus-ui/drawer';
+import { MenuModule } from '@openng/optimus-ui/menu';
 
 @Component({
   selector: 'sxe-ui-side-menu',

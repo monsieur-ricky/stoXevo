@@ -29,12 +29,12 @@ import {
 } from '@shared/models';
 import { PurchaseFormComponent, SymbolSearchComponent } from '@shared/ui';
 import { getIdFromSentence, isFormValid } from '@shared/utils';
-import { Button } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
-import { DrawerModule } from 'primeng/drawer';
-import { InputNumber } from 'primeng/inputnumber';
-import { InputText } from 'primeng/inputtext';
-import { Select } from 'primeng/select';
+import { Button } from '@openng/optimus-ui/button';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { DrawerModule } from '@openng/optimus-ui/drawer';
+import { InputNumber } from '@openng/optimus-ui/inputnumber';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Select } from '@openng/optimus-ui/select';
 
 @Component({
   selector: 'sxe-portfolio-details',

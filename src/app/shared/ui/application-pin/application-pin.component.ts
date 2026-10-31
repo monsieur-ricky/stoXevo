@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApplicationStore } from '@shared/data';
-import { InputOtpModule } from 'primeng/inputotp';
+import { InputOtpModule } from '@openng/optimus-ui/inputotp';
 
 @Component({
   selector: 'sxe-ui-application-pin',
