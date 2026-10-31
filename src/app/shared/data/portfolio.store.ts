@@ -269,11 +269,12 @@ export const PortfolioStore = signalStore(
               detail: 'Portfolio quotes were updated!'
             });
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
-            detail: error.error['Error Message'] ?? 'Failed to update quotes.',
+            detail:
+              error instanceof Error ? error.message : 'Failed to update quotes.',
             life: 10000
           });
 

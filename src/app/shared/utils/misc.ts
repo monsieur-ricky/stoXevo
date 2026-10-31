@@ -26,7 +26,7 @@ export const getMetalPriceFromCurrency = (
   quote: MetalQuote | undefined,
   currency: string
 ): number => {
-  let price = 0;
+  const price = 0;
 
   switch (currency.toLowerCase()) {
     case 'eur':

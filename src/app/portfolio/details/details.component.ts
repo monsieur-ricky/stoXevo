@@ -99,7 +99,8 @@ export class DetailsComponent implements OnInit {
 
   onSave(): void {
     if (isFormValid(this.assetForm)) {
-      const { purchase: _, ...formValue } = this.assetForm.getRawValue();
+      const formValue = { ...this.assetForm.getRawValue() };
+      delete formValue['purchase'];
 
       if (this.isEditMode()) {
         const asset = {

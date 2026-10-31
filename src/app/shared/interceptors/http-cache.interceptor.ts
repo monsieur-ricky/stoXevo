@@ -7,9 +7,9 @@ const requests = new Map<
   string,
   {
     src: string;
-    data: HttpResponse<any>;
-    data$: Subject<HttpResponse<any>>;
-    params?: any;
+    data: HttpResponse<unknown>;
+    data$: Subject<HttpResponse<unknown>>;
+    params?: unknown;
     ttl?: number;
   }
 >();
@@ -46,20 +46,20 @@ export const httpCacheInterceptor = (options?: {
           return of(prevReq.data);
         }
 
-        prevReq.data$ = new Subject<any>();
+        prevReq.data$ = new Subject<HttpResponse<unknown>>();
       } else {
         const cachedData = storageService.getPlainValue(key);
         if (cachedData) {
           const { data, ttl } = JSON.parse(cachedData);
           if (data && ttl && ttl > new Date().getTime()) {
-            return of(new HttpResponse<any>({ body: data }));
+            return of(new HttpResponse<unknown>({ body: data }));
           }
         }
 
         requests.set(key, {
           src: req.url,
-          data$: new Subject<HttpResponse<any>>(),
-          data: new HttpResponse<any>(),
+          data$: new Subject<HttpResponse<unknown>>(),
+          data: new HttpResponse<unknown>(),
           params: req.body,
           ttl: getTTL()
         });
@@ -69,13 +69,13 @@ export const httpCacheInterceptor = (options?: {
     return next(req).pipe(
       filter(x => x instanceof HttpResponse),
       tap(x => {
-        const data = x as HttpResponse<any>;
+        const data = x as HttpResponse<unknown>;
         const r = prevRequest();
         if (!r) return;
 
         r.data = data;
         r.ttl = getTTL();
-        !r.data$.closed && r.data$.next(data);
+        if (!r.data$.closed) r.data$.next(data);
 
         // Cache the response in localStorage
         storageService.setPlainValue(

@@ -82,9 +82,24 @@ All the necessary information to setup and run [stoXscraper Web API](https://git
 
 Contributions are welcome! If you'd like to improve **stoXevo**, feel free to open a pull request or submit an issue.
 
+### Quality checks
+
+```bash
+npm ci
+npm run check
+```
+
+The test suite uses Angular TestBed and Vitest. Following the testing trophy,
+most coverage should exercise collaborating services, stores and rendered UI;
+use small unit tests for financial calculations and edge cases. HTTP tests mock
+stoXscraper, and storage tests use disposable fixtures. No E2E tests or real
+financial credentials are needed. Run `npm test` for interactive watch mode.
+
+The upgrade work and per-step validation results are tracked in
+[MIGRATION_PLAN.md](MIGRATION_PLAN.md).
+
 ### TODOs
 
-- Unit Tests
 - Add asset currency stats
 - Add historical stats
 - Use IndexedDB instead of localStorage
