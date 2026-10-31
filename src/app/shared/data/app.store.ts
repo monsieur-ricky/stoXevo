@@ -11,7 +11,7 @@ import {
 import { ApplicationData, EncryptedAppData } from '@shared/models';
 import { LocalStorageService } from '@shared/services';
 import { map } from 'rxjs';
-import { IV_KEY, SALT_KEY, STORAGE_APP_DATA_KEY } from 'src/app/app.settings';
+import { IV_KEY, SALT_KEY, STORAGE_APP_DATA_KEY } from '@app';
 
 export type ApplicationState = {
   apiKey: string | null;

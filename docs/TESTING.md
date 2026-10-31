@@ -33,3 +33,16 @@ For targeted work:
 ```bash
 npm test -- --watch=false --include='src/app/shared/data/**/*.spec.ts'
 ```
+
+## Migration review requests
+
+The major steps are separate, stacked branches, listed in `MIGRATION_PLAN.md`.
+After authenticating with `gh auth login`, run:
+
+```bash
+bash scripts/open-migration-prs.sh
+```
+
+The helper reuses existing open PRs and creates only missing ones, each against
+the preceding checkpoint. It never merges or enables auto-merge. Approve and
+merge in order; retarget subsequent PRs as their bases land.

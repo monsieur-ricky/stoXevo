@@ -38,8 +38,8 @@
 - [ ] Validate lint, tests, build, remaining references and dependency audit; create stacked PR 3.
 
 ### 4. Angular 22 and Optimus UI 2
-- [ ] Run official Angular 21 → 22 and Optimus UI 1 → 2 migrations, with compatible NgRx/CDK/tooling/TypeScript.
-- [ ] Use a supported Node runtime (Angular 22.2.4 needs Node ^22.22.3, ^24.15.0 or >=26).
+- [x] Run official Angular 21 → 22 and Optimus UI 1 → 2 migrations, with compatible NgRx/CDK/tooling/TypeScript.
+- [x] Use a supported Node runtime (Angular 22.2.4 needs Node ^22.22.3, ^24.15.0 or >=26).
 - [ ] Validate lint, tests, production/PWA build and dependency peers; create stacked PR 4.
 
 ### 5. Angular modernization and final regression coverage
@@ -70,3 +70,7 @@ A step is ready only after its lint, tests and production build pass. Use determ
 - Step 3: official Optimus 1.0.2 migration rewrote providers/component/service imports, icon styles and package names. Manually replaced the older `@primeng/themes` package that the schematic does not recognize. Historical documentation references intentionally remain.
 - Replaced ignored legacy Tailwind configs with Tailwind 4's CSS-first Optimus plugin and matching `.dark-mode` variant; retained custom `--p-*` tokens and `p-*` selectors (Optimus preserves these APIs). Updated deprecated `pTemplate` slots to named templates, fixed input-label associations and added accessible privacy/theme button names.
 - Step 3 validation complete: zero-warning lint, 21 passing tests, production/PWA build and zero production audit findings. No legacy UI imports remain in source/manifest. Browser smoke on isolated `127.0.0.1:4307`: PIN entry, dashboard, mobile navigation, dark theme, portfolio table and manual-entry drawer; zero console errors. PR body: `docs/pull-requests/03-optimus-ui.md`.
+- Step 3 branch pushed; Angular/Optimus major upgrade is running on `improvement/angular-22`. Pinned Node 24.22.2 for contributors and CI; updated setup instructions to describe optional scraper integration accurately. Added an idempotent PR publication helper (`scripts/open-migration-prs.sh`) that requires GitHub authentication and never merges.
+- Step 4: official migrations completed (Angular 22.2.4, CLI/CDK/build 22.2.5, NgRx 22.0.1, Optimus suite 2.0.2, TypeScript 6.0.3). Root component explicitly uses OnPush rather than the migration's conservative Eager fallback.
+- TypeScript 6 rejects deprecated `baseUrl`; removed it, made path mappings explicitly relative and replaced two bare `src/` imports. No TypeScript deprecation suppression added. Updating compatible Vitest 5, ESLint 10 and jsdom 29; removed unused Prettier/ESLint bridge packages and Autoprefixer.
+- Step 4 validation complete: `npm run check` passes (zero-warning lint, 21 tests, production/PWA build). Dependency count reduced from 704 to 440; audit reduced to 18 moderate development findings and no high/critical findings. PR body: `docs/pull-requests/04-angular-22.md`.

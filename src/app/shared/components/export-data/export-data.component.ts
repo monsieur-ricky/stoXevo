@@ -3,7 +3,7 @@ import { ApplicationStore } from '@shared/data';
 import { ApplicationData } from '@shared/models';
 import { ButtonModule } from '@openng/optimus-ui/button';
 import { TooltipModule } from '@openng/optimus-ui/tooltip';
-import { IV_KEY, SALT_KEY, STORAGE_APP_DATA_KEY } from 'src/app/app.settings';
+import { IV_KEY, SALT_KEY, STORAGE_APP_DATA_KEY } from '@app';
 import { LocalStorageService } from './../../services/local-storage.service';
 
 @Component({
