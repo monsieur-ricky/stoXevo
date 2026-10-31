@@ -43,7 +43,7 @@ export class SymbolSearchComponent {
 
   symbols = signal<Symbol[]>([]);
 
-  selectedItem?: symbol;
+  selectedItem?: Symbol;
 
   selected = output<Symbol>();
 

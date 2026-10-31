@@ -7,12 +7,15 @@ describe('value visibility integration', () => {
   afterEach(() => localStorage.clear());
 
   it('toggles sensitive values and persists the preference through the real UI', async () => {
-    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()]
+    });
     const fixture = TestBed.createComponent(ValueVisibilityComponent);
     const store = TestBed.inject(ApplicationStore);
     await fixture.whenStable();
 
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    const button: HTMLButtonElement =
+      fixture.nativeElement.querySelector('button');
     expect(store.showValues()).toBe(true);
     button.click();
     await fixture.whenStable();

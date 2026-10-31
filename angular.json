@@ -27,9 +27,7 @@
             "outputPath": "dist/stoXevo",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -37,15 +35,10 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles/tailwind.css",
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles/tailwind.css", "src/styles.scss"],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles"
-              ]
+              "includePaths": ["src/styles"]
             }
           },
           "configurations": {
@@ -99,10 +92,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -110,8 +100,6 @@
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }

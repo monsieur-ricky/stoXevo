@@ -1,7 +1,6 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { PortfolioStore } from '@shared/data';
 import { MessageService } from '@openng/optimus-ui/api';
 import { DetailsComponent } from './details.component';
@@ -11,9 +10,8 @@ describe('asset details form integration', () => {
     localStorage.clear();
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideZonelessChangeDetection(),
-        provideNoopAnimations(),
         MessageService
       ]
     });
@@ -22,9 +20,12 @@ describe('asset details form integration', () => {
   afterEach(() => localStorage.clear());
 
   it('opens a manual-entry drawer and saves a new asset through its rendered button', async () => {
+    const warn = vi.spyOn(console, 'warn');
     const fixture = TestBed.createComponent(DetailsComponent);
     fixture.componentRef.setInput('openSidebar', true);
     await fixture.whenStable();
+    expect(warn.mock.calls.flat().join(' ')).not.toContain('NG01354');
+    warn.mockRestore();
     const form = fixture.componentInstance.assetForm;
     form.patchValue({
       symbol: 'MANUAL',

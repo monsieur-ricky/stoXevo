@@ -8,21 +8,20 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "check": "npm run lint -- --max-warnings=0 && npm test -- --watch=false && npm run build"
+    "check": "npm run lint -- --max-warnings=0 && npm test -- --watch=false && npm run build && npm run check:pwa",
+    "check:pwa": "node scripts/check-pwa.mjs"
   },
   "private": true,
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
   },
   "dependencies": {
-    "@angular/animations": "^22.2.4",
     "@angular/cdk": "^22.2.5",
     "@angular/common": "^22.2.4",
     "@angular/compiler": "^22.2.4",
     "@angular/core": "^22.2.4",
     "@angular/forms": "^22.2.4",
     "@angular/platform-browser": "^22.2.4",
-    "@angular/platform-browser-dynamic": "^22.2.4",
     "@angular/router": "^22.2.4",
     "@angular/service-worker": "^22.2.4",
     "@ngrx/signals": "^22.0.1",
@@ -30,7 +29,6 @@
     "@openng/optimus-ui-themes": "^2.0.2",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1",
-    "zone.js": "^0.15.1",
     "@openng/icons": "^1.0.0",
     "@openng/optimus-ui-tailwindcss": "^2.0.2"
   },

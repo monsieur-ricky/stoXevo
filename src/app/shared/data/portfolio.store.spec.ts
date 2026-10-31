@@ -1,8 +1,9 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { STORAGE_APP_DATA_KEY } from '@app';
 import { PortfolioService } from '@shared/data/api';
 import { Asset } from '@shared/models';
+import { LocalStorageService } from '@shared/services';
 import { MessageService } from '@openng/optimus-ui/api';
 import { ApplicationStore } from './app.store';
 import { PortfolioStore } from './portfolio.store';
@@ -30,7 +31,7 @@ describe('portfolio store integration', () => {
     vi.resetAllMocks();
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         MessageService,
         { provide: PortfolioService, useValue: api }
       ]
@@ -78,9 +79,21 @@ describe('portfolio store integration', () => {
 
   it('removes assets and handles empty-portfolio percentages', async () => {
     await store.addAsset(manualAsset());
-    store.removeAsset('ACME');
+    await store.removeAsset('ACME');
     expect(store.assets()).toEqual([]);
     expect(store.totalPercentageDifferenceSum()).toBe(0);
+  });
+
+  it('loads legacy single-purchase assets without making HTTP requests when no API key is set', async () => {
+    const asset = { ...manualAsset(), purchases: [] };
+    await TestBed.inject(LocalStorageService).set(STORAGE_APP_DATA_KEY, {
+      assets: [asset],
+      apiKey: null
+    });
+    await store.getAssets();
+    expect(store.assets()[0].purchases).toEqual(manualAsset().purchases);
+    expect(store.loading()).toBe(false);
+    expect(api.getQuote).not.toHaveBeenCalled();
   });
 
   it('refreshes automatic quotes but leaves manual valuations unchanged', async () => {
@@ -95,5 +108,17 @@ describe('portfolio store integration', () => {
     await store.getQuotes();
     expect(store.assets().map(asset => asset.value)).toEqual([30, 15]);
     expect(api.getQuote).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps the portfolio unchanged and releases loading after a failed quote request', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    api.getQuote.mockRejectedValue(new Error('Scraper unavailable'));
+    expect(
+      await store.addAsset({ ...manualAsset(), manualUpdate: false })
+    ).toBe(false);
+    expect(store.assets()).toEqual([]);
+    expect(store.loading()).toBe(false);
+    expect(log).toHaveBeenCalledOnce();
+    log.mockRestore();
   });
 });

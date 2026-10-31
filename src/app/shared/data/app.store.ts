@@ -11,6 +11,7 @@ import {
 import { ApplicationData, EncryptedAppData } from '@shared/models';
 import { LocalStorageService } from '@shared/services';
 import { map } from 'rxjs';
+import { readBackup } from '@shared/utils';
 import { IV_KEY, SALT_KEY, STORAGE_APP_DATA_KEY } from '@app';
 
 export type ApplicationState = {
@@ -48,12 +49,17 @@ export const ApplicationStore = signalStore(
       });
     };
 
-    const setPin = (pin: string): void => {
-      patchState(store, {
-        pin
-      });
-
-      getApiKey();
+    const setPin = async (pin: string): Promise<boolean> => {
+      try {
+        const data = await storageService.get<EncryptedAppData>(
+          STORAGE_APP_DATA_KEY,
+          pin
+        );
+        patchState(store, { pin, apiKey: data?.apiKey ?? null });
+        return true;
+      } catch {
+        return false;
+      }
     };
 
     const getApiKey = async (): Promise<void> => {
@@ -72,30 +78,24 @@ export const ApplicationStore = signalStore(
       const decryptedAppData = await getDecryptedAppData();
       const appData = { ...decryptedAppData, apiKey: key };
 
-      storageService.set(STORAGE_APP_DATA_KEY, appData, store.pin());
+      await storageService.set(STORAGE_APP_DATA_KEY, appData, store.pin());
     };
 
     const importData = async (
       data: ApplicationData | undefined
     ): Promise<void> => {
-      if (!data) {
-        return;
-      }
-
+      const pin = store.pin();
+      if (!data || !pin)
+        throw new Error('Unlock the application before importing a backup.');
+      const decryptedAppData = await readBackup(data, pin);
       const { appData, salt, iv } = data;
-
-      if (!appData && !salt && !iv) {
-        return;
-      }
 
       storageService.setPlainValue(STORAGE_APP_DATA_KEY, appData as string);
       storageService.setPlainValue(SALT_KEY, salt as string);
       storageService.setPlainValue(IV_KEY, iv as string);
 
-      const decryptedAppData = await getDecryptedAppData();
-
       patchState(store, {
-        apiKey: decryptedAppData?.apiKey,
+        apiKey: decryptedAppData.apiKey ?? null,
         dataImportDate: new Date().toISOString()
       });
     };

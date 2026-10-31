@@ -80,7 +80,7 @@ import { ToastModule } from '@openng/optimus-ui/toast';
       </sxe-ui-side-menu>
       <main>
         <p-toast />
-        <router-outlet></router-outlet>
+        <router-outlet />
       </main>
     </div>
     <footer>

@@ -1,10 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
-  signal,
-  untracked
+  linkedSignal
 } from '@angular/core';
 import { ApplicationStore } from '@shared/data';
 import { MenuItem } from '@openng/optimus-ui/api';
@@ -24,9 +22,7 @@ export class SideMenuComponent {
   private readonly appStore = inject(ApplicationStore);
 
   isMobile = this.appStore.isMobile;
-  showMenu = this.appStore.showMenu;
-
-  visible = signal(false);
+  visible = linkedSignal(this.appStore.showMenu);
 
   items: MenuItem[] = [
     {
@@ -51,16 +47,6 @@ export class SideMenuComponent {
       command: () => this.appStore.setShowMenu(false)
     }
   ];
-
-  constructor() {
-    effect(() => {
-      const visible = this.showMenu();
-
-      untracked(() => {
-        this.visible.set(visible);
-      });
-    });
-  }
 
   onVisibleChange(visible: boolean): void {
     this.appStore.setShowMenu(visible);

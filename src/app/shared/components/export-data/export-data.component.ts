@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ApplicationStore } from '@shared/data';
 import { ApplicationData } from '@shared/models';
 import { ButtonModule } from '@openng/optimus-ui/button';
 import { TooltipModule } from '@openng/optimus-ui/tooltip';
@@ -16,10 +15,6 @@ import { LocalStorageService } from './../../services/local-storage.service';
 })
 export class ExportDataComponent {
   private readonly localStorageService = inject(LocalStorageService);
-  private readonly appStore = inject(ApplicationStore);
-
-  isApiKeySet = this.appStore.isApiKeySet;
-
   async onExportData(): Promise<void> {
     const appData =
       await this.localStorageService.getPlainValue(STORAGE_APP_DATA_KEY);

@@ -105,9 +105,10 @@ export const encryptText = async (
  */
 export const decryptText = async (
   cipherText: ArrayBuffer,
-  password: string
+  password: string,
+  metadata?: { salt: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer> }
 ): Promise<string> => {
-  const { salt, iv } = getSaltAndIV(); // Retrieve the salt and IV from localStorage
+  const { salt, iv } = metadata ?? getSaltAndIV();
   const key = await deriveKey(password, salt); // Derive the key using the retrieved salt and password
 
   const decrypted = await crypto.subtle.decrypt(
