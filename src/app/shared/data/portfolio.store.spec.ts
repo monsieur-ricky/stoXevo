@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { STORAGE_APP_DATA_KEY } from '@app';
 import { PortfolioService } from '@shared/data/api';
@@ -30,7 +30,7 @@ describe('portfolio store integration', () => {
     vi.resetAllMocks();
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         MessageService,
         { provide: PortfolioService, useValue: api }
       ]

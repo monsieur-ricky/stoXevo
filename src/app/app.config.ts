@@ -12,7 +12,11 @@ import {
   withViewTransitions
 } from '@angular/router';
 
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withXhr
+} from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideServiceWorker } from '@angular/service-worker';
 import { authInterceptor } from '@shared/interceptors';
@@ -27,7 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideAnimationsAsync(),
     importProvidersFrom([BrowserModule, BrowserAnimationsModule]),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
     MessageService,
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

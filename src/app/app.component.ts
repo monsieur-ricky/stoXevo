@@ -1,4 +1,10 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   AppSettingsComponent,
@@ -35,6 +41,7 @@ import { ToastModule } from '@openng/optimus-ui/toast';
     ButtonModule
   ],
   selector: 'sxe-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` @if (!isPinSet()) {
       <sxe-ui-application-pin />
     }

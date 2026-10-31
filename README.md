@@ -32,9 +32,9 @@ Whether you're an experienced investor or just getting started, this tool provid
 
 ## Prerequisites
 
-- This project was created using [Angular CLI](https://github.com/angular/angular-cli) version 18.1.2 therefore make sure that [NodeJS](https://nodejs.org/en) (version >= 18.19.1) is installed on your operating system.
+- Angular 22 and [Node.js](https://nodejs.org/en) 24.22.2 (see `.nvmrc`). Angular 22 supports Node `^22.22.3`, `^24.15.0` or `>=26`; use the pinned Node 24 release for reproducible development and CI.
 
-- This application requires [stoXscraper Web API](https://github.com/monsieur-ricky/stoXscraper) to retrieve the necessary financial information. Please make sure to run this [Web API](https://github.com/monsieur-ricky/stoXscraper) before using **stoXevo**.
+- [stoXscraper Web API](https://github.com/monsieur-ricky/stoXscraper) is optional for automatic quotes and symbol profiles. Manual asset entry and local portfolio tracking work without it.
 
 ## Integration with stoXscraper
 
@@ -59,7 +59,7 @@ All the necessary information to setup and run [stoXscraper Web API](https://git
 3. Install the dependencies:
 
    ```bash
-   npm install
+    npm ci
    ```
 
 4. Start the application:
@@ -74,7 +74,7 @@ All the necessary information to setup and run [stoXscraper Web API](https://git
 
 - Before you start you need to chose a PIN number in order to use the App. This PIN is used to encrypt and decrypt all of the information stored locally in the browser **It's important you memorize the PIN, as it will be required to access the application and all saved data (locally and exported).**
 
-- Add your [stoXscraper](https://github.com/monsieur-ricky/stoXscraper) API Key in the settings.
+- For automatic updates, optionally add your [stoXscraper](https://github.com/monsieur-ricky/stoXscraper) API key in settings. The default endpoint is `http://localhost:3000/asset` in `src/app/app.settings.ts`; host the scraper yourself and configure a trusted endpoint. An HTTPS deployment also needs an HTTPS scraper endpoint to avoid mixed-content restrictions.
 
 - Once everything is setup, you can manage your financial portfolio directly within your browser. All your financial data will remain local, and you can add stocks, ETFs, or any other financial assets to your portfolio.
 
@@ -97,6 +97,11 @@ financial credentials are needed. Run `npm test` for interactive watch mode.
 
 The upgrade work and per-step validation results are tracked in
 [MIGRATION_PLAN.md](MIGRATION_PLAN.md).
+
+The UI uses [Optimus UI](https://github.com/openng-org/optimus-ui) 2 (MIT),
+its Lara theme, OpenNG Icons and Tailwind CSS 4. `p-*` selectors and `--p-*`
+design tokens are retained by Optimus; they do not imply a PrimeNG dependency.
+See [docs/TESTING.md](docs/TESTING.md) for test conventions.
 
 ### TODOs
 
