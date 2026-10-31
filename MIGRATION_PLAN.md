@@ -94,6 +94,7 @@ A step is ready only after its lint, tests and production build pass. Use determ
 - Repaired both lockfiles with npm 11.19.1: existing package versions are unchanged; missing optional WASM peers and bundled metadata are now recorded. Fresh `npm ci` and all local gates pass on both checkpoints (21 tests for PR #16; 40 tests and 26 PWA hashes for PR #17). PRs #13–#15 have green GitHub checks; awaiting Linux CI confirmation of the two lockfile repairs.
 - Linux CI subsequently passed for every PR, including both repaired lockfiles. Synchronizing PR #17 with its corrected base introduced merge commit `acfa00e`; GitHub reported that head as mergeable but not rebaseable. The active `Main` ruleset requires linear history, so enabling merge commits in repository settings alone does not resolve stack rebase eligibility.
 - With explicit maintainer authorization, linearized only PR #17 onto PR #16's existing head (`329a7eb`). Preserved the old head in local backup branch `backup/angular-modernization-pre-linearization-acfa00e`. The replacement implementation commit's entire Git tree exactly matches the previously approved `acfa00e` tree; application code, tests, dependencies and build configuration are unchanged. This log update is the only subsequent content change. Fresh `npm ci` and `npm run check` pass with Node 24.22.2 / npm 11.19.1: zero lint warnings, 40 tests, production build and all 26 PWA hashes. Updating only the authorized branch with an exact-head `--force-with-lease`; fresh GitHub eligibility and checks will be verified after pushing. No PR merge or protection change is authorized.
+- History repair pushed successfully with the expected-old-head lease. GitHub now reports `rebaseable: true`; both fresh Linux CI jobs pass ([push](https://github.com/monsieur-ricky/stoXevo/actions/runs/41240742130), [pull request](https://github.com/monsieur-ricky/stoXevo/actions/runs/41240748357)). GitHub requires renewed review after the rewrite. `main` and all other PR branches are unchanged, and no protection settings were modified. Existing uncommitted local plan edits were preserved byte-for-byte; the repair log is recorded on the PR branch.
 
 ## Review checkpoints
 
@@ -103,9 +104,9 @@ A step is ready only after its lint, tests and production build pass. Use determ
 | 2 | `improvement/angular-21-bridge` | lint, 20 tests, build | [#14](https://github.com/monsieur-ricky/stoXevo/pull/14) |
 | 3 | `improvement/optimus-ui` | lint, 21 tests, build, browser | [#15](https://github.com/monsieur-ricky/stoXevo/pull/15) |
 | 4 | `improvement/angular-22` | lint, 21 tests, build; repaired lockfile and Linux CI passed | [#16](https://github.com/monsieur-ricky/stoXevo/pull/16) |
-| 5 | `improvement/angular-modernization` | clean install, lint, 40 tests, build, PWA hashes, browser and Linux CI passed; linear-history repair also passes fresh local gates | [#17](https://github.com/monsieur-ricky/stoXevo/pull/17) |
+| 5 | `improvement/angular-modernization` | clean install, lint, 40 tests, build, PWA hashes, browser and Linux CI passed; linear-history blocker repaired, renewed approval required | [#17](https://github.com/monsieur-ricky/stoXevo/pull/17) |
 
 All five PRs are published. The active `Main` ruleset requires linear history:
 use a compatible stack rebase/squash workflow, not merge commits. After the
-history repair, wait for fresh CI and renew approval if GitHub requires it.
+history repair, fresh CI passed and GitHub requires renewed approval for #17.
 **No PRs have been merged and no protection rules have been changed.**
