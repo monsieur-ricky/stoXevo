@@ -22,17 +22,17 @@ import {
   ConfirmationService,
   MenuItem,
   MenuItemCommandEvent
-} from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DatePickerModule } from 'primeng/datepicker';
-import { DialogModule } from 'primeng/dialog';
-import { DrawerModule } from 'primeng/drawer';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { Menu, MenuModule } from 'primeng/menu';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { TableModule } from 'primeng/table';
-import { ToastModule } from 'primeng/toast';
+} from '@openng/optimus-ui/api';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { ConfirmDialogModule } from '@openng/optimus-ui/confirmdialog';
+import { DatePickerModule } from '@openng/optimus-ui/datepicker';
+import { DialogModule } from '@openng/optimus-ui/dialog';
+import { DrawerModule } from '@openng/optimus-ui/drawer';
+import { InputNumberModule } from '@openng/optimus-ui/inputnumber';
+import { Menu, MenuModule } from '@openng/optimus-ui/menu';
+import { ProgressSpinnerModule } from '@openng/optimus-ui/progressspinner';
+import { TableModule } from '@openng/optimus-ui/table';
+import { ToastModule } from '@openng/optimus-ui/toast';
 import { DetailsComponent } from './details/details.component';
 import { PurchasesComponent } from './purchases/purchases.component';
 

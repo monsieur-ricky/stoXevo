@@ -18,12 +18,12 @@ import { ApplicationStore, PortfolioStore } from '@shared/data';
 import { Asset, Purchase } from '@shared/models';
 import { PurchaseFormComponent } from '@shared/ui';
 import { isFormValid } from '@shared/utils';
-import { ConfirmationService } from 'primeng/api';
-import { Button } from 'primeng/button';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { DrawerModule } from 'primeng/drawer';
-import { TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmationService } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
+import { ConfirmPopupModule } from '@openng/optimus-ui/confirmpopup';
+import { DrawerModule } from '@openng/optimus-ui/drawer';
+import { TableModule } from '@openng/optimus-ui/table';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
 
 @Component({
   selector: 'sxe-portfolio-purchases',

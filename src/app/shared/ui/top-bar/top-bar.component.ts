@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MenubarModule } from 'primeng/menubar';
+import { MenubarModule } from '@openng/optimus-ui/menubar';
 
 @Component({
   selector: 'sxe-ui-top-bar',

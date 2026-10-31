@@ -16,7 +16,7 @@
     (completeMethod)="searchSymbols($event.query)"
     [(ngModel)]="selectedItem"
   >
-    <ng-template let-symbol pTemplate="item">
+    <ng-template #item let-symbol>
       <div class="flex items-center gap-2">
         <span>{{ symbol.name }}</span>
         <span>({{ symbol.symbol }})</span>

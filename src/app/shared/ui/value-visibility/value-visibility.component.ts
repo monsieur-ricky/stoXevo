@@ -5,8 +5,8 @@ import {
   inject
 } from '@angular/core';
 import { ApplicationStore } from '@shared/data';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
 
 @Component({
   selector: 'sxe-ui-value-visibility',

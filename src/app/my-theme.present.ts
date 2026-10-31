@@ -1,5 +1,5 @@
-import { definePreset } from '@primeng/themes';
-import Lara from '@primeng/themes/lara';
+import { definePreset } from '@openng/optimus-ui-themes';
+import Lara from '@openng/optimus-ui-themes/lara';
 
 export const MyThemePreset = definePreset(Lara, {
   semantic: {

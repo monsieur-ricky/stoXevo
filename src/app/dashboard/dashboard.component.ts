@@ -11,7 +11,7 @@ import {
 import { ApplicationStore, DashboardStore, PortfolioStore } from '@shared/data';
 import { AssetTypeSelect } from '@shared/models';
 import { HideValuePipe } from '@shared/pipes';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressSpinnerModule } from '@openng/optimus-ui/progressspinner';
 import { AssetDataComponent } from './asset-data/asset-data.component';
 
 type DashboardAssetType = AssetTypeSelect & {

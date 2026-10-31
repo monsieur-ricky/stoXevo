@@ -16,8 +16,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideServiceWorker } from '@angular/service-worker';
 import { authInterceptor } from '@shared/interceptors';
-import { MessageService } from 'primeng/api';
-import { providePrimeNG } from 'primeng/config';
+import { MessageService } from '@openng/optimus-ui/api';
+import { provideOptimus } from '@openng/optimus-ui/config';
 import { routes } from './app.routes';
 import { MyThemePreset } from './my-theme.present';
 
@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    providePrimeNG({
+    provideOptimus({
       theme: {
         preset: MyThemePreset,
         options: {

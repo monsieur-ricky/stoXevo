@@ -1,5 +1,5 @@
 <p-menubar>
-  <ng-template pTemplate="start">
+  <ng-template #start>
     <a routerLink="/">
       <img src="assets/images/logo.png" alt="stoXevo" class="hidden md:block" />
       <img
@@ -10,7 +10,7 @@
     </a>
   </ng-template>
 
-  <ng-template pTemplate="end">
+  <ng-template #end>
     <div class="flex justify-end content-center gap-2">
       <div class="w-full flex items-center">
         <ng-content select="symbol-search"></ng-content>

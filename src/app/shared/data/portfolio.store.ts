@@ -12,7 +12,7 @@ import { PortfolioService } from '@shared/data/api';
 import { Asset, Purchase } from '@shared/models';
 import { LocalStorageService } from '@shared/services';
 import { getAveragePrice, getMetalPriceFromCurrency } from '@shared/utils';
-import { MessageService } from 'primeng/api';
+import { MessageService } from '@openng/optimus-ui/api';
 
 export type PortfolioState = {
   assets: Asset[];
@@ -274,7 +274,9 @@ export const PortfolioStore = signalStore(
             severity: 'error',
             summary: 'Oops!',
             detail:
-              error instanceof Error ? error.message : 'Failed to update quotes.',
+              error instanceof Error
+                ? error.message
+                : 'Failed to update quotes.',
             life: 10000
           });
 

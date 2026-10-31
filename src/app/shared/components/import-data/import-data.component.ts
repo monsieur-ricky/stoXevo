@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import { ApplicationStore } from '@shared/data';
 import { ApplicationData } from '@shared/models';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { FileUpload, FileUploadModule } from 'primeng/fileupload';
-import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { DialogModule } from '@openng/optimus-ui/dialog';
+import { FileUpload, FileUploadModule } from '@openng/optimus-ui/fileupload';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
 
 interface FileSelectEvent {
   originalEvent: Event;

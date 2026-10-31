@@ -5,7 +5,7 @@
   (onHide)="onClose()"
   [(visible)]="openSidebar"
 >
-  <ng-template pTemplate="header">
+  <ng-template #header>
     <h2>{{ sidebarTitle() }}</h2>
   </ng-template>
 
@@ -35,7 +35,7 @@
         [value]="purchases()"
         [scrollable]="true"
       >
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th>Date</th>
             <th>Price</th>
@@ -44,7 +44,7 @@
             <th class="actions"></th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-purchase let-index="rowIndex">
+        <ng-template #body let-purchase let-index="rowIndex">
           <tr>
             <td>{{ purchase.date | date: 'dd-MM-yyyy' }}</td>
             <td>{{ purchase.price | currency: currency }}</td>
@@ -68,7 +68,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="footer">
+        <ng-template #footer>
           @let price = asset()?.purchasePrice ?? 0;
           @let quantity = asset()?.quantity ?? 0;
 
@@ -86,7 +86,7 @@
     </div>
   </form>
 
-  <ng-template pTemplate="footer">
+  <ng-template #footer>
     <div class="flex justify-between flex-wrap">
       <p-button
         severity="secondary"

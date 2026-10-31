@@ -5,7 +5,7 @@
   (onHide)="onClose()"
   [(visible)]="openSidebar"
 >
-  <ng-template pTemplate="header">
+  <ng-template #header>
     <h2>{{ sidebarTitle() }}</h2>
   </ng-template>
 
@@ -14,7 +14,7 @@
       <div class="field col-span-12 md:col-span-6">
         <label for="type">Asset Type</label>
         <p-select
-          id="type"
+          inputId="type"
           formControlName="type"
           optionValue="id"
           [options]="types"
@@ -26,9 +26,9 @@
         assetForm.get('type')?.value === 'commodity' && subTypes.length > 0
       ) {
         <div class="field col-span-12 md:col-span-6">
-          <label for="type">Commodity Type</label>
+          <label for="subType">Commodity Type</label>
           <p-select
-            id="subType"
+            inputId="subType"
             formControlName="subType"
             optionValue="id"
             [options]="subTypes"
@@ -95,7 +95,7 @@
       <div class="field col-span-12 md:col-span-4">
         <label for="value">Current Price</label>
         <p-inputNumber
-          id="value"
+          inputId="value"
           formControlName="value"
           mode="decimal"
           class="w-full"
@@ -116,7 +116,7 @@
     </div>
   </form>
 
-  <ng-template pTemplate="footer">
+  <ng-template #footer>
     <div class="flex justify-between flex-wrap">
       <p-button
         icon="pi pi-save"
