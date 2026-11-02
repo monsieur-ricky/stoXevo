@@ -24,10 +24,10 @@ Each phase branches from the previous checkpoint. Run `npm run check` (zero-warn
    - [x] Serialize app-data updates; maintain legacy backup readability.
    - [x] Integration tests and quality gates (55 tests); PR below.
 3. **Provider adapters** — `feature/ai-market-data-03-providers`
-   - [ ] Bounded cited retrieval + structured extraction for OpenAI, Anthropic and OpenRouter.
-   - [ ] Kilo fails closed until hosted grounding is verified; no pretend plugin compatibility.
-   - [ ] Direct Gold-API adapter; deterministic gram conversion; HTTP/cancellation/privacy tests.
-   - [ ] Quality gates and PR.
+   - [x] Bounded cited retrieval + structured extraction for OpenAI, Anthropic and OpenRouter.
+   - [x] Kilo fails closed until hosted grounding is verified; no pretend plugin compatibility.
+   - [x] Direct Gold-API adapter; deterministic gram conversion; HTTP/cancellation/privacy tests.
+   - [x] Quality gates (64 tests); PR below.
 4. **Application integration** — `feature/ai-market-data-04-integration`
    - [ ] Route search/profile/quotes through selected source; batch refresh and independent partial successes.
    - [ ] Settings UI, explicit consent, connection test, source/time/status display, manual fallback.
@@ -58,3 +58,6 @@ Before production enablement, explicitly opt into authenticated evaluations from
 - Phase 1 PR: [#19](https://github.com/monsieur-ricky/stoXevo/pull/19), targeting `main`.
 - Phase 2 implementation: added versioned preferences, explicit capability checks, memory-only credentials cleared on provider changes/import, serialized app-data writes and strict settings validation during backup import. Persistent AI-key storage is intentionally deferred rather than using the weak PIN envelope.
 - Phase 2 validation: `npm run check` passes (zero-warning lint, 55 tests, production build and PWA verification).
+- Phase 2 PR: [#20](https://github.com/monsieur-ricky/stoXevo/pull/20), stacked on #19.
+- Phase 3: implemented two bounded requests (cited retrieval then schema extraction), provider-issued citation normalization, sanitized errors, cancellation, five-instrument limit and explicit metals exclusion. Direct metals adapter uses the existing Gold-API JSON source, paced requests, coalescing, 30-second cache, freshness validation and rate-limit cooldown. Kilo remains fail-closed, not falsely advertised as grounded. Live CORS/accuracy remain unverified.
+- Phase 3 validation: `npm run check` passes (64 tests, zero-warning lint, production/PWA build). Claude long-running paused turns fail closed instead of creating potentially unbounded continuations. No automatic retries or paid fallback.
