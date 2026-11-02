@@ -20,9 +20,9 @@ Each phase branches from the previous checkpoint. Run `npm run check` (zero-warn
    - [x] Regression tests for identity, currency, source, timestamp and missing-value handling.
    - [x] Record research and live-evaluation requirements; quality gates passed (PR below).
 2. **Settings and migration** — `feature/ai-market-data-02-settings`
-   - [ ] Versioned non-secret configuration; session credentials; legacy migration and backup validation.
-   - [ ] Serialize app-data updates; maintain legacy backup readability.
-   - [ ] Integration tests, quality gates and PR.
+   - [x] Versioned non-secret configuration; session credentials; legacy migration and backup validation.
+   - [x] Serialize app-data updates; maintain legacy backup readability.
+   - [x] Integration tests and quality gates (55 tests); PR below.
 3. **Provider adapters** — `feature/ai-market-data-03-providers`
    - [ ] Bounded cited retrieval + structured extraction for OpenAI, Anthropic and OpenRouter.
    - [ ] Kilo fails closed until hosted grounding is verified; no pretend plugin compatibility.
@@ -55,3 +55,6 @@ Before production enablement, explicitly opt into authenticated evaluations from
 - Baseline check blocked by stale Angular 19 `node_modules` versus the committed Angular 22 lockfile. Restoring with `npm ci`; first attempt timed out after 120 seconds. Retrying with a ten-minute limit. Available Node 24.18.0 satisfies package engines; pinned 24.22.2 is not installed.
 - No live API calls or costs incurred. No phase or PR is marked complete before its quality gates pass.
 - Phase 1: lockfile dependencies restored successfully. `npm run check` passes: zero lint warnings, 52 tests, production build and PWA hash verification. Live-provider accuracy/CORS remain unverified and explicitly release-gated.
+- Phase 1 PR: [#19](https://github.com/monsieur-ricky/stoXevo/pull/19), targeting `main`.
+- Phase 2 implementation: added versioned preferences, explicit capability checks, memory-only credentials cleared on provider changes/import, serialized app-data writes and strict settings validation during backup import. Persistent AI-key storage is intentionally deferred rather than using the weak PIN envelope.
+- Phase 2 validation: `npm run check` passes (zero-warning lint, 55 tests, production build and PWA verification).

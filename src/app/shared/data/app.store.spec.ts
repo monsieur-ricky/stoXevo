@@ -83,4 +83,67 @@ describe('application persistence integration', () => {
     expect(store.showValues()).toBe(false);
     expect(store.isDarkMode()).toBe(true);
   });
+
+  it('keeps AI keys in memory only and requires unlock and consent', async () => {
+    const settings = {
+      version: 1,
+      source: 'ai',
+      provider: 'openai',
+      consent: true
+    } as const;
+    await expect(
+      store.setMarketDataSettings(settings, 'session-secret')
+    ).rejects.toThrow('Unlock');
+    await store.setPin('1234');
+    await store.setMarketDataSettings(settings, 'session-secret');
+    expect(store.canUseMarketData()).toBe(true);
+    expect((await store.getDecryptedAppData())?.marketData).toEqual(settings);
+    expect(JSON.stringify(await store.getDecryptedAppData())).not.toContain(
+      'session-secret'
+    );
+    store.clearAiKey();
+    expect(store.canUseMarketData()).toBe(false);
+    await store.setPin('1234');
+    expect(store.aiKey()).toBeNull();
+  });
+
+  it('serializes simultaneous settings, key and asset saves without losing fields', async () => {
+    await store.setPin('1234');
+    await Promise.all([
+      store.updateAppData({ assets: [] }),
+      store.setApiKey('legacy'),
+      store.setMarketDataSettings(
+        { version: 1, source: 'ai', provider: 'openrouter', consent: true },
+        'memory-only'
+      )
+    ]);
+    expect(await store.getDecryptedAppData()).toEqual({
+      assets: [],
+      apiKey: 'legacy',
+      marketData: {
+        version: 1,
+        source: 'ai',
+        provider: 'openrouter',
+        consent: true
+      }
+    });
+  });
+
+  it('clears session credentials on provider changes and imports', async () => {
+    await store.setPin('1234');
+    await store.setMarketDataSettings(
+      { version: 1, source: 'ai', provider: 'openai', consent: true },
+      'secret'
+    );
+    await store.setMarketDataSettings({
+      version: 1,
+      source: 'ai',
+      provider: 'anthropic',
+      consent: true
+    });
+    expect(store.aiKey()).toBeNull();
+    await store.importData(legacyBackup);
+    expect(store.marketData().source).toBe('stoxscraper');
+    expect(store.aiKey()).toBeNull();
+  });
 });

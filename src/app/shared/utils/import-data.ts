@@ -1,5 +1,6 @@
 import { ApplicationData, EncryptedAppData } from '@shared/models';
 import { base64ToArrayBuffer, decryptText } from './encryption';
+import { readMarketDataSettings } from '../data/market-data/market-data.types';
 
 /** Validate backups before replacing any of the current browser data. */
 export function isApplicationData(value: unknown): value is ApplicationData {
@@ -42,5 +43,6 @@ export async function readBackup(
     (value.apiKey != null && typeof value.apiKey !== 'string')
   )
     throw new Error('Invalid backup contents.');
+  readMarketDataSettings(value.marketData, value.apiKey);
   return value;
 }

@@ -1,5 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { STORAGE_APP_DATA_KEY } from '@app';
 import {
   patchState,
   signalStore,
@@ -10,7 +9,6 @@ import {
 import { ApplicationStore } from '@shared/data';
 import { PortfolioService } from '@shared/data/api';
 import { Asset, Purchase } from '@shared/models';
-import { LocalStorageService } from '@shared/services';
 import { getAveragePrice, getMetalPriceFromCurrency } from '@shared/utils';
 import { MessageService } from '@openng/optimus-ui/api';
 
@@ -36,17 +34,11 @@ export const PortfolioStore = signalStore(
     (
       store,
       portfolioService = inject(PortfolioService),
-      storageService = inject(LocalStorageService),
       appStore = inject(ApplicationStore),
       messageService = inject(MessageService)
     ) => {
-      const pin = appStore.pin;
-
       const storeAssets = async (): Promise<void> => {
-        const decryptedAppData = await appStore.getDecryptedAppData();
-        const appData = { ...decryptedAppData, assets: store.assets() };
-
-        await storageService.set(STORAGE_APP_DATA_KEY, appData, pin());
+        await appStore.updateAppData({ assets: store.assets() });
       };
 
       const setAsset = (asset: Asset | undefined): void => {
