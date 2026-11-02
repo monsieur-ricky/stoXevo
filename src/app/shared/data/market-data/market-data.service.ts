@@ -103,6 +103,24 @@ export class MarketDataService {
       reason: string
     ): QuoteResult => ({ instrument, status: 'unavailable', reason });
     const jobs: (() => Promise<QuoteResult[]>)[] = [];
+    const queueJob = (
+      targets: Instrument[],
+      task: () => Promise<QuoteResult[]>
+    ) =>
+      jobs.push(async () => {
+        try {
+          return await task();
+        } catch (error) {
+          return targets.map(item =>
+            unavailable(
+              item,
+              source === 'ai' && error instanceof Error
+                ? error.message
+                : 'Scraper request failed. Previous value was kept.'
+            )
+          );
+        }
+      });
     const other: Instrument[] = [];
     for (const item of pending) {
       if (item.type === 'physical' || source === 'manual') {
@@ -117,7 +135,7 @@ export class MarketDataService {
         item.type === 'gold' ||
         item.type === 'silver'
       ) {
-        jobs.push(async () => {
+        queueJob([item], async () => {
           if (!this.app.canUseMetals())
             return [
               unavailable(item, 'Configure metal retrieval and consent first.')
@@ -149,7 +167,7 @@ export class MarketDataService {
           )
         );
       } else if (source === 'stoxscraper') {
-        jobs.push(async () => {
+        queueJob([item], async () => {
           const quote = await this.get<{ symbol?: string; price?: number }>(
             `${STOXSCRAPER_API}/quote/${encodeURIComponent(item.symbol)}`,
             signal
@@ -167,7 +185,7 @@ export class MarketDataService {
     }
     for (let index = 0; index < other.length; index += AI_BATCH_SIZE) {
       const batch = other.slice(index, index + AI_BATCH_SIZE);
-      jobs.push(() => this.ai.getQuotes(batch, signal));
+      queueJob(batch, () => this.ai.getQuotes(batch, signal));
     }
     // Two foreground jobs at a time; errors affect their own instruments only.
     for (let index = 0; index < jobs.length; index += 2) {
@@ -175,6 +193,9 @@ export class MarketDataService {
       const settled = await Promise.allSettled(
         jobs.slice(index, index + 2).map(job => job())
       );
+      signal.throwIfAborted();
+      if (revision !== this.app.marketDataRevision())
+        throw new Error('Market data configuration changed.');
       for (const result of settled)
         if (result.status === 'fulfilled') {
           for (const quote of result.value) {
@@ -217,6 +238,7 @@ export class MarketDataService {
     cancellation?: AbortSignal
   ): Promise<Symbol[]> {
     const signal = this.signal(cancellation);
+    const revision = this.revision;
     if (
       !this.app.canUseMarketData() ||
       query.trim().length < 3 ||
@@ -234,6 +256,10 @@ export class MarketDataService {
           );
     signal.throwIfAborted();
     this.searches.set(query, { until: Date.now() + 86_400_000, value });
+    if (revision !== this.app.marketDataRevision()) {
+      this.searches.delete(query);
+      throw new Error('Market data configuration changed.');
+    }
     return value;
   }
 
@@ -242,6 +268,7 @@ export class MarketDataService {
     cancellation?: AbortSignal
   ): Promise<Profile & { sources?: MarketSource[] }> {
     const signal = this.signal(cancellation);
+    const revision = this.revision;
     if (!this.app.canUseMarketData())
       throw new Error('Configure market data first.');
     const cached = this.profiles.get(symbol);
@@ -255,6 +282,8 @@ export class MarketDataService {
         );
     signal.throwIfAborted();
     // AI profiles contain metadata only; scraper profiles also contain prices.
+    if (revision !== this.app.marketDataRevision())
+      throw new Error('Market data configuration changed.');
     this.profiles.set(symbol, {
       until: Date.now() + (ai ? 7 * 86_400_000 : QUOTE_TTL_MS),
       value

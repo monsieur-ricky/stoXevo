@@ -27,18 +27,5 @@
       }
     }
   ],
-  "dataGroups": [
-    {
-      "name": "api-calls",
-      "urls": [
-        "https://stoxscraper.onrender.com/**"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 100,
-        "maxAge": "15m",
-        "timeout": "10s"
-      }
-    }
-  ]
+  "dataGroups": []
 }

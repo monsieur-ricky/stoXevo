@@ -146,4 +146,23 @@ describe('application persistence integration', () => {
     expect(store.marketData().source).toBe('stoxscraper');
     expect(store.aiKey()).toBeNull();
   });
+
+  it('requires fresh session consent on unlock and preserves explicit manual mode', async () => {
+    await store.setPin('1234');
+    await store.setMarketDataSettings(
+      { version: 1, source: 'ai', provider: 'openai', consent: true },
+      'memory-only'
+    );
+    await store.setPin('1234');
+    expect(store.marketData().consent).toBe(false);
+    expect(store.canUseMetals()).toBe(false);
+    await store.setMarketDataSettings({
+      version: 1,
+      source: 'manual',
+      provider: 'openai',
+      consent: false
+    });
+    await store.setApiKey('saved-for-later');
+    expect(store.marketData().source).toBe('manual');
+  });
 });

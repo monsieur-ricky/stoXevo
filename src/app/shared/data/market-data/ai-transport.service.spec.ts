@@ -118,7 +118,9 @@ describe('grounded AI HTTP integration', () => {
         expect(retrieval.request.body).toMatchObject({
           plugins: [{ id: 'web', engine: 'parallel', mode: 'fast' }]
         });
-      retrieval.flush(response(provider, `ACME XNAS USD 42 ${date}`, true));
+      retrieval.flush(
+        response(provider, `ACME XNAS USD 42 share ${date}`, true)
+      );
       await Promise.resolve();
       await Promise.resolve();
       const extraction = http.expectOne(AI_PRESETS[provider].endpoint);
@@ -143,6 +145,7 @@ describe('grounded AI HTTP integration', () => {
                 symbol: 'ACME',
                 exchange: 'XNAS',
                 currency: 'USD',
+                unit: 'share',
                 price: 42,
                 marketAsOf: date,
                 kind: 'latest',
@@ -209,5 +212,37 @@ describe('grounded AI HTTP integration', () => {
         { status: 401, statusText: 'Unauthorized' }
       );
     await failure;
+  });
+
+  it('does not extract after a provider change', async () => {
+    await configure('openai');
+    const result = service.getQuotes([{ symbol: 'ACME', currency: 'USD' }]);
+    const assertion = expect(result).rejects.toThrow('settings changed');
+    const request = http.expectOne(AI_PRESETS.openai.endpoint);
+    await configure('anthropic');
+    request.flush(response('openai', 'ACME USD 42 share', true));
+    await assertion;
+    http.expectNone(AI_PRESETS.anthropic.endpoint);
+  });
+
+  it('fails closed on a Claude search error inside HTTP 200', async () => {
+    await configure('anthropic');
+    const result = service.getQuotes([{ symbol: 'ACME', currency: 'USD' }]);
+    const assertion = expect(result).rejects.toThrow('Claude search failed');
+    http
+      .expectOne(AI_PRESETS.anthropic.endpoint)
+      .flush({
+        stop_reason: 'end_turn',
+        content: [
+          {
+            type: 'web_search_tool_result',
+            content: {
+              type: 'web_search_tool_result_error',
+              error_code: 'unavailable'
+            }
+          }
+        ]
+      });
+    await assertion;
   });
 });

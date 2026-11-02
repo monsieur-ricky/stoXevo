@@ -30,6 +30,7 @@ describe('existing Gold-API source integration', () => {
   afterEach(() => {
     http.verify();
     localStorage.clear();
+    vi.useRealTimers();
   });
 
   it('uses keyless JSON, coalesces requests and converts troy ounces in code', async () => {
@@ -71,5 +72,28 @@ describe('existing Gold-API source integration', () => {
       consent: false
     });
     await expect(service.getQuote('gold', 'EUR')).rejects.toThrow('consent');
+  });
+
+  it('paces requests and honors cooldown without automatic retries', async () => {
+    vi.useFakeTimers();
+    const first = service.getQuote('gold', 'EUR');
+    const assertion = expect(first).rejects.toThrow('unavailable');
+    await Promise.resolve();
+    http
+      .expectOne('https://api.gold-api.com/price/XAU/EUR')
+      .flush(
+        {},
+        {
+          status: 429,
+          statusText: 'Rate limited',
+          headers: { 'Retry-After': '60' }
+        }
+      );
+    await assertion;
+    const next = service.getQuote('silver', 'EUR');
+    const nextAssertion = expect(next).rejects.toThrow('rate limited');
+    await vi.advanceTimersByTimeAsync(1100);
+    await nextAssertion;
+    http.expectNone('https://api.gold-api.com/price/XAG/EUR');
   });
 });

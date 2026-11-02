@@ -88,7 +88,7 @@ describe('market data orchestration', () => {
     expect(result.filter(row => row.status === 'ok')).toHaveLength(5);
     expect(result[5].status).toBe('unavailable');
   });
-  it('does not retrieve quotes while locked/manual and invalidates cache after changing provider', async () => {
+  it('does not retrieve quotes in manual mode', async () => {
     ai.getQuotes.mockResolvedValue([]);
     await app.setMarketDataSettings({
       version: 1,
@@ -100,5 +100,41 @@ describe('market data orchestration', () => {
       (await service.getQuotes([{ symbol: 'ACME', currency: 'USD' }]))[0].status
     ).toBe('unavailable');
     expect(ai.getQuotes).not.toHaveBeenCalled();
+  });
+
+  it('rejects obsolete results before caching when a provider changes mid-refresh', async () => {
+    let finish!: (value: unknown) => void;
+    const instrument: Instrument = { symbol: 'ACME', currency: 'USD' };
+    ai.getQuotes.mockImplementationOnce(
+      () =>
+        new Promise(resolve => {
+          finish = resolve;
+        })
+    );
+    const pending = service.getQuotes([instrument]);
+    const assertion = expect(pending).rejects.toBeDefined();
+    await app.setMarketDataSettings(
+      { version: 1, source: 'ai', provider: 'anthropic', consent: true },
+      'new-memory-key'
+    );
+    finish([{ instrument, status: 'ok', price: 999 }]);
+    await assertion;
+    ai.getQuotes.mockResolvedValue([{ instrument, status: 'ok', price: 20 }]);
+    expect(await service.getQuotes([instrument])).toMatchObject([
+      { price: 20 }
+    ]);
+    expect(ai.getQuotes).toHaveBeenCalledTimes(2);
+  });
+
+  it('reports per-instrument failures and never retries a paid batch', async () => {
+    ai.getQuotes.mockRejectedValue(new Error('AI credits exhausted.'));
+    const result = await service.getQuotes([
+      { symbol: 'ACME', currency: 'USD' }
+    ]);
+    expect(result[0]).toMatchObject({
+      status: 'unavailable',
+      reason: 'AI credits exhausted.'
+    });
+    expect(ai.getQuotes).toHaveBeenCalledOnce();
   });
 });

@@ -3,7 +3,8 @@ import {
   Component,
   effect,
   inject,
-  signal
+  signal,
+  untracked
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApplicationStore } from '@shared/data';
@@ -47,18 +48,23 @@ export class AppSettingsComponent {
 
   constructor() {
     effect(() => {
-      if (this.openDialog()) {
-        const settings = this.app.marketData();
-        this.source = settings.source;
-        this.provider = settings.provider;
-        this.consent = settings.consent;
-        this.scraperKey = this.app.apiKey() ?? '';
-        this.apiKey = '';
-        this.message.set('');
-      } else {
-        this.apiKey = '';
-        this.scraperKey = '';
-      }
+      const open = this.openDialog();
+      // Initialize the draft only when opening/closing, not whenever saving
+      // changes store signals while an async settings operation is in flight.
+      untracked(() => {
+        if (open) {
+          const settings = this.app.marketData();
+          this.source = settings.source;
+          this.provider = settings.provider;
+          this.consent = settings.consent;
+          this.scraperKey = this.app.apiKey() ?? '';
+          this.apiKey = '';
+          this.message.set('');
+        } else {
+          this.apiKey = '';
+          this.scraperKey = '';
+        }
+      });
     });
   }
 
@@ -70,22 +76,25 @@ export class AppSettingsComponent {
   async onSaveSettings(close = true): Promise<boolean> {
     this.busy.set(true);
     this.message.set('');
+    const settings: MarketDataSettings = {
+      version: 1,
+      source: this.source,
+      provider: this.provider,
+      consent: this.source === 'ai' && this.consent
+    };
+    const sessionKey = this.apiKey;
+    const scraperKey = this.scraperKey.trim();
     try {
-      if (this.source === 'ai' && !this.presets[this.provider].available)
+      if (
+        settings.source === 'ai' &&
+        !this.presets[settings.provider].available
+      )
         throw new Error(
           'Kilo hosted search is not verified. Select another provider.'
         );
-      if (this.source === 'stoxscraper')
-        await this.app.setApiKey(this.scraperKey.trim());
-      await this.app.setMarketDataSettings(
-        {
-          version: 1,
-          source: this.source,
-          provider: this.provider,
-          consent: this.source === 'ai' && this.consent
-        },
-        this.apiKey
-      );
+      if (settings.source === 'stoxscraper')
+        await this.app.setApiKey(scraperKey);
+      await this.app.setMarketDataSettings(settings, sessionKey);
       this.apiKey = '';
       if (close) this.openDialog.set(false);
       return true;

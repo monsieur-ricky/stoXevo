@@ -34,8 +34,8 @@ Each phase branches from the previous checkpoint. Run `npm run check` (zero-warn
    - [x] Caching, deduplication, cancellation, stale-response protection; integration tests.
    - [x] Quality gates (71 tests); PR below.
 5. **Hardening and release documentation** — `feature/ai-market-data-05-release`
-   - [ ] Privacy/PWA checks, contributor/user documentation and opt-in live benchmark instructions.
-   - [ ] Final regression coverage and quality gates; publish final PR.
+   - [x] Privacy/PWA checks, contributor/user documentation and opt-in live benchmark instructions.
+   - [x] Final regression coverage and quality gates (79 tests); final PR below.
 
 ## Research and release gates
 
@@ -64,3 +64,14 @@ Before production enablement, explicitly opt into authenticated evaluations from
 - Phase 3 PR: [#21](https://github.com/monsieur-ricky/stoXevo/pull/21), stacked on #20.
 - Phase 4: wired facades, resource cancellation, five-instrument AI chunks/two concurrent jobs, independent partial results, metadata/quote caches, manual assets and separate metals routing. Removed paid refresh on portfolio open/import and on purchase edits. Settings provide masked session keys, explicit consent, manual/scraper alternatives and an explicitly billable connection test. Portfolio/search/profile display source links; missing metal data can no longer overwrite a value with zero. Regression tests cover batching, caching, partial failures, deleted assets, legacy scraper routes and rendered settings.
 - Phase 4 validation: `npm run check` passes (71 tests, zero-warning lint, production build and PWA hash verification).
+- Phase 4 PR: [#22](https://github.com/monsieur-ricky/stoXevo/pull/22), stacked on #21.
+- Phase 5 review: added per-instrument unit validation and same-line numeric evidence checks to prevent cross-batch number borrowing; distinguished provider-fetch metal timestamps from market timestamps; require session consent again after unlock. Removed legacy service-worker financial-response caching and made PWA verification reject it. Guard cache writes against provider/import changes and preserve sanitized per-instrument error messages.
+- Phase 5 also fixes settings drafts being reset during async scraper-key saves (rendered-control regression test). Added provider-switch/cache races, Claude HTTP-200 tool errors, metal cooldown, session consent and batch evidence tests. Added `docs/AI_MARKET_DATA.md` with setup, privacy, cost/accuracy limitations and opt-in live evaluation checklist; updated README/testing guidance.
+- Final local validation: `npm run check` passes with zero lint warnings/errors, **79 tests across 18 files**, production build (1.25 MB initial raw bundle) and PWA hash/no-financial-cache verification. `git diff --check` reports no whitespace errors. No real API keys, paid requests or portfolio data used. Browser smoke/live CORS/accuracy/cost benchmarks were not performed.
+
+## Remaining release work (not claimed complete)
+
+- Authenticated provider and deployed-origin CORS evaluations, including direct Gold-API browser access and reference-price/latency/cost benchmarks. AI remains explicitly experimental.
+- Kilo hosted retrieval: intentionally unavailable pending documented, verified search/citation support.
+- Persistent AI-key vault, free-inference presets, complete scraper profile-metric parity, exchange-calendar-aware freshness and provider-side hard spend controls beyond bounded calls/dedicated key limits are not implemented in this increment.
+- Review and merge the PR stack in order; no branches are merged or auto-merged by this work.

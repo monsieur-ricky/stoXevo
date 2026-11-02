@@ -2,7 +2,7 @@
 
 This is a personal open-source project designed to help you easily manage and track your financial assets, such as Stocks and ETFs.
 
-This web app was created with privacy and simplicity in mind. All your data is securely stored locally in your browser, ensuring that only you have access to your financial information.
+This web app was created with privacy and simplicity in mind. Holdings and purchases are stored locally in your browser. Optional market-data lookups disclose instrument identifiers to your selected provider; review the privacy and credential limitations below.
 
 Whether you're an experienced investor or just getting started, this tool provides a straightforward and easy way to monitor your portfolio. With real market updates and a user-friendly interface, you can stay on top of your investments without the need for complex software or cloud storage.
 
@@ -12,7 +12,8 @@ Whether you're an experienced investor or just getting started, this tool provid
 - **Dashboard with Metrics**: Visualize the status of assets.
 - **Import/Export Data**: Easily import and export your encrypted data.
 - **Simple and Intuitive UI**: A clean and simple interface focused on delivering an easy-to-use experience.
-- **Secure by Design**: User data is not shared or stored on remote servers. Privacy is at the core of this app.
+- **Local-first**: Holdings and purchases stay in the browser. Optional AI/search services receive instrument identifiers, not portfolio quantities or purchase history.
+- **Market-data choice**: Experimental AI-assisted bulk quotes, existing stoXscraper, or manual entry. Gold/silver retain the existing Gold-API source, never AI.
 - **Open Source**: The project is open source, allowing the community to contribute and improve the application over time.
 
 ## Screenshots
@@ -25,6 +26,7 @@ Whether you're an experienced investor or just getting started, this tool provid
 
 - [Prerequisites](#prerequisites)
 - [Integration with stoXscraper](#integration-with-stoxscraper)
+- [AI-assisted market data](#ai-assisted-market-data)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -38,11 +40,13 @@ Whether you're an experienced investor or just getting started, this tool provid
 
 ## Integration with stoXscraper
 
-**stoXevo** retrieves real-time financial data by leveraging the stoXscraper API. To make the integration seamless and secure, the application communicates with stoXscraper using API keys. The key ensures that only authorized requests can fetch financial data.
+**stoXevo** can retrieve financial data through the optional stoXscraper API. Its configured API key is sent only to the scraper endpoint. Quotes are indicative; upstream accuracy and freshness are not guaranteed.
 
 All the necessary information to setup and run [stoXscraper Web API](https://github.com/monsieur-ricky/stoXscraper) can be found [here](https://github.com/monsieur-ricky/stoXscraper).
 
 ## Installation
+
+See [AI-assisted setup and privacy](#ai-assisted-market-data) for the optional server-free alternative to stoXscraper.
 
 1. Clone the repository:
 
@@ -74,9 +78,17 @@ All the necessary information to setup and run [stoXscraper Web API](https://git
 
 - Before you start you need to chose a PIN number in order to use the App. This PIN is used to encrypt and decrypt all of the information stored locally in the browser **It's important you memorize the PIN, as it will be required to access the application and all saved data (locally and exported).**
 
-- For automatic updates, optionally add your [stoXscraper](https://github.com/monsieur-ricky/stoXscraper) API key in settings. The default endpoint is `http://localhost:3000/asset` in `src/app/app.settings.ts`; host the scraper yourself and configure a trusted endpoint. An HTTPS deployment also needs an HTTPS scraper endpoint to avoid mixed-content restrictions.
+- For market updates, configure AI-assisted data or select [stoXscraper](https://github.com/monsieur-ricky/stoXscraper) in settings. The scraper endpoint is `http://localhost:3000/asset` in `src/app/app.settings.ts`; host it yourself and configure a trusted endpoint. HTTPS deployments require an HTTPS scraper endpoint to avoid mixed-content restrictions.
 
-- Once everything is setup, you can manage your financial portfolio directly within your browser. All your financial data will remain local, and you can add stocks, ETFs, or any other financial assets to your portfolio.
+- Once configured, manage your portfolio in the browser. Holdings and purchases remain local; selected market-data providers receive instrument lookups only.
+
+## AI-assisted market data
+
+New installations default to AI-assisted setup; existing scraper users keep their selection. In Settings choose OpenAI, Anthropic or OpenRouter, add a **session-only**, spending-limited API key and review consent. The model is preselected. Kilo remains unavailable until hosted search is verified. Manual entry always works without a key.
+
+Portfolio Update groups non-metal assets into small AI batches, requests schema-constrained JSON and retains source/time information. Invalid or missing results preserve the previous price. Gold/silver use the existing keyless Gold-API JSON source directly in AI mode; scraper mode keeps its routes. Prices are indicative, not independently certified real-time data. Live provider/CORS validation remains required before production promotion.
+
+Keys and consent must be re-entered after reload/unlock. Searches/tokens can cost money, including the labeled connection test. No billable refresh runs on portfolio open/import. Browser BYOK has security limitations; the original PIN protection is unsuitable for persistent AI credentials. See [setup, privacy, batching and release checks](docs/AI_MARKET_DATA.md) and the [implementation progress plan](AI_MARKET_DATA_PLAN.md).
 
 ## Contributing
 

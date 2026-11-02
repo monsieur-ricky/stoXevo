@@ -35,6 +35,12 @@ For targeted work:
 npm test -- --watch=false --include='src/app/shared/data/**/*.spec.ts'
 ```
 
+## AI market-data regression coverage
+
+The same `npm run check` gates apply to every phase in `AI_MARKET_DATA_PLAN.md`. Specs under `src/app/shared/data/market-data/` exercise mocked provider HTTP boundaries, cited retrieval/schema extraction, batching, cache invalidation, per-instrument failure, consent, key isolation and the existing metal source. Settings tests use real rendered controls and disposable encrypted storage. The PWA check rejects financial response caches.
+
+Never use production keys/holdings in CI. Live model accuracy, costs and deployed-origin CORS are separate opt-in release checks described in `docs/AI_MARKET_DATA.md`; passing mocks does not prove them.
+
 ## Migration review requests
 
 The major steps are separate, stacked branches, listed in `MIGRATION_PLAN.md`.

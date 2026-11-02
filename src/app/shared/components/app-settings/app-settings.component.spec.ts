@@ -73,4 +73,31 @@ describe('market data settings UI', () => {
       )
     );
   });
+
+  it('does not reset a scraper draft while its key is being saved', async () => {
+    const app = TestBed.inject(ApplicationStore);
+    await app.setMarketDataSettings({
+      version: 1,
+      source: 'ai',
+      provider: 'openai',
+      consent: false
+    });
+    const fixture = TestBed.createComponent(AppSettingsComponent);
+    fixture.componentInstance.openDialog.set(true);
+    await fixture.whenStable();
+    const host = fixture.nativeElement as HTMLElement;
+    const source = host.querySelector<HTMLSelectElement>('#market-source')!;
+    source.value = 'stoxscraper';
+    source.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    const key = host.querySelector<HTMLInputElement>('#scraper-key')!;
+    key.value = 'scraper-fixture';
+    key.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    [...host.querySelectorAll('button')]
+      .find(button => button.textContent?.trim() === 'Save')!
+      .click();
+    await vi.waitFor(() => expect(app.marketData().source).toBe('stoxscraper'));
+    expect(app.apiKey()).toBe('scraper-fixture');
+  });
 });

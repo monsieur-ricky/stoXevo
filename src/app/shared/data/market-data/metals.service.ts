@@ -101,6 +101,8 @@ export class MetalsService {
         evidence: {
           provider: 'Gold-API.com (spot per gram)',
           kind: 'latest',
+          unit: 'gram',
+          timestampKind: 'provider-fetch',
           marketAsOf: data.updatedAt,
           retrievedAt: new Date().toISOString(),
           sources: [

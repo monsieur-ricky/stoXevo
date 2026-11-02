@@ -8,6 +8,10 @@ for (const file of ['index.html', 'ngsw-worker.js', 'manifest.webmanifest']) {
     throw new Error(`Missing PWA artifact: ${file}`);
 }
 const manifest = JSON.parse(readFileSync(resolve(output, 'ngsw.json'), 'utf8'));
+if (manifest.dataGroups?.length)
+  throw new Error(
+    'Financial/provider requests must not be cached by the service worker'
+  );
 if (!manifest.hashTable['/index.html'])
   throw new Error('App shell is not cached');
 for (const [url, expected] of Object.entries(manifest.hashTable)) {

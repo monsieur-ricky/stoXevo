@@ -15,6 +15,17 @@ export const QUOTE_SCHEMA = {
           symbol: { type: 'string' },
           exchange: { type: ['string', 'null'] },
           currency: { type: 'string' },
+          unit: {
+            type: 'string',
+            enum: [
+              'share',
+              'coin',
+              'nav-unit',
+              'base-unit',
+              'contract',
+              'bond-unit'
+            ]
+          },
           price: { type: ['number', 'null'] },
           marketAsOf: { type: ['string', 'null'] },
           kind: { type: 'string', enum: ['latest', 'close', 'nav'] },
@@ -26,6 +37,7 @@ export const QUOTE_SCHEMA = {
           'symbol',
           'exchange',
           'currency',
+          'unit',
           'price',
           'marketAsOf',
           'kind',
@@ -80,6 +92,17 @@ export function validateQuotes(
     if (matches.length !== 1) return fail('Missing or duplicate quote.');
     const row = matches[0] as Record<string, unknown>;
     if (row['status'] !== 'ok') return fail('No sourced quote available.');
+    const units: Record<string, string> = {
+      stock: 'share',
+      etf: 'share',
+      crypto: 'coin',
+      fund: 'nav-unit',
+      forex: 'base-unit',
+      futures: 'contract',
+      bond: 'bond-unit'
+    };
+    const unit = units[instrument.type ?? 'stock'];
+    if (!unit || row['unit'] !== unit) return fail('Quote unit mismatch.');
     if (
       row['symbol'] !== instrument.symbol ||
       row['currency'] !== instrument.currency ||
@@ -119,12 +142,23 @@ export function validateQuotes(
       return fail('Missing provider citation.');
     // A grounded answer must actually contain the extracted number and identity.
     // This is not independent verification of the original publisher's data.
-    const text = groundedText.replaceAll(',', '');
+    const priceToken = String(price).replaceAll('.', '\\.');
+    const number = new RegExp(`(^|[^\\d.])${priceToken}(?:\\.0+)?($|[^\\d.])`);
+    // A different batch instrument's line or a substring of a larger number
+    // must not substantiate this instrument's quote.
     if (
-      !text.includes(String(price)) ||
-      !text.includes(instrument.symbol) ||
-      !text.includes(instrument.currency) ||
-      !text.includes(date)
+      !groundedText
+        .replaceAll(',', '')
+        .split('\n')
+        .some(
+          line =>
+            number.test(line.replaceAll(date, '')) &&
+            line.includes(instrument.symbol) &&
+            line.includes(instrument.currency) &&
+            line.includes(date) &&
+            line.includes(unit) &&
+            (!instrument.exchange || line.includes(instrument.exchange))
+        )
     )
       return fail('Quote not supported by retrieved answer.');
     return {
@@ -137,6 +171,8 @@ export function validateQuotes(
         marketAsOf: date,
         retrievedAt: new Date(now).toISOString(),
         kind: kind as 'latest' | 'close' | 'nav',
+        unit,
+        timestampKind: 'market',
         sources: sources.filter(source => ids.includes(source.id))
       }
     };

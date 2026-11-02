@@ -15,12 +15,13 @@ describe('market data contracts', () => {
     symbol: 'ACME',
     exchange: 'XNAS',
     currency: 'USD',
+    unit: 'share',
     price: 42,
     marketAsOf: '2026-11-02T15:29:00Z',
     kind: 'latest',
     sourceIds: ['s1']
   };
-  const text = 'ACME USD 42 2026-11-02T15:29:00Z';
+  const text = 'ACME XNAS USD 42 share 2026-11-02T15:29:00Z';
   const validate = (rows: unknown[], evidence = text) =>
     validateQuotes(
       { quotes: rows },
@@ -52,6 +53,7 @@ describe('market data contracts', () => {
     { symbol: 'OTHER' },
     { price: 0 },
     { price: NaN },
+    { unit: 'coin' },
     { sourceIds: ['invented'] },
     { marketAsOf: '2025-01-01T00:00:00Z' },
     { marketAsOf: '2026-11-03T15:29:00Z' },
@@ -63,6 +65,15 @@ describe('market data contracts', () => {
   it('rejects missing, duplicate and unsupported evidence instead of using zero', () => {
     expect(validate([]).status).toBe('unavailable');
     expect(validate([row, row]).status).toBe('unavailable');
+    expect(
+      validate(
+        [row],
+        'ACME XNAS USD unavailable\nOTHER USD 42 share 2026-11-02T15:29:00Z'
+      ).status
+    ).toBe('unavailable');
+    expect(validate([row], text.replace('42 share', '142 share')).status).toBe(
+      'unavailable'
+    );
     expect(validate([row], 'Company information only').status).toBe(
       'unavailable'
     );

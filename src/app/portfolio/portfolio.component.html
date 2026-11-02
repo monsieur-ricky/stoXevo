@@ -83,13 +83,18 @@
         >
           {{ asset.value | currency: currency | hideValue }}
           @if (asset.quoteStatus === 'unavailable') {
-            <small class="block font-normal"
+            <small class="block font-normal" [title]="asset.quoteMessage"
               >Update unavailable — last value kept</small
             >
           }
           @if (asset.quoteEvidence; as evidence) {
             <small class="block font-normal">
-              {{ evidence.kind }} · {{ evidence.marketAsOf | date: 'short' }}
+              {{
+                evidence.timestampKind === 'provider-fetch'
+                  ? 'Provider update'
+                  : evidence.kind
+              }}
+              · {{ evidence.unit }} · {{ evidence.marketAsOf | date: 'short' }}
               @for (source of sourcesFor(asset); track source.id) {
                 ·
                 <a
@@ -101,6 +106,11 @@
                 >
               }
             </small>
+          }
+          @if (!asset.manualUpdate && !asset.quoteEvidence) {
+            <small class="block font-normal"
+              >Source timestamp unavailable</small
+            >
           }
         </td>
         <td

@@ -119,7 +119,10 @@ export const ApplicationStore = signalStore(
         patchState(store, {
           pin,
           apiKey: data?.apiKey ?? null,
-          marketData,
+          marketData:
+            marketData.source === 'ai'
+              ? { ...marketData, consent: false }
+              : marketData,
           aiKey: null,
           marketDataRevision: store.marketDataRevision() + 1
         });
@@ -139,9 +142,10 @@ export const ApplicationStore = signalStore(
 
     const setApiKey = async (key: string): Promise<void> => {
       await updateAppData({ apiKey: key });
+      const persisted = await getDecryptedAppData();
       patchState(store, {
         apiKey: key,
-        marketData: store.marketData().consent
+        marketData: persisted?.marketData
           ? store.marketData()
           : readMarketDataSettings(undefined, key),
         marketDataRevision: store.marketDataRevision() + 1

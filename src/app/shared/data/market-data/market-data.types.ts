@@ -56,6 +56,8 @@ export type QuoteEvidence = {
   marketAsOf: string;
   retrievedAt: string;
   kind: 'latest' | 'close' | 'nav';
+  unit?: string;
+  timestampKind?: 'market' | 'provider-fetch';
   sources: MarketSource[];
 };
 export type QuoteResult = {
