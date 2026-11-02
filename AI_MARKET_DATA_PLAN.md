@@ -75,3 +75,15 @@ Before production enablement, explicitly opt into authenticated evaluations from
 - Kilo hosted retrieval: intentionally unavailable pending documented, verified search/citation support.
 - Persistent AI-key vault, free-inference presets, complete scraper profile-metric parity, exchange-calendar-aware freshness and provider-side hard spend controls beyond bounded calls/dedicated key limits are not implemented in this increment.
 - Review and merge the PR stack in order; no branches are merged or auto-merged by this work.
+
+## Published PR stack
+
+| Phase | PR | Base |
+| --- | --- | --- |
+| 1. Contracts/safety | [#19](https://github.com/monsieur-ricky/stoXevo/pull/19) | `main` |
+| 2. Settings/migration | [#20](https://github.com/monsieur-ricky/stoXevo/pull/20) | Phase 1 |
+| 3. Provider adapters | [#21](https://github.com/monsieur-ricky/stoXevo/pull/21) | Phase 2 |
+| 4. Application integration | [#22](https://github.com/monsieur-ricky/stoXevo/pull/22) | Phase 3 |
+| 5. Hardening/documentation | [#23](https://github.com/monsieur-ricky/stoXevo/pull/23) | Phase 4 |
+
+The complete feature is on `feature/ai-market-data-05-release`. Earlier branches are independently validated checkpoints. Review/merge in order and retarget later PRs as their bases land. No automatic merges were requested.
