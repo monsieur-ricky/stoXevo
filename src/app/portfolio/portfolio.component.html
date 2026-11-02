@@ -12,7 +12,8 @@
       icon="pi pi-sync"
       class="mr-6"
       [label]="isMobile() ? undefined : 'Update'"
-      [disabled]="!isApiKeySet() || !isOnline()"
+      ariaLabel="Update portfolio prices"
+      [disabled]="!canRefresh() || !isOnline()"
       [loading]="loading()"
       (onClick)="onGetQuotes()"
     />
@@ -23,6 +24,11 @@
     />
   </div>
 </div>
+
+<p class="text-sm mb-4">
+  Indicative prices, not executable trading quotes. Update uses fresh cached
+  results where available. AI lookups may incur charges.
+</p>
 
 <div class="table-container">
   <p-table
@@ -76,6 +82,26 @@
           class="font-bold"
         >
           {{ asset.value | currency: currency | hideValue }}
+          @if (asset.quoteStatus === 'unavailable') {
+            <small class="block font-normal"
+              >Update unavailable — last value kept</small
+            >
+          }
+          @if (asset.quoteEvidence; as evidence) {
+            <small class="block font-normal">
+              {{ evidence.kind }} · {{ evidence.marketAsOf | date: 'short' }}
+              @for (source of sourcesFor(asset); track source.id) {
+                ·
+                <a
+                  [href]="source.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  referrerpolicy="no-referrer"
+                  >{{ source.title }}</a
+                >
+              }
+            </small>
+          }
         </td>
         <td
           [class.text-green-600]="totalValue > totalInvestment"

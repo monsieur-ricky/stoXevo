@@ -126,7 +126,8 @@ export class AiMarketDataService {
         symbol,
         name,
         currency,
-        exchangeShortName
+        exchangeShortName,
+        sources: result.sources
       }));
   }
 

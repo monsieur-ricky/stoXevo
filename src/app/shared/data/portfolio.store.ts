@@ -9,7 +9,9 @@ import {
 import { ApplicationStore } from '@shared/data';
 import { PortfolioService } from '@shared/data/api';
 import { Asset, Purchase } from '@shared/models';
-import { getAveragePrice, getMetalPriceFromCurrency } from '@shared/utils';
+import { getAveragePrice } from '@shared/utils';
+import { assetInstrument } from './market-data/market-data.service';
+import { instrumentKey, QuoteResult } from './market-data/market-data.types';
 import { MessageService } from '@openng/optimus-ui/api';
 
 export type PortfolioState = {
@@ -37,9 +39,26 @@ export const PortfolioStore = signalStore(
       appStore = inject(ApplicationStore),
       messageService = inject(MessageService)
     ) => {
+      let generation = 0;
       const storeAssets = async (): Promise<void> => {
         await appStore.updateAppData({ assets: store.assets() });
       };
+
+      const applyQuote = (asset: Asset, quote?: QuoteResult): Asset =>
+        quote?.status === 'ok' && quote.price !== undefined
+          ? {
+              ...asset,
+              value: quote.price,
+              quoteEvidence: quote.evidence,
+              quoteStatus: 'ok',
+              quoteMessage: undefined
+            }
+          : {
+              ...asset,
+              quoteStatus: 'unavailable',
+              quoteMessage:
+                quote?.reason ?? 'Price unavailable; last value kept.'
+            };
 
       const setAsset = (asset: Asset | undefined): void => {
         patchState(store, {
@@ -49,6 +68,7 @@ export const PortfolioStore = signalStore(
       };
 
       const getAssets = async (): Promise<void> => {
+        generation++;
         const decryptedAppData = await appStore.getDecryptedAppData();
         const decryptedAssets = (decryptedAppData?.assets as Asset[]) ?? [];
 
@@ -78,7 +98,12 @@ export const PortfolioStore = signalStore(
 
         if (!store.initialLoadDone()) {
           patchState(store, { initialLoadDone: true });
-          if (appStore.isApiKeySet()) await getQuotes(false);
+          // Opening/importing a portfolio must never trigger billable AI work.
+          if (
+            appStore.marketData().source === 'stoxscraper' &&
+            appStore.canUseMarketData()
+          )
+            await getQuotes(false);
         }
       };
 
@@ -101,16 +126,14 @@ export const PortfolioStore = signalStore(
           }
 
           if (!asset.manualUpdate) {
-            if (asset.type === 'commodity') {
-              const quote = await portfolioService.getMetalQuote(asset.subType);
-              const price = getMetalPriceFromCurrency(quote, asset.currency);
-
-              asset = { ...asset, value: price ?? asset.value };
-            } else {
-              const quote = await portfolioService.getQuote(asset.symbol);
-
-              asset = { ...asset, value: quote?.price ?? asset.value };
-            }
+            const [quote] = await portfolioService.getQuotes([
+              assetInstrument(asset)
+            ]);
+            if (quote?.status !== 'ok')
+              throw new Error(
+                'No acceptable quote. Add the asset with a manual valuation instead.'
+              );
+            asset = applyQuote(asset, quote);
           }
 
           patchState(store, { asset, assets: [...store.assets(), asset] });
@@ -124,14 +147,13 @@ export const PortfolioStore = signalStore(
           });
 
           return true;
-        } catch (error) {
+        } catch {
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
             detail: 'Failed to add the asset to the portfolio!'
           });
 
-          console.error(error);
           return false;
         } finally {
           patchState(store, { loading: false });
@@ -143,28 +165,19 @@ export const PortfolioStore = signalStore(
 
         try {
           if (!updatedAsset.manualUpdate) {
-            if (updatedAsset.type === 'commodity') {
-              const quote = await portfolioService.getMetalQuote(
-                updatedAsset.subType
-              );
-              const price = getMetalPriceFromCurrency(
-                quote,
-                updatedAsset.currency
-              );
-
+            // Editing purchases does not initiate paid lookups. Use Update in
+            // the portfolio to refresh prices explicitly.
+            const current = store
+              .assets()
+              .find(asset => asset.symbol === updatedAsset.symbol);
+            if (current)
               updatedAsset = {
                 ...updatedAsset,
-                value: price ?? updatedAsset.value
+                value: current.value,
+                quoteEvidence: current.quoteEvidence,
+                quoteStatus: current.quoteStatus,
+                quoteMessage: current.quoteMessage
               };
-            } else {
-              const quote = await portfolioService.getQuote(
-                updatedAsset.symbol
-              );
-              updatedAsset = {
-                ...updatedAsset,
-                value: quote?.price ?? updatedAsset.value
-              };
-            }
           }
 
           const purchases = updatedAsset.purchases ?? [];
@@ -194,14 +207,12 @@ export const PortfolioStore = signalStore(
             summary: 'Yay!',
             detail: 'Asset was updated!'
           });
-        } catch (error) {
+        } catch {
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
             detail: 'Failed to update the asset!'
           });
-
-          console.error(error);
         } finally {
           patchState(store, { loading: false });
         }
@@ -222,43 +233,49 @@ export const PortfolioStore = signalStore(
       };
 
       const getQuotes = async (showSuccessMessage = true): Promise<void> => {
+        if (store.loading()) return;
+        const snapshot = store.assets();
+        const currentGeneration = generation;
+        const revision = appStore.marketDataRevision();
         patchState(store, { loading: true });
 
         try {
-          const updatedAssets: Asset[] = [];
-
-          for (const asset of store.assets()) {
-            if (asset.manualUpdate) {
-              updatedAssets.push(asset);
-              continue;
-            }
-
-            if (asset.type === 'commodity') {
-              const quote = await portfolioService.getMetalQuote(asset.subType);
-              const price = getMetalPriceFromCurrency(quote, asset.currency);
-
-              updatedAssets.push({ ...asset, value: price ?? asset.value });
-            } else {
-              const quote = await portfolioService.getQuote(asset.symbol);
-
-              updatedAssets.push({
-                ...asset,
-                value: quote?.price ?? asset.value
-              });
-            }
-          }
-
+          const automatic = snapshot.filter(asset => !asset.manualUpdate);
+          const quotes = await portfolioService.getQuotes(
+            automatic.map(assetInstrument)
+          );
+          if (
+            currentGeneration !== generation ||
+            revision !== appStore.marketDataRevision()
+          )
+            return;
+          const byKey = new Map(
+            quotes.map(quote => [instrumentKey(quote.instrument), quote])
+          );
+          // Map the latest store, not the old snapshot: don't resurrect deleted
+          // assets or overwrite edits made while the requests were running.
           patchState(store, {
-            assets: updatedAssets
+            assets: store
+              .assets()
+              .map(asset =>
+                asset.manualUpdate || !snapshot.includes(asset)
+                  ? asset
+                  : applyQuote(
+                      asset,
+                      byKey.get(instrumentKey(assetInstrument(asset)))
+                    )
+              )
           });
 
           await storeAssets();
 
           if (showSuccessMessage) {
             messageService.add({
-              severity: 'success',
-              summary: 'Yay!',
-              detail: 'Portfolio quotes were updated!'
+              severity: quotes.some(quote => quote.status !== 'ok')
+                ? 'warn'
+                : 'success',
+              summary: 'Market data',
+              detail: `${quotes.filter(quote => quote.status === 'ok').length} prices available; ${quotes.filter(quote => quote.status !== 'ok').length} unavailable (previous values kept). Fresh cached prices may be reused.`
             });
           }
         } catch (error: unknown) {
@@ -271,8 +288,6 @@ export const PortfolioStore = signalStore(
                 : 'Failed to update quotes.',
             life: 10000
           });
-
-          console.error(error);
         } finally {
           patchState(store, { loading: false });
         }

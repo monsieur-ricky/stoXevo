@@ -9,9 +9,10 @@
     [inputStyle]="{ width: '100%' }"
     [suggestions]="symbols()"
     [minLength]="3"
+    [delay]="800"
     [virtualScroll]="true"
     [virtualScrollItemSize]="34"
-    [disabled]="!isApiKeySet() || disabled()"
+    [disabled]="!canSearch() || disabled()"
     (onSelect)="onSelect($event.value)"
     (completeMethod)="searchSymbols($event.query)"
     [(ngModel)]="selectedItem"
@@ -25,3 +26,19 @@
     </ng-template>
   </p-autoComplete>
 </p-iconField>
+
+@if (sources().length) {
+  <small
+    >Search sources:
+    @for (source of sources(); track source.url) {
+      <a
+        class="mr-2"
+        [href]="source.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        referrerpolicy="no-referrer"
+        >{{ source.title }}</a
+      >
+    }
+  </small>
+}

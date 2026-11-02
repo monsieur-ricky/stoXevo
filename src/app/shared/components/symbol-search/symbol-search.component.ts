@@ -3,9 +3,12 @@ import {
   Component,
   inject,
   input,
+  DestroyRef,
   output,
   signal
 } from '@angular/core';
+import { computed } from '@angular/core';
+import { safeSourceUrl } from '../../data/market-data/quote-validation';
 import { FormsModule } from '@angular/forms';
 import { ApplicationStore } from '@shared/data';
 import { SymbolSearchService } from '@shared/data/api';
@@ -39,19 +42,41 @@ export class SymbolSearchComponent {
 
   disabled = input<boolean>(false);
 
-  isApiKeySet = this.appStore.isApiKeySet;
+  canSearch = this.appStore.canUseMarketData;
+  private request?: AbortController;
+  private readonly destroy = inject(DestroyRef);
 
   symbols = signal<Symbol[]>([]);
+  sources = computed(() => [
+    ...new Map(
+      this.symbols()
+        .flatMap(symbol => symbol.sources ?? [])
+        .filter(source => safeSourceUrl(source.url))
+        .map(source => [source.url, source])
+    ).values()
+  ]);
 
   selectedItem?: Symbol;
 
   selected = output<Symbol>();
 
+  constructor() {
+    this.destroy.onDestroy(() => this.request?.abort());
+  }
+
   async searchSymbols(query: string): Promise<void> {
+    this.request?.abort();
+    const controller = new AbortController();
+    this.request = controller;
     try {
-      const symbols = await this.symbolService.searchSymbols(query);
+      const symbols = await this.symbolService.searchSymbols(
+        query,
+        controller.signal
+      );
+      if (controller.signal.aborted) return;
       this.symbols.set(symbols);
-    } catch (error) {
+    } catch {
+      if (controller.signal.aborted) return;
       this.symbols.set([]);
       this.selectedItem = undefined;
       this.messageService.add({
@@ -59,8 +84,6 @@ export class SymbolSearchComponent {
         summary: 'Oops!',
         detail: 'Failed to load the search results.'
       });
-
-      console.error(error);
     }
   }
 

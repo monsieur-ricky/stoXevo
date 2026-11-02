@@ -20,27 +20,33 @@ export const getIdFromSentence = (sentence: string): string => {
  *
  * @param {MetalQuote | undefined} quote - The metal quote object containing price information.
  * @param {string} currency - The currency code (EUR, USD, GBP).
- * @returns {number} The price per gram in the specified currency. Returns 0 if quote is undefined or currency is not supported.
+ * Missing, unsupported or invalid prices are unavailable, never a zero valuation.
  */
 export const getMetalPriceFromCurrency = (
   quote: MetalQuote | undefined,
   currency: string
-): number => {
-  const price = 0;
+): number | undefined => {
+  let price: number | undefined;
 
   switch (currency.toLowerCase()) {
     case 'eur':
-      return quote?.pricePerGramEuro ?? 0;
+      price = quote?.pricePerGramEuro;
+      break;
 
     case 'usd':
-      return quote?.pricePerGramDollar ?? 0;
+      price = quote?.pricePerGramDollar;
+      break;
 
     case 'gbp':
-      return quote?.pricePerGramPound ?? 0;
+      price = quote?.pricePerGramPound;
+      break;
 
     default:
-      return price;
+      return undefined;
   }
+  return typeof price === 'number' && Number.isFinite(price) && price > 0
+    ? price
+    : undefined;
 };
 
 /**

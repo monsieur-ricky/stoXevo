@@ -1,4 +1,5 @@
 import { SelectList, Symbol } from '@shared/models';
+import type { QuoteEvidence } from '../data/market-data/market-data.types';
 
 export type AssetTypeSelect = SelectList<AssetType> & {
   id: AssetType;
@@ -33,6 +34,9 @@ export type Asset = Symbol & {
   manualUpdate: boolean;
   subType?: string;
   purchases: Purchase[];
+  quoteEvidence?: QuoteEvidence;
+  quoteStatus?: 'ok' | 'unavailable';
+  quoteMessage?: string;
 };
 
 export const assetTypes: AssetTypeSelect[] = [

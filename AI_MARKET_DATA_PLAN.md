@@ -29,10 +29,10 @@ Each phase branches from the previous checkpoint. Run `npm run check` (zero-warn
    - [x] Direct Gold-API adapter; deterministic gram conversion; HTTP/cancellation/privacy tests.
    - [x] Quality gates (64 tests); PR below.
 4. **Application integration** — `feature/ai-market-data-04-integration`
-   - [ ] Route search/profile/quotes through selected source; batch refresh and independent partial successes.
-   - [ ] Settings UI, explicit consent, connection test, source/time/status display, manual fallback.
-   - [ ] Caching, deduplication, cancellation, stale-response protection; integration tests.
-   - [ ] Quality gates and PR.
+   - [x] Route search/profile/quotes through selected source; batch refresh and independent partial successes.
+   - [x] Settings UI, explicit consent, connection test, source/time/status display, manual fallback.
+   - [x] Caching, deduplication, cancellation, stale-response protection; integration tests.
+   - [x] Quality gates (71 tests); PR below.
 5. **Hardening and release documentation** — `feature/ai-market-data-05-release`
    - [ ] Privacy/PWA checks, contributor/user documentation and opt-in live benchmark instructions.
    - [ ] Final regression coverage and quality gates; publish final PR.
@@ -61,3 +61,6 @@ Before production enablement, explicitly opt into authenticated evaluations from
 - Phase 2 PR: [#20](https://github.com/monsieur-ricky/stoXevo/pull/20), stacked on #19.
 - Phase 3: implemented two bounded requests (cited retrieval then schema extraction), provider-issued citation normalization, sanitized errors, cancellation, five-instrument limit and explicit metals exclusion. Direct metals adapter uses the existing Gold-API JSON source, paced requests, coalescing, 30-second cache, freshness validation and rate-limit cooldown. Kilo remains fail-closed, not falsely advertised as grounded. Live CORS/accuracy remain unverified.
 - Phase 3 validation: `npm run check` passes (64 tests, zero-warning lint, production/PWA build). Claude long-running paused turns fail closed instead of creating potentially unbounded continuations. No automatic retries or paid fallback.
+- Phase 3 PR: [#21](https://github.com/monsieur-ricky/stoXevo/pull/21), stacked on #20.
+- Phase 4: wired facades, resource cancellation, five-instrument AI chunks/two concurrent jobs, independent partial results, metadata/quote caches, manual assets and separate metals routing. Removed paid refresh on portfolio open/import and on purchase edits. Settings provide masked session keys, explicit consent, manual/scraper alternatives and an explicitly billable connection test. Portfolio/search/profile display source links; missing metal data can no longer overwrite a value with zero. Regression tests cover batching, caching, partial failures, deleted assets, legacy scraper routes and rendered settings.
+- Phase 4 validation: `npm run check` passes (71 tests, zero-warning lint, production build and PWA hash verification).

@@ -66,7 +66,6 @@ export class DetailsComponent implements OnInit {
 
   asset = this.portfolioStore.asset;
   isMobile = this.appStore.isMobile;
-  isApiKeySet = this.appStore.isApiKeySet;
 
   isEditMode = computed(() => !!this.asset()?.symbol);
   sidebarTitle = computed(() =>
@@ -225,7 +224,11 @@ export class DetailsComponent implements OnInit {
     const form = this.assetForm;
     const manualUpdate = form.get('manualUpdate');
 
-    if (this.isApiKeySet() && enable) {
+    const available =
+      form.get('type')?.value === 'commodity'
+        ? this.appStore.canUseMetals()
+        : this.appStore.canUseMarketData();
+    if (available && enable) {
       manualUpdate?.enable();
       manualUpdate?.setValue(this.asset()?.manualUpdate ?? value);
     } else {

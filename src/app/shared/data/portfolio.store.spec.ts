@@ -24,7 +24,7 @@ const manualAsset = (): Asset => ({
 describe('portfolio store integration', () => {
   let store: InstanceType<typeof PortfolioStore>;
   let app: InstanceType<typeof ApplicationStore>;
-  const api = { getQuote: vi.fn(), getMetalQuote: vi.fn() };
+  const api = { getQuotes: vi.fn() };
 
   beforeEach(() => {
     localStorage.clear();
@@ -52,7 +52,7 @@ describe('portfolio store integration', () => {
     expect(store.totalValueDifferenceSum()).toBe(10);
     expect(store.totalPercentageDifferenceSum()).toBe(0.5);
     expect((await app.getDecryptedAppData())?.assets).toEqual([manualAsset()]);
-    expect(api.getQuote).not.toHaveBeenCalled();
+    expect(api.getQuotes).not.toHaveBeenCalled();
   });
 
   it('rejects duplicate symbols and releases the loading state', async () => {
@@ -93,32 +93,86 @@ describe('portfolio store integration', () => {
     await store.getAssets();
     expect(store.assets()[0].purchases).toEqual(manualAsset().purchases);
     expect(store.loading()).toBe(false);
-    expect(api.getQuote).not.toHaveBeenCalled();
+    expect(api.getQuotes).not.toHaveBeenCalled();
   });
 
   it('refreshes automatic quotes but leaves manual valuations unchanged', async () => {
-    api.getQuote.mockResolvedValue({ price: 25 });
+    api.getQuotes.mockImplementation(instruments =>
+      Promise.resolve(
+        instruments.map((instrument: unknown) => ({
+          instrument,
+          status: 'ok',
+          price: 25
+        }))
+      )
+    );
     await store.addAsset({
       ...manualAsset(),
       symbol: 'AUTO',
       manualUpdate: false
     });
     await store.addAsset(manualAsset());
-    api.getQuote.mockResolvedValue({ price: 30 });
+    api.getQuotes.mockImplementation(instruments =>
+      Promise.resolve(
+        instruments.map((instrument: unknown) => ({
+          instrument,
+          status: 'ok',
+          price: 30
+        }))
+      )
+    );
     await store.getQuotes();
     expect(store.assets().map(asset => asset.value)).toEqual([30, 15]);
-    expect(api.getQuote).toHaveBeenCalledTimes(2);
+    expect(api.getQuotes).toHaveBeenCalledTimes(2);
   });
 
   it('keeps the portfolio unchanged and releases loading after a failed quote request', async () => {
     const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    api.getQuote.mockRejectedValue(new Error('Scraper unavailable'));
+    api.getQuotes.mockRejectedValue(new Error('Scraper unavailable'));
     expect(
       await store.addAsset({ ...manualAsset(), manualUpdate: false })
     ).toBe(false);
     expect(store.assets()).toEqual([]);
     expect(store.loading()).toBe(false);
-    expect(log).toHaveBeenCalledOnce();
+    expect(log).not.toHaveBeenCalled();
     log.mockRestore();
+  });
+
+  it('applies partial batch successes and keeps unavailable valuations', async () => {
+    await store.addAsset(manualAsset());
+    await store.addAsset({ ...manualAsset(), symbol: 'OTHER' });
+    await store.updateAsset({ ...store.assets()[0], manualUpdate: false });
+    await store.updateAsset({ ...store.assets()[1], manualUpdate: false });
+    api.getQuotes.mockImplementation(instruments =>
+      Promise.resolve(
+        instruments.map((instrument: unknown, index: number) => ({
+          instrument,
+          status: index ? 'unavailable' : 'ok',
+          price: index ? undefined : 50
+        }))
+      )
+    );
+    await store.getQuotes();
+    expect(store.assets().map(asset => asset.value)).toEqual([50, 15]);
+    expect(store.assets()[1].quoteStatus).toBe('unavailable');
+    expect(api.getQuotes).toHaveBeenCalledOnce();
+    expect(JSON.stringify(api.getQuotes.mock.calls)).not.toContain('purchases');
+  });
+
+  it('does not resurrect a deleted asset after a refresh finishes', async () => {
+    await store.addAsset(manualAsset());
+    await store.updateAsset({ ...manualAsset(), manualUpdate: false });
+    let finish!: (value: unknown) => void;
+    api.getQuotes.mockImplementation(
+      () =>
+        new Promise(resolve => {
+          finish = resolve;
+        })
+    );
+    const refresh = store.getQuotes();
+    await store.removeAsset('ACME');
+    finish([]);
+    await refresh;
+    expect(store.assets()).toEqual([]);
   });
 });

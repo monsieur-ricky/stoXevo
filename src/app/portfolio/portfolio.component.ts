@@ -35,6 +35,8 @@ import { TableModule } from '@openng/optimus-ui/table';
 import { ToastModule } from '@openng/optimus-ui/toast';
 import { DetailsComponent } from './details/details.component';
 import { PurchasesComponent } from './purchases/purchases.component';
+import { safeSourceUrl } from '../shared/data/market-data/quote-validation';
+import { MarketSource } from '../shared/data/market-data/market-data.types';
 
 @Component({
   selector: 'sxe-portfolio',
@@ -75,7 +77,9 @@ export class PortfolioComponent {
   private readonly networkService = inject(NetworkStatusService);
 
   isMobile = this.appStore.isMobile;
-  isApiKeySet = this.appStore.isApiKeySet;
+  canRefresh = computed(
+    () => this.appStore.canUseMarketData() || this.appStore.canUseMetals()
+  );
   isOnline = this.networkService.isOnline;
   selectedAsset = this.portfolioStore.asset;
   loading = this.portfolioStore.loading;
@@ -99,6 +103,12 @@ export class PortfolioComponent {
 
   onGetQuotes(): void {
     this.portfolioStore.getQuotes();
+  }
+
+  sourcesFor(asset: Asset): MarketSource[] {
+    return Array.isArray(asset.quoteEvidence?.sources)
+      ? asset.quoteEvidence.sources.filter(source => safeSourceUrl(source.url))
+      : [];
   }
 
   onAddAsset(): void {

@@ -1,20 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { STOXSCRAPER_API } from '@app';
-import { Symbol } from '@shared/models';
-import { firstValueFrom } from 'rxjs';
+import { MarketDataService } from '../market-data/market-data.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SymbolSearchService {
-  private readonly http = inject(HttpClient);
-
-  private readonly apiUrl = `${STOXSCRAPER_API}/search`;
-
-  searchSymbols(query: string): Promise<Symbol[]> {
-    const url = `${this.apiUrl}/${query}`;
-
-    return firstValueFrom(this.http.get<Symbol[]>(url));
+  private readonly marketData = inject(MarketDataService);
+  searchSymbols(query: string, signal?: AbortSignal) {
+    return this.marketData.searchSymbols(query, signal);
   }
 }

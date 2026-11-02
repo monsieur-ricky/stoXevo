@@ -9,11 +9,13 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { STOXSCRAPER_API } from '@app';
 import { MessageService } from '@openng/optimus-ui/api';
 import { ProfileComponent } from './profile.component';
+import { ApplicationStore } from '@shared/data';
 
 describe('profile route and HTTP resource integration', () => {
   let http: HttpTestingController;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -26,8 +28,14 @@ describe('profile route and HTTP resource integration', () => {
       ]
     });
     http = TestBed.inject(HttpTestingController);
+    const app = TestBed.inject(ApplicationStore);
+    await app.setPin('1234');
+    await app.setApiKey('synthetic-key');
   });
-  afterEach(() => http.verify({ ignoreCancelled: true }));
+  afterEach(() => {
+    http.verify({ ignoreCancelled: true });
+    localStorage.clear();
+  });
 
   it('binds the route symbol and renders the resource result', async () => {
     const harness = await RouterTestingHarness.create();

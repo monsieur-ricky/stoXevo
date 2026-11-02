@@ -55,14 +55,12 @@ describe('existing Gold-API source integration', () => {
     const result = service.getQuote('silver', 'USD');
     const assertion = expect(result).rejects.toThrow('stale');
     await Promise.resolve();
-    http
-      .expectOne('https://api.gold-api.com/price/XAG/USD')
-      .flush({
-        symbol: 'XAG',
-        currency: 'USD',
-        price: 50,
-        updatedAt: '2020-01-01T00:00:00Z'
-      });
+    http.expectOne('https://api.gold-api.com/price/XAG/USD').flush({
+      symbol: 'XAG',
+      currency: 'USD',
+      price: 50,
+      updatedAt: '2020-01-01T00:00:00Z'
+    });
     await assertion;
   });
   it('requires consent even though no model key is needed', async () => {

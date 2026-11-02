@@ -9,9 +9,9 @@
 </h1>
 
 <div class="grid grid-cols-12 gap-4 grid-cols-12 gap-6">
-  @let low = profile()?.regularMarketDayLow ?? 0;
-  @let high = profile()?.regularMarketDayHigh ?? 0;
-  @let price = profile()?.price ?? 0;
+  @let low = profile()?.regularMarketDayLow;
+  @let high = profile()?.regularMarketDayHigh;
+  @let price = profile()?.price;
   @let changes = profile()?.changeValue ?? 0;
   @let changePercent = profile()?.changePercent ?? 0;
   @let currency = profile()?.currency ?? 'USD';
@@ -38,7 +38,11 @@
         [class.!text-red-700]="changes < 0"
         [class.!text-green-700]="changes > 0"
       >
-        {{ price | currency: currency }}
+        @if (price !== undefined) {
+          {{ price | currency: currency }}
+        } @else {
+          Unavailable
+        }
       </h1>
     </section>
   </div>
@@ -48,7 +52,11 @@
       <h5>High</h5>
 
       <h1>
-        {{ high | currency: currency }}
+        @if (high !== undefined) {
+          {{ high | currency: currency }}
+        } @else {
+          Unavailable
+        }
       </h1>
     </section>
   </div>
@@ -58,7 +66,11 @@
       <h5>Low</h5>
 
       <h1>
-        {{ low | currency: currency }}
+        @if (low !== undefined) {
+          {{ low | currency: currency }}
+        } @else {
+          Unavailable
+        }
       </h1>
     </section>
   </div>
@@ -123,7 +135,12 @@
     <span>
       Website:
       <span>
-        <a href="{{ profile()?.website }}" target="_blank">
+        <a
+          href="{{ profile()?.website }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          referrerpolicy="no-referrer"
+        >
           {{ profile()?.website }}
         </a>
       </span>
@@ -194,6 +211,22 @@
     </span>
   </div>
 </div>
+
+@if (profile()?.sources; as sources) {
+  <p class="mt-4">
+    AI-assisted metadata. Unavailable numerical metrics are not estimated.
+  </p>
+  @for (source of sources; track source.id) {
+    <a
+      class="block"
+      [href]="source.url"
+      target="_blank"
+      rel="noopener noreferrer"
+      referrerpolicy="no-referrer"
+      >{{ source.title }}</a
+    >
+  }
+}
 
 <div class="grid grid-cols-12 gap-4 grid-cols-12 gap-6 mt-6">
   <div class="col-span-12">

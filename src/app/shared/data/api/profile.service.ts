@@ -1,19 +1,23 @@
-import { httpResource } from '@angular/common/http';
-import { Injectable, Signal } from '@angular/core';
-import { STOXSCRAPER_API } from '@app';
+import { inject, Injectable, resource, Signal } from '@angular/core';
+import { ApplicationStore } from '../app.store';
+import { MarketDataService } from '../market-data/market-data.service';
 
-import { Profile } from '@shared/models';
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private readonly apiUrl = `${STOXSCRAPER_API}/profile`;
+  private readonly marketData = inject(MarketDataService);
+  private readonly app = inject(ApplicationStore);
 
   resource(symbol: Signal<string | undefined>) {
-    return httpResource<Profile>(() => {
-      const value = symbol();
-      return value ? `${this.apiUrl}/${encodeURIComponent(value)}` : undefined;
+    return resource({
+      params: () => {
+        const value = symbol();
+        const revision = this.app.marketDataRevision();
+        return value && this.app.canUseMarketData()
+          ? { symbol: value, revision }
+          : undefined;
+      },
+      loader: ({ params, abortSignal }) =>
+        this.marketData.getProfile(params.symbol, abortSignal)
     });
   }
 }

@@ -2,6 +2,7 @@
   icon="pi pi-cog"
   severity="secondary"
   pTooltip="Settings"
+  ariaLabel="Application settings"
   tooltipPosition="bottom"
   size="large"
   [rounded]="true"
@@ -12,41 +13,120 @@
 <p-dialog
   header="Application Settings"
   [modal]="true"
-  [style]="{ width: '25rem' }"
+  [style]="{ width: '34rem', maxWidth: '95vw' }"
   [(visible)]="openDialog"
 >
-  <div class="field">
-    <label for="key">API Key</label>
-    <p-inputGroup>
-      <p-inputGroupAddon>
-        <i class="pi pi-key"></i>
-      </p-inputGroupAddon>
-      <input
-        id="key"
-        pInputText
-        aria-describedby="key-help"
-        [(ngModel)]="apiKey"
-      />
-    </p-inputGroup>
-    <small id="key-help">
-      Don't have an API Key? Check out
-      <a
-        href="https://github.com/monsieur-ricky/stoXscraper"
-        target="_blank"
-        class="text-primary"
-      >
-        stoXscraper
-      </a>
-    </small>
-    <small>Or get in touch and request one from me :)</small>
-  </div>
+  <div class="flex flex-col gap-4">
+    <label for="market-source">Market data source</label>
+    <select
+      id="market-source"
+      class="border rounded p-2"
+      [(ngModel)]="source"
+      [disabled]="busy()"
+    >
+      <option value="ai">AI-assisted (experimental, recommended setup)</option>
+      <option value="stoxscraper">stoXscraper</option>
+      <option value="manual">Manual only</option>
+    </select>
 
-  <div class="flex justify-end mt-20 gap-6">
-    <p-button
-      label="Cancel"
-      severity="secondary"
-      (onClick)="openDialog.set(false)"
-    />
-    <p-button label="Save" [disabled]="!apiKey" (onClick)="onSaveSettings()" />
+    @if (source === 'ai') {
+      <label for="ai-provider">AI provider</label>
+      <select
+        id="ai-provider"
+        class="border rounded p-2"
+        [(ngModel)]="provider"
+        (ngModelChange)="onProviderChange()"
+        [disabled]="busy()"
+      >
+        <option value="openai">OpenAI</option>
+        <option value="anthropic">Anthropic</option>
+        <option value="openrouter">OpenRouter</option>
+        <option value="kilo" disabled>
+          Kilo Gateway — hosted search not verified
+        </option>
+      </select>
+      <small>Automatic model: {{ presets[provider].model }}</small>
+      <label for="ai-key">Session API key</label>
+      <input
+        id="ai-key"
+        type="password"
+        pInputText
+        autocomplete="off"
+        [(ngModel)]="apiKey"
+        [disabled]="busy()"
+        placeholder="Leave blank to keep the current session key"
+      />
+      <small
+        >AI keys stay in memory only and are excluded from backups. Re-enter
+        after reload. Use a dedicated, spending-limited key. Browser
+        scripts/extensions may access it while unlocked.</small
+      >
+      <label class="flex gap-2 items-start" for="ai-consent">
+        <input
+          id="ai-consent"
+          type="checkbox"
+          [(ngModel)]="consent"
+          [disabled]="busy()"
+        />
+        <span
+          >I allow lookups to send instrument identifiers to this provider and
+          its search services, and gold/silver identifiers to Gold-API. AI
+          searches and tokens may incur charges.</span
+        >
+      </label>
+      <small
+        >Holdings quantities, purchases, portfolio totals and PIN are never
+        sent. Prices are indicative; missing or unsafe results keep the last
+        value. Live provider accuracy/CORS are not certified. Gold and silver
+        always use the existing Gold-API source, never AI.</small
+      >
+      <p-button
+        label="Forget session AI key"
+        severity="secondary"
+        [text]="true"
+        [disabled]="busy()"
+        (onClick)="forgetKey()"
+      />
+    }
+
+    @if (source === 'stoxscraper') {
+      <label for="scraper-key">stoXscraper API key</label>
+      <input
+        id="scraper-key"
+        type="password"
+        pInputText
+        autocomplete="off"
+        [(ngModel)]="scraperKey"
+        [disabled]="busy()"
+      />
+      <small
+        >Your existing scraper endpoint and key storage remain unchanged. See
+        <a
+          href="https://github.com/monsieur-ricky/stoXscraper"
+          target="_blank"
+          rel="noopener noreferrer"
+          >stoXscraper setup</a
+        >.</small
+      >
+    }
+
+    <p role="status" aria-live="polite">{{ message() }}</p>
+    <div class="flex flex-wrap justify-end gap-3">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        [disabled]="busy()"
+        (onClick)="openDialog.set(false)"
+      />
+      @if (source !== 'manual') {
+        <p-button
+          label="Save & test (may charge)"
+          severity="secondary"
+          [disabled]="busy() || (source === 'ai' && !consent)"
+          (onClick)="onTestConnection()"
+        />
+      }
+      <p-button label="Save" [disabled]="busy()" (onClick)="onSaveSettings()" />
+    </div>
   </div>
 </p-dialog>

@@ -22,8 +22,8 @@ describe('financial calculations', () => {
   });
 
   it('handles missing metal prices and unsupported currencies', () => {
-    expect(getMetalPriceFromCurrency(undefined, 'EUR')).toBe(0);
-    expect(getMetalPriceFromCurrency(undefined, 'JPY')).toBe(0);
+    expect(getMetalPriceFromCurrency(undefined, 'EUR')).toBeUndefined();
+    expect(getMetalPriceFromCurrency(undefined, 'JPY')).toBeUndefined();
   });
 
   it('creates readable initials', () => {

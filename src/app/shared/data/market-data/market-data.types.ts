@@ -47,6 +47,7 @@ export type Instrument = {
   currency: string;
   exchange?: string;
   type?: AssetType;
+  metal?: string;
 };
 export type MarketSource = { id: string; url: string; title: string };
 export type QuoteEvidence = {
@@ -73,7 +74,8 @@ export function instrumentKey(value: Instrument): string {
     value.symbol.toUpperCase(),
     value.exchange ?? '',
     value.currency,
-    value.type ?? ''
+    value.type ?? '',
+    value.metal ?? ''
   ]);
 }
 

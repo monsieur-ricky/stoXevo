@@ -56,7 +56,6 @@ export class PurchasesComponent {
 
   asset = this.portfolioStore.asset;
   isMobile = this.appStore.isMobile;
-  isApiKeySet = this.appStore.isApiKeySet;
 
   sidebarTitle = computed(() => `Manage ${this.asset()?.symbol} Purchases`);
   purchases = computed(() => this.asset()?.purchases ?? []);
