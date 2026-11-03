@@ -10,6 +10,17 @@
   </ng-template>
 
   <form [formGroup]="assetForm">
+    @if (saveError(); as message) {
+      <div role="alert" class="mb-4 p-3 border rounded">
+        <p>{{ message }}</p>
+        <p-button
+          label="Enter a manual current price"
+          severity="secondary"
+          [disabled]="saving()"
+          (onClick)="useManualValue()"
+        />
+      </div>
+    }
     <div class="grid grid-cols-12 gap-6">
       <div class="field col-span-12 md:col-span-6">
         <label for="type">Asset Type</label>
@@ -121,6 +132,8 @@
       <p-button
         icon="pi pi-save"
         [label]="saveBtnText()"
+        [loading]="saving()"
+        [disabled]="saving()"
         (onClick)="onSave()"
       />
 

@@ -1,4 +1,14 @@
 import { Instrument, MarketSource, QuoteResult } from './market-data.types';
+import {
+  containsToken,
+  exchangeAliases,
+  normalizedCurrency,
+  normalizedEvidence,
+  quoteBlocks,
+  sameExchange,
+  supportsNumber,
+  supportsTimestamp
+} from './market-evidence';
 
 export const QUOTE_SCHEMA = {
   type: 'object',
@@ -29,7 +39,12 @@ export const QUOTE_SCHEMA = {
           price: { type: ['number', 'null'] },
           marketAsOf: { type: ['string', 'null'] },
           kind: { type: 'string', enum: ['latest', 'close', 'nav'] },
-          sourceIds: { type: 'array', items: { type: 'string' } }
+          sourceIds: { type: 'array', items: { type: 'string' } },
+          evidence: {
+            type: ['string', 'null'],
+            description:
+              'Exact verbatim quote excerpt from the cited answer, including this ticker, currency, unit and market timestamp. Do not rewrite it.'
+          }
         },
         required: [
           'id',
@@ -41,7 +56,8 @@ export const QUOTE_SCHEMA = {
           'price',
           'marketAsOf',
           'kind',
-          'sourceIds'
+          'sourceIds',
+          'evidence'
         ]
       }
     }
@@ -105,8 +121,11 @@ export function validateQuotes(
     if (!unit || row['unit'] !== unit) return fail('Quote unit mismatch.');
     if (
       row['symbol'] !== instrument.symbol ||
-      row['currency'] !== instrument.currency ||
-      (instrument.exchange && row['exchange'] !== instrument.exchange)
+      typeof row['currency'] !== 'string' ||
+      normalizedCurrency(row['currency']) !==
+        normalizedCurrency(instrument.currency) ||
+      (instrument.exchange &&
+        !sameExchange(row['exchange'], instrument.exchange))
     )
       return fail('Instrument or currency mismatch.');
     const price = row['price'];
@@ -142,23 +161,30 @@ export function validateQuotes(
       return fail('Missing provider citation.');
     // A grounded answer must actually contain the extracted number and identity.
     // This is not independent verification of the original publisher's data.
-    const priceToken = String(price).replaceAll('.', '\\.');
-    const number = new RegExp(`(^|[^\\d.])${priceToken}(?:\\.0+)?($|[^\\d.])`);
-    // A different batch instrument's line or a substring of a larger number
-    // must not substantiate this instrument's quote.
+    const excerpt = row['evidence'];
     if (
-      !groundedText
-        .replaceAll(',', '')
-        .split('\n')
-        .some(
-          line =>
-            number.test(line.replaceAll(date, '')) &&
-            line.includes(instrument.symbol) &&
-            line.includes(instrument.currency) &&
-            line.includes(date) &&
-            line.includes(unit) &&
-            (!instrument.exchange || line.includes(instrument.exchange))
-        )
+      typeof excerpt === 'string' &&
+      !normalizedEvidence(groundedText).includes(normalizedEvidence(excerpt))
+    )
+      return fail('Quote excerpt was not retrieved.');
+    const text = typeof excerpt === 'string' ? excerpt : groundedText;
+    if (
+      !quoteBlocks(text, instrument.symbol).some(
+        block =>
+          supportsNumber(block, price) &&
+          containsToken(block, instrument.currency) &&
+          supportsTimestamp(block, date) &&
+          containsToken(block, unit) &&
+          (!instrument.exchange ||
+            exchangeAliases(instrument.exchange).some(alias =>
+              containsToken(block.toUpperCase(), alias)
+            )) &&
+          !instruments.some(
+            other =>
+              other.symbol !== instrument.symbol &&
+              containsToken(block, other.symbol)
+          )
+      )
     )
       return fail('Quote not supported by retrieved answer.');
     return {

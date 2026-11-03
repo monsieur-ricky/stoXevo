@@ -1,5 +1,6 @@
 import { Quote } from './quote.model';
 import { Symbol } from './symbol.model';
+import type { QuoteEvidence } from '../data/market-data/market-data.types';
 
 export type Profile = Partial<Symbol> &
   Partial<Quote> & {
@@ -14,4 +15,6 @@ export type Profile = Partial<Symbol> &
     phone?: string;
     address?: string;
     image?: string;
+    quoteEvidence?: QuoteEvidence;
+    quoteMessage?: string;
   };

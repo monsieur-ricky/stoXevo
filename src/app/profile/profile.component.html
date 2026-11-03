@@ -1,220 +1,135 @@
+@let data = profile();
 @if (loading()) {
-  <p-progressSpinner ariaLabel="loading" strokeWidth="4" />
+  <p-progressSpinner ariaLabel="Loading asset details" strokeWidth="4" />
 }
 
-<h1 class="header mb-6 md:mb-20">
-  {{ profile()?.name }}
-
-  <small> {{ profile()?.symbol }} </small>
+<h1 class="header mb-6 md:mb-12">
+  {{ data?.name || symbol() }}
+  <small>{{ data?.symbol || symbol() }}</small>
 </h1>
 
-<div class="grid grid-cols-12 gap-4 grid-cols-12 gap-6">
-  @let low = profile()?.regularMarketDayLow;
-  @let high = profile()?.regularMarketDayHigh;
-  @let price = profile()?.price;
-  @let changes = profile()?.changeValue ?? 0;
-  @let changePercent = profile()?.changePercent ?? 0;
-  @let currency = profile()?.currency ?? 'USD';
-
-  <div class="col-span-12 md:col-span-3 mb-12">
-    <section
-      class="widget widget--small border"
-      [class.border-red-400]="changes < 0"
-      [class.bg-red-100]="changes < 0"
-      [class.border-green-400]="changes > 0"
-      [class.bg-green-100]="changes > 0"
-    >
-      <h5
-        [class.!text-red-700]="changes < 0"
-        [class.!text-green-700]="changes > 0"
-      >
-        @if (changes) {
-          {{ changes | currency: currency }}
-          ({{ changePercent / 100 | percent: '1.2' }})
-        }
-      </h5>
-
-      <h1
-        [class.!text-red-700]="changes < 0"
-        [class.!text-green-700]="changes > 0"
-      >
-        @if (price !== undefined) {
-          {{ price | currency: currency }}
+<div class="grid grid-cols-12 gap-6 mb-8">
+  <div class="col-span-12 md:col-span-4">
+    <section class="widget widget--small border">
+      <h5>Current Price</h5>
+      <h1 data-testid="current-price">
+        @if (hasNumber(data?.price)) {
+          @if (data?.currency) {
+            {{ data?.price | currency: data?.currency }}
+          } @else {
+            {{ data?.price | number: '1.2-5' }}
+          }
         } @else {
           Unavailable
         }
       </h1>
-    </section>
-  </div>
-
-  <div class="col-span-6 md:col-span-3 mb-12">
-    <section class="widget widget--small border bg-gray-300 border-gray-400">
-      <h5>High</h5>
-
-      <h1>
-        @if (high !== undefined) {
-          {{ high | currency: currency }}
-        } @else {
-          Unavailable
-        }
-      </h1>
-    </section>
-  </div>
-
-  <div class="col-span-6 md:col-span-3 mb-12">
-    <section class="widget widget--small border bg-gray-300 border-gray-400">
-      <h5>Low</h5>
-
-      <h1>
-        @if (low !== undefined) {
-          {{ low | currency: currency }}
-        } @else {
-          Unavailable
-        }
-      </h1>
-    </section>
-  </div>
-</div>
-
-<div class="grid grid-cols-12 gap-4 grid-cols-12 gap-6">
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Symbol:
-      <span>
-        {{ profile()?.symbol }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Name:
-      <span>
-        {{ profile()?.name }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Exchange:
-      <span>
-        {{ profile()?.exchangeShortName }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Currency:
-      <span>
-        {{ profile()?.currency }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Industry:
-      <span>
-        {{ profile()?.industry }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Sector:
-      <span>
-        {{ profile()?.sector }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Website:
-      <span>
-        <a
-          href="{{ profile()?.website }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          referrerpolicy="no-referrer"
+      @if (hasNumber(data?.changeValue)) {
+        <small
+          >Change: {{ data?.changeValue | number: '1.2-5' }}
+          @if (hasNumber(data?.changePercent)) {
+            ({{ data?.changePercent | number: '1.2-2' }}%)
+          }
+        </small>
+      }
+      @if (data?.quoteEvidence; as evidence) {
+        <small
+          >{{ evidence.kind }} · {{ evidence.marketAsOf }} ·
+          {{ evidence.unit }}</small
         >
-          {{ profile()?.website }}
-        </a>
-      </span>
-    </span>
+      }
+    </section>
   </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      CEO:
-      <span>
-        {{ profile()?.ceo }}
-      </span>
-    </span>
+  <div class="col-span-6 md:col-span-4">
+    <section class="widget widget--small border">
+      <h5>Day High</h5>
+      <h1>
+        @if (hasNumber(data?.regularMarketDayHigh)) {
+          @if (data?.currency) {
+            {{ data?.regularMarketDayHigh | currency: data?.currency }}
+          } @else {
+            {{ data?.regularMarketDayHigh | number: '1.2-5' }}
+          }
+        } @else {
+          Unavailable
+        }
+      </h1>
+    </section>
   </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Address:
-      <span>
-        {{ profile()?.address }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Employees:
-      <span>
-        {{ profile()?.fullTimeEmployees }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Last Dividend:
-      <span>
-        {{ profile()?.trailingAnnualDividendRate }} {{ profile()?.currency }}
-      </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      Dividend Yield:
-      <span> {{ profile()?.dividendYield }} % </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      52-Wk Average:
-      <span> {{ profile()?.fiftyDayAverage }} </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      52-Wk Low:
-      <span> {{ profile()?.fiftyTwoWeekLow }} </span>
-    </span>
-  </div>
-
-  <div class="col-span-6 md:col-span-3">
-    <span>
-      52-Wk Low:
-      <span> {{ profile()?.fiftyTwoWeekLow }} </span>
-    </span>
+  <div class="col-span-6 md:col-span-4">
+    <section class="widget widget--small border">
+      <h5>Day Low</h5>
+      <h1>
+        @if (hasNumber(data?.regularMarketDayLow)) {
+          @if (data?.currency) {
+            {{ data?.regularMarketDayLow | currency: data?.currency }}
+          } @else {
+            {{ data?.regularMarketDayLow | number: '1.2-5' }}
+          }
+        } @else {
+          Unavailable
+        }
+      </h1>
+    </section>
   </div>
 </div>
 
-@if (profile()?.sources; as sources) {
-  <p class="mt-4">
-    AI-assisted metadata. Unavailable numerical metrics are not estimated.
+@if (data?.quoteMessage) {
+  <p role="status">Price unavailable: {{ data?.quoteMessage }}</p>
+}
+
+<div class="grid grid-cols-12 gap-6">
+  @for (field of textFields; track field.key) {
+    <div class="col-span-6 md:col-span-3">
+      <span
+        >{{ field.label }}:<span>{{
+          data?.[field.key] || 'Unavailable'
+        }}</span></span
+      >
+    </div>
+  }
+  <div class="col-span-6 md:col-span-3">
+    <span
+      >Website:<span>
+        @if (data?.website) {
+          <a
+            [href]="data?.website"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerpolicy="no-referrer"
+            >{{ data?.website }}</a
+          >
+        } @else {
+          Unavailable
+        }
+      </span></span
+    >
+  </div>
+  @for (field of metricFields; track field.key) {
+    <div class="col-span-6 md:col-span-3">
+      <span
+        >{{ field.label }}:<span>
+          @if (hasNumber(data?.[field.key])) {
+            {{ data?.[field.key] | number: '1.2-5' }}
+          } @else {
+            Unavailable
+          }
+        </span></span
+      >
+    </div>
+  }
+</div>
+
+<h3 class="mt-8">About</h3>
+<p>
+  {{
+    data?.description ||
+      'No sourced description is available for this instrument.'
+  }}
+</p>
+
+@if (data?.sources; as sources) {
+  <p class="mt-6">
+    AI-assisted, indicative data. Missing facts are not estimated. Sources:
   </p>
   @for (source of sources; track source.id) {
     <a
@@ -227,14 +142,3 @@
     >
   }
 }
-
-<div class="grid grid-cols-12 gap-4 grid-cols-12 gap-6 mt-6">
-  <div class="col-span-12">
-    <span>
-      About:
-      <span>
-        {{ profile()?.description }}
-      </span>
-    </span>
-  </div>
-</div>

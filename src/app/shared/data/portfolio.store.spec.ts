@@ -62,6 +62,23 @@ describe('portfolio store integration', () => {
     expect(store.loading()).toBe(false);
   });
 
+  it('keeps a failed save out of state and permits retry without a phantom duplicate', async () => {
+    const persist = vi
+      .spyOn(app, 'updateAppData')
+      .mockRejectedValueOnce(new Error('Storage quota exceeded'));
+    expect(await store.addAsset(manualAsset())).toBe(false);
+    expect(store.assets()).toEqual([]);
+    expect(store.asset()).toBeUndefined();
+    expect(store.loading()).toBe(false);
+    expect(store.saveError()).toContain('browser storage');
+    expect(await store.addAsset(manualAsset())).toBe(true);
+    expect(store.assets()).toEqual([manualAsset()]);
+    expect(store.saveError()).toBeNull();
+    expect(persist).toHaveBeenCalledTimes(2);
+    expect((await app.getDecryptedAppData())?.assets).toEqual([manualAsset()]);
+    persist.mockRestore();
+  });
+
   it('recalculates weighted purchase totals when an asset is updated', async () => {
     const asset = manualAsset();
     await store.addAsset(asset);

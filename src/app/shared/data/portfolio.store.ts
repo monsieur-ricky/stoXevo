@@ -19,13 +19,15 @@ export type PortfolioState = {
   asset: Asset | undefined;
   loading: boolean;
   initialLoadDone: boolean;
+  saveError: string | null;
 };
 
 const initialState: PortfolioState = {
   assets: [],
   asset: undefined,
   loading: false,
-  initialLoadDone: false
+  initialLoadDone: false,
+  saveError: null
 };
 
 export const PortfolioStore = signalStore(
@@ -63,7 +65,8 @@ export const PortfolioStore = signalStore(
       const setAsset = (asset: Asset | undefined): void => {
         patchState(store, {
           asset,
-          loading: false
+          loading: false,
+          saveError: null
         });
       };
 
@@ -108,7 +111,8 @@ export const PortfolioStore = signalStore(
       };
 
       const addAsset = async (asset: Asset): Promise<boolean> => {
-        patchState(store, { loading: true });
+        if (store.loading()) return false;
+        patchState(store, { loading: true, saveError: null });
 
         try {
           const symbolExists = !!store
@@ -129,16 +133,25 @@ export const PortfolioStore = signalStore(
             const [quote] = await portfolioService.getQuotes([
               assetInstrument(asset)
             ]);
-            if (quote?.status !== 'ok')
-              throw new Error(
-                'No acceptable quote. Add the asset with a manual valuation instead.'
-              );
+            if (quote?.status !== 'ok') {
+              const message = `${quote?.reason ?? 'No sourced current price was available.'} Retry the lookup or enable manual value updates and enter a current price.`;
+              patchState(store, { saveError: message });
+              messageService.add({
+                severity: 'warn',
+                summary: 'Price unavailable',
+                detail: message,
+                life: 10000
+              });
+              return false;
+            }
             asset = applyQuote(asset, quote);
           }
 
-          patchState(store, { asset, assets: [...store.assets(), asset] });
-
-          await storeAssets();
+          const assets = [...store.assets(), asset];
+          // Publish success only after persistence: a storage failure must not
+          // leave a phantom duplicate that cannot be retried from the form.
+          await appStore.updateAppData({ assets });
+          patchState(store, { asset, assets });
 
           messageService.add({
             severity: 'success',
@@ -148,10 +161,13 @@ export const PortfolioStore = signalStore(
 
           return true;
         } catch {
+          const message =
+            'Failed to add the asset. Check provider settings and browser storage, then retry or enter a manual current price.';
+          patchState(store, { saveError: message });
           messageService.add({
             severity: 'error',
             summary: 'Oops!',
-            detail: 'Failed to add the asset to the portfolio!'
+            detail: message
           });
 
           return false;

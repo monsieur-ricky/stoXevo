@@ -65,6 +65,8 @@ export class DetailsComponent implements OnInit {
   openSidebar = model.required<boolean>();
 
   asset = this.portfolioStore.asset;
+  saving = this.portfolioStore.loading;
+  saveError = this.portfolioStore.saveError;
   isMobile = this.appStore.isMobile;
 
   isEditMode = computed(() => !!this.asset()?.symbol);
@@ -92,11 +94,16 @@ export class DetailsComponent implements OnInit {
   }
 
   onSymbolSelected(selectedAsset: Symbol) {
+    if (selectedAsset.type) {
+      this.assetForm.get('type')?.setValue(selectedAsset.type);
+      this.onTypeChange(selectedAsset.type);
+    }
     const { symbol, name, currency, exchangeShortName } = selectedAsset;
     this.assetForm.patchValue({ symbol, name, currency, exchangeShortName });
   }
 
   onSave(): void {
+    if (this.saving()) return;
     if (isFormValid(this.assetForm)) {
       const formValue = { ...this.assetForm.getRawValue() };
       delete formValue['purchase'];
@@ -177,6 +184,11 @@ export class DetailsComponent implements OnInit {
     } else {
       value?.disable();
     }
+  }
+
+  useManualValue(): void {
+    this.assetForm.get('manualUpdate')?.setValue(true);
+    this.onManualUpdateChange(true);
   }
 
   private createForm(): void {

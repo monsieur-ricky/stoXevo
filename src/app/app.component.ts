@@ -114,7 +114,13 @@ export class AppComponent implements OnInit {
   }
 
   onSymbolSelected(symbol: Symbol) {
-    this.router.navigate(['profile', symbol.symbol]);
+    this.router.navigate(['profile', symbol.symbol], {
+      queryParams: {
+        currency: symbol.currency,
+        exchange: symbol.exchangeShortName,
+        assetType: symbol.type
+      }
+    });
   }
 
   onShowMenu() {

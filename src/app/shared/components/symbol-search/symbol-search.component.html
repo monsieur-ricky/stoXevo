@@ -15,7 +15,8 @@
     [disabled]="!canSearch() || disabled()"
     (onSelect)="onSelect($event.value)"
     (completeMethod)="searchSymbols($event.query)"
-    [(ngModel)]="selectedItem"
+    [ngModel]="selectedItem"
+    (ngModelChange)="onSearchValueChange($event)"
     [ngModelOptions]="{ standalone: true }"
   >
     <ng-template #item let-symbol>

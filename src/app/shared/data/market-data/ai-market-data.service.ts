@@ -12,6 +12,12 @@ import {
   safeSourceUrl,
   validateQuotes
 } from './quote-validation';
+import {
+  PROFILE_SCHEMA,
+  PROFILE_TEXT_FIELDS,
+  supportedProfileMetrics
+} from './profile-data';
+import { normalizedCurrency, sameExchange } from './market-evidence';
 
 const SYMBOL_SCHEMA = {
   type: 'object',
@@ -26,35 +32,26 @@ const SYMBOL_SCHEMA = {
           symbol: { type: 'string' },
           name: { type: 'string' },
           currency: { type: 'string' },
-          exchangeShortName: { type: 'string' }
+          exchangeShortName: { type: 'string' },
+          type: {
+            type: ['string', 'null'],
+            enum: [
+              'stock',
+              'etf',
+              'fund',
+              'bond',
+              'crypto',
+              'forex',
+              'futures',
+              null
+            ]
+          }
         },
-        required: ['symbol', 'name', 'currency', 'exchangeShortName']
+        required: ['symbol', 'name', 'currency', 'exchangeShortName', 'type']
       }
     }
   },
   required: ['symbols']
-};
-const PROFILE_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    symbol: { type: 'string' },
-    name: { type: ['string', 'null'] },
-    description: { type: ['string', 'null'] },
-    website: { type: ['string', 'null'] },
-    sector: { type: ['string', 'null'] },
-    industry: { type: ['string', 'null'] },
-    country: { type: ['string', 'null'] }
-  },
-  required: [
-    'symbol',
-    'name',
-    'description',
-    'website',
-    'sector',
-    'industry',
-    'country'
-  ]
 };
 
 @Injectable({ providedIn: 'root' })
@@ -122,41 +119,104 @@ export class AiMarketDataService {
           result.text.includes(String(row['currency']))
         );
       })
-      .map(({ symbol, name, currency, exchangeShortName }) => ({
+      .map(({ symbol, name, currency, exchangeShortName, type }) => ({
         symbol,
         name,
         currency,
         exchangeShortName,
+        type:
+          type &&
+          [
+            'stock',
+            'etf',
+            'fund',
+            'bond',
+            'crypto',
+            'forex',
+            'futures'
+          ].includes(type)
+            ? type
+            : undefined,
         sources: result.sources
       }));
   }
 
   async getProfile(
     symbol: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    identity: Partial<Instrument> = {}
   ): Promise<Profile & { sources: MarketSource[] }> {
     const result = await this.transport.extract(
-      `Find sourced company/fund metadata for the exact ticker ${JSON.stringify(symbol)}. Return null for unknown fields. Do not supply price metrics, dividends or numerical estimates.`,
+      `Build the asset details page for this exact public instrument: ${JSON.stringify({ symbol, currency: identity.currency, exchange: identity.exchange, type: identity.type })}.
+Search established financial quote/profile pages AND official company/investor-relations pages, not just a company FAQ. Retrieve name, type, quoted currency, listing exchange, company description, industry, sector, country, website, CEO, employee count, phone and address when supported.
+Also retrieve the latest available sourced market quote with request id 0, or the most recent market close/NAV when the market is closed. Include its actual market timestamp, not the request time. Put it in quotes; use an empty array if no acceptable price is available.
+Retrieve available day high/low, change value/percent, 50-day average, 52-week high/low, annual dividend and dividend yield (percent, not fractional). Each metric must include its own exact verbatim supporting evidence and sourceIds. Null is better than an estimate; do not invent missing fields.`,
       PROFILE_SCHEMA,
-      signal
+      signal,
+      { searchContext: 'medium' }
     );
     if (!result.value || typeof result.value !== 'object')
       throw new Error('Invalid asset profile.');
     const row = result.value as Record<string, unknown>;
     if (row['symbol'] !== symbol)
       throw new Error('Profile instrument mismatch.');
-    const profile: Profile = { symbol };
-    for (const key of [
-      'name',
-      'description',
-      'sector',
-      'industry',
-      'country'
-    ] as const) {
-      if (typeof row[key] === 'string' && row[key].length < 10_000)
+    if (
+      (identity.currency &&
+        typeof row['currency'] === 'string' &&
+        normalizedCurrency(identity.currency) !==
+          normalizedCurrency(row['currency'])) ||
+      (identity.exchange &&
+        typeof row['exchangeShortName'] === 'string' &&
+        !sameExchange(row['exchangeShortName'], identity.exchange))
+    ) {
+      throw new Error(
+        'Profile listing or currency does not match the selected instrument.'
+      );
+    }
+    const profile: Profile = {
+      symbol,
+      currency: identity.currency,
+      exchangeShortName: identity.exchange,
+      type: identity.type
+    };
+    for (const key of PROFILE_TEXT_FIELDS) {
+      if (
+        typeof row[key] === 'string' &&
+        row[key].trim() &&
+        row[key].length < 10_000
+      )
         profile[key] = row[key];
     }
     profile.website = safeSourceUrl(row['website']);
-    return { ...profile, sources: result.sources };
+    if (
+      typeof row['type'] === 'string' &&
+      ['stock', 'etf', 'fund', 'bond', 'crypto', 'forex', 'futures'].includes(
+        row['type']
+      )
+    )
+      profile.type = identity.type ?? (row['type'] as Instrument['type']);
+    const instrument: Instrument = {
+      symbol,
+      currency: identity.currency ?? profile.currency ?? '',
+      exchange: identity.exchange ?? profile.exchangeShortName,
+      type: identity.type ?? profile.type
+    };
+    const [quote] = validateQuotes(
+      { quotes: row['quotes'] },
+      [instrument],
+      result.sources,
+      result.provider,
+      result.model,
+      result.text
+    );
+    if (quote.status === 'ok') {
+      profile.price = quote.price;
+      profile.quoteEvidence = quote.evidence;
+    } else profile.quoteMessage = quote.reason;
+    return {
+      ...profile,
+      ...supportedProfileMetrics(row['metrics'], result.text, result.sources),
+      sources: result.sources
+    };
   }
 }

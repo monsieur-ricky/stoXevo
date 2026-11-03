@@ -47,6 +47,26 @@ describe('market data contracts', () => {
       evidence: { marketAsOf: row.marketAsOf, sources: [source] }
     });
   });
+  it('accepts equivalent listing names and timestamp representations in multiline evidence', () => {
+    const result = validateQuotes(
+      {
+        quotes: [
+          {
+            ...row,
+            exchange: 'NASDAQ',
+            marketAsOf: '2026-11-02T10:29:00-05:00'
+          }
+        ]
+      },
+      [{ ...instrument, exchange: 'Nasdaq' }],
+      [source],
+      'openai',
+      'test',
+      'ACME — NASDAQ\nPrice: USD 42 per share\nMarket time: 2026-11-02T15:29:00.000Z',
+      now
+    );
+    expect(result[0]).toMatchObject({ status: 'ok', price: 42 });
+  });
   it.each([
     { currency: 'EUR' },
     { exchange: 'XLON' },
@@ -75,6 +95,32 @@ describe('market data contracts', () => {
       'unavailable'
     );
     expect(validate([row], 'Company information only').status).toBe(
+      'unavailable'
+    );
+  });
+
+  it('does not normalize genuinely different venues or pence into pounds', () => {
+    expect(validate([{ ...row, exchange: 'NYSE' }]).status).toBe('unavailable');
+    expect(
+      validateQuotes(
+        { quotes: [{ ...row, currency: 'GBp' }] },
+        [{ ...instrument, currency: 'GBP' }],
+        [source],
+        'openai',
+        'test',
+        text,
+        now
+      )[0].status
+    ).toBe('unavailable');
+    expect(
+      validate([
+        {
+          ...row,
+          evidence: 'ACME XNAS USD 42 share 2026-11-02T15:29:00Z invented'
+        }
+      ]).status
+    ).toBe('unavailable');
+    expect(validate([row], text.replace('ACME', 'ACMEOTHER')).status).toBe(
       'unavailable'
     );
   });

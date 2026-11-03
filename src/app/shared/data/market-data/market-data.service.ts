@@ -265,29 +265,65 @@ export class MarketDataService {
 
   async getProfile(
     symbol: string,
-    cancellation?: AbortSignal
+    cancellation?: AbortSignal,
+    identity: Partial<Instrument> = {}
   ): Promise<Profile & { sources?: MarketSource[] }> {
     const signal = this.signal(cancellation);
     const revision = this.revision;
     if (!this.app.canUseMarketData())
       throw new Error('Configure market data first.');
-    const cached = this.profiles.get(symbol);
+    const key = instrumentKey({
+      symbol,
+      currency: identity.currency ?? '',
+      exchange: identity.exchange,
+      type: identity.type
+    });
+    const cached = this.profiles.get(key);
     if (cached && cached.until > Date.now()) return cached.value;
     const ai = this.app.marketData().source === 'ai';
     const value = ai
-      ? await this.ai.getProfile(symbol, signal)
+      ? await this.ai.getProfile(symbol, signal, identity)
       : await this.get<Profile>(
           `${STOXSCRAPER_API}/profile/${encodeURIComponent(symbol)}`,
           signal
         );
     signal.throwIfAborted();
-    // AI profiles contain metadata only; scraper profiles also contain prices.
+    // Both profiles now contain market data: never cache their prices for days.
     if (revision !== this.app.marketDataRevision())
       throw new Error('Market data configuration changed.');
-    this.profiles.set(symbol, {
-      until: Date.now() + (ai ? 7 * 86_400_000 : QUOTE_TTL_MS),
+    const until =
+      value.quoteEvidence?.kind === 'latest'
+        ? Math.min(
+            Date.now() + QUOTE_TTL_MS,
+            Date.parse(value.quoteEvidence.marketAsOf) + QUOTE_TTL_MS
+          )
+        : Date.now() + QUOTE_TTL_MS;
+    this.profiles.set(key, {
+      until,
       value
     });
+    if (
+      ai &&
+      value.quoteEvidence &&
+      typeof value.price === 'number' &&
+      value.currency
+    ) {
+      const instrument: Instrument = {
+        symbol,
+        currency: value.currency,
+        exchange: value.exchangeShortName,
+        type: value.type
+      };
+      this.quotes.set(instrumentKey(instrument), {
+        until,
+        value: {
+          instrument,
+          status: 'ok',
+          price: value.price,
+          evidence: value.quoteEvidence
+        }
+      });
+    }
     return value;
   }
 }

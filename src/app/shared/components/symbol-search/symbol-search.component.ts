@@ -56,7 +56,7 @@ export class SymbolSearchComponent {
     ).values()
   ]);
 
-  selectedItem?: Symbol;
+  selectedItem: Symbol | string | undefined;
 
   selected = output<Symbol>();
 
@@ -74,7 +74,10 @@ export class SymbolSearchComponent {
         controller.signal
       );
       if (controller.signal.aborted) return;
-      this.symbols.set(symbols);
+      // Optimus acknowledges completion through its suggestions input setter.
+      // A cached array may be the same object as last time: always publish a
+      // fresh reference, otherwise the autocomplete keeps its loader running.
+      this.symbols.set([...symbols]);
     } catch {
       if (controller.signal.aborted) return;
       this.symbols.set([]);
@@ -84,10 +87,24 @@ export class SymbolSearchComponent {
         summary: 'Oops!',
         detail: 'Failed to load the search results.'
       });
+    } finally {
+      if (this.request === controller) this.request = undefined;
     }
   }
 
+  onSearchValueChange(value: Symbol | string | undefined): void {
+    this.selectedItem = value;
+    // Cancel immediately when text changes, rather than waiting for the next
+    // debounced completeMethod. Empty/short queries never emit that event.
+    this.request?.abort();
+    this.request = undefined;
+    if (typeof value !== 'string' || value.length < 3) this.symbols.set([]);
+  }
+
   onSelect(symbol: Symbol): void {
+    this.request?.abort();
+    this.request = undefined;
+    this.symbols.set([]);
     this.selected.emit(symbol);
     this.selectedItem = undefined;
   }

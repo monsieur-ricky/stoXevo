@@ -1,4 +1,5 @@
 import { AssetType } from '@shared/models';
+import { exchangeAliases, normalizedCurrency } from './market-evidence';
 
 export type AiProvider = 'openai' | 'anthropic' | 'openrouter' | 'kilo';
 export type MarketDataSettings = {
@@ -74,8 +75,8 @@ export const QUOTE_TTL_MS = 15 * 60_000;
 export function instrumentKey(value: Instrument): string {
   return JSON.stringify([
     value.symbol.toUpperCase(),
-    value.exchange ?? '',
-    value.currency,
+    value.exchange ? exchangeAliases(value.exchange)[0] : '',
+    normalizedCurrency(value.currency),
     value.type ?? '',
     value.metal ?? ''
   ]);

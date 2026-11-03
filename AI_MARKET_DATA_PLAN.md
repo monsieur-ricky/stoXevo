@@ -87,3 +87,18 @@ Before production enablement, explicitly opt into authenticated evaluations from
 | 5. Hardening/documentation | [#23](https://github.com/monsieur-ricky/stoXevo/pull/23) | Phase 4 |
 
 The complete feature is on `feature/ai-market-data-05-release`. Earlier branches are independently validated checkpoints. Review/merge in order and retarget later PRs as their bases land. No automatic merges were requested.
+
+## Corrective follow-up: user-tested AI workflows (2026-11-03)
+
+Branch: `fix/ai-market-data-workflows`, stacked on `feature/ai-market-data-05-release`.
+
+- [x] Reproduce and fix autocomplete loading on repeated cached arrays: Optimus only acknowledges completion when its suggestions input setter runs. Publish fresh arrays; cancel searches immediately on input changes/clear/selection and ignore late results.
+- [x] Fix sparse details: the original AI profile schema deliberately omitted quote metrics, currency, exchange and much of the displayed company information. Expand retrieval/schema, retain selected listing context through routing, validate optional statistics individually and show explicit unavailable states. Correct duplicated/mislabeled statistics in the page.
+- [x] Fix avoidable Add rejections: recognize explicit exchange aliases and equivalent ISO timestamps; accept bounded multiline evidence while preserving identity/currency/unit/freshness/citation checks. Preserve selected asset type and reuse validated profile quotes. Do not invent additional search listings or accept unsupported prices.
+- [x] Make rejected Add lookups actionable inline, keep entered values and offer explicit manual-price recovery. Prevent duplicate submissions and publish added assets only after persistence succeeds.
+- [x] Synthetic DOM/route/HTTP/form/storage regression coverage includes cached/retried searches, clear/shorten/select cancellation, profile rendering and identity rejection, quote-cache reuse, automatic Add, rejected-quote manual recovery and persistence-failure retry. Gold/silver routing, stoXscraper and manual entry are preserved.
+- [x] Update user documentation; AI profiles now share the quote TTL rather than the former seven-day metadata cache.
+
+Validation: the final full `npm run check` passed with zero-warning lint, **96 tests across 20 files**, production build (1.26 MB initial raw bundle) and PWA verification (26 cached files). `git diff --check` passes. The initial build attempts failed downloading Google Fonts because Node's automatic network-family selection timed out in this WSL environment. Verified HTTPS retrieval and the full gate succeeded with the environment-only workaround `NODE_OPTIONS="--no-network-family-autoselection --dns-result-order=ipv4first"`; no build configuration or TLS verification was disabled.
+
+No user API keys or authenticated/paid provider requests were used. The screenshots alone do not identify the exact provider-side reason for the reported Add rejection; deterministic regressions cover confirmed local causes and expose future rejection reasons. Live provider accuracy, latency, cost and browser CORS still require the opt-in evaluation above. No PRs are merged automatically.

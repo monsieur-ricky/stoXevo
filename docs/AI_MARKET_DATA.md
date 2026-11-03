@@ -37,15 +37,21 @@ Identity, currency, positive finite prices and provider timestamps (maximum 5 mi
 - Deduplicate identities and reuse fresh cache entries. AI quotes use five-instrument interactive requests; at most two jobs run concurrently. These are not asynchronous provider Batch APIs.
 - Each uncached AI batch uses **two foreground requests**: cited retrieval, then schema-constrained extraction without search. This retains original citations and avoids Anthropic citation/strict-JSON incompatibility. No automatic paid retries or fallbacks.
 - One bulk request does **not** imply one search charge. A provider may use multiple searches. OpenRouter's one-search plugin may find insufficient evidence for five instruments; missing ones remain unavailable rather than guessed.
-- Rows require request id, symbol, exchange, exact currency, unit, positive finite price, timezone-qualified market timestamp, quote kind and provider-issued source IDs. A number on another instrument's line cannot substantiate this quote. Missing/duplicate/mismatched/stale rows are rejected independently.
+- Rows require request id, symbol, exchange, currency, unit, positive finite price, timezone-qualified market timestamp, quote kind and provider-issued source IDs. Explicit exchange aliases (such as Nasdaq/XNAS) and equivalent ISO timestamp representations are accepted; different venues and GBP versus GBp/GBX are not interchangeable. Evidence can span a bounded multiline quote block, but another batch instrument's numbers cannot substantiate this quote. Supplied verbatim excerpts must occur in the retrieved answer. Missing/duplicate/mismatched/stale rows are rejected independently.
 - Units distinguish shares, coins, NAV units, base currency units, contracts and monetary bond units. Bond percentages of par are not monetary prices. No AI currency/unit conversions.
 - `latest` quotes must be at most 15 minutes old; `close`/`nav` at most 7 days old. Close/NAV results are labeled and can be older than the last trading session: holiday/calendar freshness is not independently certified.
 - The cited answer is checked for extracted fields, but citations/schema compliance **do not independently verify the publisher or factual accuracy**. Prices are indicative portfolio valuations, not executable trading quotes.
 - Successes update independently. Failures retain previous prices and original evidence/timestamps. Hover the unavailable message for its sanitized reason.
-- Quotes cache for up to 15 minutes (bounded by `latest` freshness), searches for 24 hours, AI metadata for 7 days. Scraper profiles containing quote metrics use the shorter quote TTL. Caches are memory-only and invalidate on provider/settings/import changes.
+- Quotes and profiles cache for up to 15 minutes (bounded by `latest` quote freshness); searches cache for 24 hours. Profile cache keys include selected currency, exchange and asset type. A validated AI profile quote can satisfy an Add lookup for the same instrument without another paid request. Caches are memory-only and invalidate on provider/settings/import changes.
 - Portfolio open/import and purchase edits do not start paid price refreshes. Adding an automatically priced asset, symbol search after an 800ms typing pause, profile navigation, connection testing and pressing Update can make requests after consent. Canceling a browser request does not guarantee already-started provider billing stops.
 
-AI profiles currently retrieve sourced company/fund metadata only. Unavailable price/quote metrics are not estimated. This is intentionally more conservative than claiming complete parity with every scraper metric.
+## Search, asset details and Add
+
+Search returns up to five evidenced matches, not a guaranteed number of listings. Cached/repeated queries finish the autocomplete loading state; changing, clearing or selecting input cancels an outstanding search and ignores late results.
+
+Profile navigation retains the selected listing's currency, exchange and asset type. AI profiles request company/fund metadata, contact information, a validated current/close/NAV quote and optional financial statistics. OpenAI profile retrieval uses medium search context; other lookups retain low context. Statistics require their own supporting verbatim excerpt, numeric value, metric label and known source IDs. This is evidence screening, not independent publisher verification or guaranteed scraper parity. Unknown fields show **Unavailable**, never invented zero values.
+
+If Add cannot obtain an acceptable quote, it keeps the form open and displays the sanitized reason. Retry explicitly, or choose **Enter a manual current price** and supply a valuation yourself. The purchase price is never silently substituted for the current price. Add is disabled while saving; an asset appears in the portfolio only after local persistence succeeds, so a failed write can be retried.
 
 ## Privacy and credentials
 
