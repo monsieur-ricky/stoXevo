@@ -91,6 +91,7 @@ The complete feature is on `feature/ai-market-data-05-release`. Earlier branches
 ## Corrective follow-up: user-tested AI workflows (2026-11-03)
 
 Branch: `fix/ai-market-data-workflows`, stacked on `feature/ai-market-data-05-release`.
+Published corrective PR: [#24](https://github.com/monsieur-ricky/stoXevo/pull/24), targeting phase 5 (#23); not merged.
 
 - [x] Reproduce and fix autocomplete loading on repeated cached arrays: Optimus only acknowledges completion when its suggestions input setter runs. Publish fresh arrays; cancel searches immediately on input changes/clear/selection and ignore late results.
 - [x] Fix sparse details: the original AI profile schema deliberately omitted quote metrics, currency, exchange and much of the displayed company information. Expand retrieval/schema, retain selected listing context through routing, validate optional statistics individually and show explicit unavailable states. Correct duplicated/mislabeled statistics in the page.
